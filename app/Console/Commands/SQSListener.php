@@ -29,7 +29,6 @@ class SQSListener extends Command
 
             if ($result->get('Messages') !== null) {
                 foreach ($result->get('Messages') as $message) {
-                    dd($message);
                     ProcessSQSMessage::dispatch($message);
                     $sqs->deleteMessage([
                         'QueueUrl' => $queueUrl,
