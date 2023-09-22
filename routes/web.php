@@ -20,15 +20,17 @@ Route::get('/logout', [
 ])->name('logout');
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/', [
-        App\Http\Controllers\HomeController::class,
-        'root'
-    ])->name('home_index');
+    Route::redirect('/', '/orders', 301);
 
     Route::get('/orders', [
         App\Http\Controllers\OrdersController::class,
         'root'
     ])->name('orders_root');
+
+    Route::get('/manufacturing/products', [
+        App\Http\Controllers\ManufacturingController::class,
+        'products'
+    ])->name('clients_root');
 
     Route::get('/clients', [
         App\Http\Controllers\ClientsController::class,

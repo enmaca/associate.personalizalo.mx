@@ -25,27 +25,11 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
 
-    public function root()
+    public function root(Request $request)
     {
         return view('home.index')->extends('layouts.master');
     }
 
 
-    public function lang($locale)
-    {
-        if ($locale) {
-            App::setLocale($locale);
-            Session::put('lang', $locale);
-            Session::save();
-            return redirect()->back()->with('locale', $locale);
-        } else {
-            return redirect()->back();
-        }
-    }
 
-    public function logout()
-    {
-        Auth::logout();
-        return redirect('/login');
-    }
 }

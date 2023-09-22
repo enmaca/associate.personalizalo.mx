@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 class Controller extends BaseController
@@ -103,5 +106,23 @@ class Controller extends BaseController
             ]
         ];
         View::share('menu', $menu);
+    }
+
+    public function lang($locale)
+    {
+        if ($locale) {
+            App::setLocale($locale);
+            Session::put('lang', $locale);
+            Session::save();
+            return redirect()->back()->with('locale', $locale);
+        } else {
+            return redirect()->back();
+        }
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('/login');
     }
 }
