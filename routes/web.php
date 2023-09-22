@@ -14,10 +14,24 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/login', \App\Livewire\Auth\Login::class)->name('login');
-
+Route::get('/logout', [
+    App\Http\Controllers\HomeController::class,
+    'logout'
+])->name('logout');
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::redirect('/', '/orders', 301);
+    Route::get('/', [
+        App\Http\Controllers\HomeController::class,
+        'root'
+    ])->name('home_index');
 
-    Route::get('/orders', \App\Livewire\Orders\Orders::class)->name('orders_index');
+    Route::get('/orders', [
+        App\Http\Controllers\OrdersController::class,
+        'root'
+    ])->name('orders_root');
+
+    Route::get('/clients', [
+        App\Http\Controllers\ClientsController::class,
+        'root'
+    ])->name('clients_root');
 });
