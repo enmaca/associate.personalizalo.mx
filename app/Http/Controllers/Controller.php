@@ -28,30 +28,80 @@ class Controller extends BaseController
                 [
                     'icon' => 'box',
                     'name' => 'Products',
-                    'href' => route('clients_root')
+                    'href' => route('manufacturing_products')
                 ]
             ],
             'MANUFACTURA' => [
                 [
-                    'icon' => 'box',
-                    'name' => 'Productos',
-                    'href' => route('clients_root')
-                ],
-                [
-                    'icon' => 'cash',
-                    'name' => 'Costos Mano de Obra',
-                    'href' => route('clients_root')
+                    'icon' => 'speedometer',
+                    'name' => 'Dashboard',
+                    'href' => route('manufacturing_root')
                 ],
                 [
                     'icon' => 'building-gear',
                     'name' => 'Areas',
-                    'href' => route('clients_root')
+                    'href' => route('manufacturing_areas')
                 ],
                 [
                     'icon' => 'gear',
                     'name' => 'Equipos',
-                    'href' => route('clients_root')
+                    'href' => route('manufacturing_devices')
+                ],
+                [
+                'icon' => 'cash',
+                'name' => 'Costos Mano de Obra',
+                'href' => route('manufacturing_laborcosts')
+                ],
+                [
+                    'icon' => 'postcard',
+                    'name' => 'Variación de Impresion',
+                    'href' => route('manufacturing_printvariation')
                 ]
+
+            ],
+            'INVENTARIO' => [
+                [
+                    'icon' => 'box-arrow-in-down-left',
+                    'name' => 'Materiales',
+                    'href' => route('materials_root')
+                ],
+                [
+                    'icon' => 'bricks',
+                    'name' => 'Grupo de Variación',
+                    'href' => route('materials_materialvariation')
+                ],
+            ],
+            'SISTEMA' => [
+                [
+                    'icon' => 'box-seam',
+                    'name' => 'Productos',
+                    'href' => route('system_products')
+                ],
+                [
+                    'icon' => 'people',
+                    'name' => 'Clientes',
+                    'href' => route('system_customers')
+                ],
+                [
+                    'icon' => 'truck',
+                    'name' => 'Proveedores',
+                    'href' => route('system_suppliers')
+                ],
+                [
+                    'icon' => 'receipt',
+                    'name' => 'Impuestos',
+                    'href' => route('system_taxes')
+                ],
+                [
+                    'icon' => 'rulers',
+                    'name' => 'Unidades de Medida',
+                    'href' => route('system_uom')
+                ],
+                [
+                    'icon' => 'person-badge',
+                    'name' => 'Usuarios',
+                    'href' => route('system_users')
+                ],
             ],
             'HERRAMIENTAS' => [
                 [
@@ -65,45 +115,6 @@ class Controller extends BaseController
                     'href' => route('clients_root')
                 ]
             ],
-            'INVENTARIO' => [
-                [
-                    'icon' => 'box-arrow-in-down-left',
-                    'name' => 'Materiales',
-                    'href' => route('clients_root')
-                ],
-                [
-                    'icon' => 'bricks',
-                    'name' => 'Grupo de Variación',
-                    'href' => route('clients_root')
-                ],
-            ],
-            'SISTEMA' => [
-                [
-                    'icon' => 'people',
-                    'name' => 'Clientes',
-                    'href' => route('clients_root')
-                ],
-                [
-                    'icon' => 'truck',
-                    'name' => 'Proveedores',
-                    'href' => route('clients_root')
-                ],
-                [
-                    'icon' => 'receipt',
-                    'name' => 'Impuestos',
-                    'href' => route('clients_root')
-                ],
-                [
-                    'icon' => 'rulers',
-                    'name' => 'Unidades de Medida',
-                    'href' => route('clients_root')
-                ],
-                [
-                    'icon' => 'person-badge',
-                    'name' => 'Usuarios',
-                    'href' => route('clients_root')
-                ],
-            ]
         ];
         View::share('menu', $menu);
     }
