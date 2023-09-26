@@ -3,7 +3,7 @@
         <div class="col-sm-auto">
             <div>
                 <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal" id="create-btn"
-                        data-bs-target="#showModal"><i class="ri-add-line align-bottom me-1"></i> Add
+                        data-bs-target="#createOrderModal"><i class="ri-add-line align-bottom me-1"></i>Crear Pedido
                 </button>
                 <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i>
                 </button>
@@ -43,7 +43,7 @@
                 <tr>
                     <th scope="row">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="chk_child" value="option1">
+                            <input class="form-check-input" type="checkbox" name="chk_child" value="@hashid($order['id'])">
                         </div>
                     </th>
                     <td class="id" style="display:none;"><a href="javascript:void(0);" class="fw-medium link-primary">#VZ2101</a>
@@ -106,7 +106,7 @@
             </a>
         </div>
     </div>
-    <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createOrderModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-light p-3">
@@ -114,34 +114,29 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                             id="close-modal"></button>
                 </div>
-                <form class="tablelist-form">
+                <form id="NewOrderFrom" class="tablelist-form">
                     <div class="modal-body">
                         @livewire('client.search.select')
+                        <div class="mb-3">
+                            <label for="customer-mobile-field" class="form-label">Celular</label>
+                            <input id="customer-mobile-field" class="form-control" placeholder="Ingresa Número de Celular" required/>
+                        </div>
 
                         <div class="mb-3">
-                            <label for="email-field" class="form-label">Email</label>
-                            <input type="email" id="email-field" class="form-control" placeholder="Enter Email"
+                            <label for="customer-name-field" class="form-label">Nombre</label>
+                            <input id="customer-name-field" class="form-control" placeholder="Ingresa el Nombre"
                                    required/>
                         </div>
 
                         <div class="mb-3">
-                            <label for="phone-field" class="form-label">Phone</label>
-                            <input type="text" id="phone-field" class="form-control" placeholder="Enter Phone no."
+                            <label for="customer-last_name-field" class="form-label">Apellido</label>
+                            <input id="customer-last_name-field" class="form-control" placeholder="Ingresa el Apellido"
                                    required/>
                         </div>
 
                         <div class="mb-3">
-                            <label for="date-field" class="form-label">Joining Date</label>
-                            <input type="text" id="date-field" class="form-control" placeholder="Select Date" required/>
-                        </div>
-
-                        <div>
-                            <label for="status-field" class="form-label">Status</label>
-                            <select class="form-control" data-trigger name="status-field" id="status-field">
-                                <option value="">Status</option>
-                                <option value="Active">Active</option>
-                                <option value="Block">Block</option>
-                            </select>
+                            <label for="customer-email-field" class="form-label">Correo Electrónico</label>
+                            <input type="email" id="customer-email-field" class="form-control" placeholder="Ingresa el correo Electrónico"/>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -162,9 +157,22 @@
 @endsection
 @push('scripts')
     <script>
+        function setValueDE(selector, value, enable){
+            let inputE = document.querySelector(selector);
+            inputE.value = value;
+            inputE.disabled = !enable;
+        }
         document.addEventListener('livewire:initialized', () => {
         @this.on('change-customer-id', (event) => {
-            console.log(event.data.id);
+            console.log(event.data);
+            enableFields = true;
+            if( event.data.id != 'new')
+                enableFields = false;
+            setValueDE('#customer-mobile-field', event.data.mobile, enableFields);
+            setValueDE('#customer-name-field', event.data.name, enableFields);
+            setValueDE('#customer-last_name-field', event.data.last_name, enableFields);
+            setValueDE('#customer-email-field', event.data.email, enableFields);
+            init_choices();
             });
         });
     </script>

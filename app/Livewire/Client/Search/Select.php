@@ -3,8 +3,9 @@
 namespace App\Livewire\Client\Search;
 
 use App\Models\Customer;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
-
+use Vinkla\Hashids\Facades\Hashids;
 
 class Select extends Component
 {
@@ -25,13 +26,39 @@ class Select extends Component
         ];
 
     public function change_customer_id(){
-        $this->dispatch('change-customer-id', data: ['id' => $this->customer_id]);
+        if( $this->customer_id == 'new')
+            $customer_data = [
+                'id' => $this->customer_id,
+                'mobile' => '',
+                'name' => '',
+                'last_name' => '',
+                'email' => ''
+            ];
+        else if ( $this->customer_id == 'guest' )
+            $customer_data = [
+                'id' => $this->customer_id,
+                'name' => 'Guest',
+                'last_name' => 'Guest',
+                'mobile' => 'Guest',
+                'email' => 'Guest'
+            ];
+        else {
+            if( is_array($this->customer_id) && array_key_exists('value', $this->customer_id))
+                $this->customer_id = $this->customer_id['value'];
+
+            $customer_id = Hashids::decode($this->customer_id)[0];
+            $customer_data = Customer::findOrFail($customer_id);
+            $customer_data = $customer_data->toArray();
+        }
+
+
+        $this->dispatch('change-customer-id', data: $customer_data );
     }
 
     public function render()
     {
         $this->options = Customer::all()->mapWithKeys(function ($client){
-            return [ $client->id => "{$client->name} [{$client->mobile}]"];
+            return [ Hashids::encode($client->id) => "{$client->name} [{$client->mobile}]"];
         })->toArray();
         return view('uxmal.livewire.form.select_choices');
     }

@@ -9,6 +9,6 @@
         @endforeach
     </select>
 </div>
-@pushonce('input-assets-scripts')
+@pushonce('scripts')
     @vite('resources/js/plugin/init_choices.js')
 @endpushonce
