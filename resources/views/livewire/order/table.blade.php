@@ -60,10 +60,10 @@
                     </td>
                     @php
                         $order_address_book = '';
-                        if( !empty( $order['address_book'] ) ){
-                            $order_address_book .= "Nombre: ".$order['address_book']['name']." ".$order['address_book']['last_name']."<br>";
-                            $order_address_book .= "Tel&eacute;fono: ".$order['address_book']['contact_mobile']."<br>";
-                            $order_address_book .= "Direccion:<br>".$order['address_book']['address_1']."<br>".$order['address_book']['address_2']."<br>".$order['address_book']['zip_code']."<br>";
+                        if( !empty( $order['address'] ) ){
+                            $order_address_book .= "Nombre: ".$order['address']['name']." ".$order['address']['last_name']."<br>";
+                            $order_address_book .= "Tel&eacute;fono: ".$order['address']['contact_mobile']."<br>";
+                            $order_address_book .= "Direccion:<br>".$order['address']['address_1']."<br>".$order['address']['address_2']."<br>".$order['address']['zip_code']."<br>";
                         }
                     @endphp
                     <td class="order_address_book">{!! $order_address_book !!}</td>

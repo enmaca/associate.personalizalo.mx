@@ -12,6 +12,7 @@
                     <h4 class="card-title mb-0">Areas de Manufactura</h4>
                 </div><!-- end card header -->
                 <div class="card-body">
+                    @livewire('manufacturing.areas')
                 </div>
             </div>
             <!-- end col -->

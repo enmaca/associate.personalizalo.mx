@@ -29,10 +29,13 @@ class Table extends Component
             'details',
             'customer',
             'payments',
-            'address'
+            'address',
+            'address.district',
+            'address.municipality',
+            'address.state'
         ])->where('status', '!=', 'done')
             ->orWhere('status','!=', 'canceled')->get()->toArray();
-//dd($this->orders);
+        dd($this->orders);
 
         return view('livewire.order.table');
     }

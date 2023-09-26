@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class MexState extends Model
 {
     use HasFactory;
-    protected $table = 'mex_states';
+    protected $table = 'v_mex_states';
     protected $primaryKey = 'id';
 }

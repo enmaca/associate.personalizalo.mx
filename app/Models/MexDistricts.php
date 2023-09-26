@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class MexDistricts extends Model
 {
     use HasFactory;
-    protected $table = 'mex_districts';
+    protected $table = 'v_mex_districts';
     protected $primaryKey = 'id';
 
-    public function municipalities(){
-        return $this->belongsTo(MexMunicipalities::class, 'municipality_id');
+    public function municipalities(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(MexMunicipality::class, 'municipality_id', 'id');
     }
 
     public static function getZipCodeData($zip_code){
