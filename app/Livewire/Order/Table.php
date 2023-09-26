@@ -35,7 +35,6 @@ class Table extends Component
             'address.state'
         ])->where('status', '!=', 'done')
             ->orWhere('status','!=', 'canceled')->get()->toArray();
-        dd($this->orders);
 
         return view('livewire.order.table');
     }
