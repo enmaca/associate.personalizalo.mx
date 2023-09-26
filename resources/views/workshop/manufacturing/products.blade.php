@@ -1,4 +1,4 @@
-@extends('associates.master')
+@extends('workshop.master')
 @section('title')
     @lang('translation.dashboards')
 @endsection
@@ -9,9 +9,10 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title mb-0">Costos de Manufactura</h4>
+                    <h4 class="card-title mb-0">Productos Por Elaborar</h4>
                 </div><!-- end card header -->
                 <div class="card-body">
+                    @livewire('manufacturing.products')
                 </div>
             </div>
             <!-- end col -->

@@ -9,4 +9,5 @@ class Tax extends Model
 {
     use HasFactory;
     protected $table = 'catalog_taxes';
+    protected $primaryKey = 'id';
 }

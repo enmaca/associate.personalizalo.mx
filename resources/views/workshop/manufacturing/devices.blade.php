@@ -1,4 +1,4 @@
-@extends('associates.master')
+@extends('workshop.master')
 @section('title')
     @lang('translation.dashboards')
 @endsection

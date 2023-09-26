@@ -8,6 +8,6 @@ class OrdersController extends Controller
 {
     public function root()
     {
-        return view('associates.order.root')->extends('associates.master');
+        return view('workshop.order.root')->extends('workshop.master');
     }
 }

@@ -11,6 +11,6 @@ class ClientsController extends Controller
      */
     public function root()
     {
-        return view('associates.client.root')->extends('associates.master');
+        return view('workshop.client.root')->extends('workshop.master');
     }
 }

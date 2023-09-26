@@ -14,10 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/login', \App\Livewire\Auth\Login::class)->name('login');
-Route::get('/logout', [
-    App\Http\Controllers\HomeController::class,
-    'logout'
-])->name('logout');
+Route::get('/logout', [ \App\Http\Controllers\HomeController::class, 'logout' ])->name('logout');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::redirect('/', '/orders', 301);
@@ -50,9 +47,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/system/products', 'products')->name('system_products');
     });
 
-
     Route::get('/clients', [
         App\Http\Controllers\ClientsController::class,
         'root'
     ])->name('clients_root');
+
+    Route::controller( \App\Http\Controllers\DigitalArtController::class)->group(function(){
+        Route::get('/digital_art/{id}', 'download')->name('digital_art_get');
+    });
 });

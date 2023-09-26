@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OrderProductDetail;
 use Illuminate\Http\Request;
 
 class ManufacturingController extends Controller
@@ -9,27 +10,27 @@ class ManufacturingController extends Controller
 
     public function dashboard()
     {
-        return view('associates.manufacturing.dashboard')->extends('associates.master');
+        return view('workshop.manufacturing.dashboard')->extends('workshop.master');
     }
 
     public function areas(){
-        return view('associates.manufacturing.areas')->extends('associates.master');
+        return view('workshop.manufacturing.areas')->extends('workshop.master');
     }
 
     public function products(){
-        return view('associates.manufacturing.products')->extends('associates.master');
+        return view('workshop.manufacturing.products')->extends('workshop.master');
     }
 
     public function laborcosts() {
-        return view('associates.manufacturing.laborcosts')->extends('associates.master');
+        return view('workshop.manufacturing.laborcosts')->extends('workshop.master');
     }
 
     public function devices(){
-        return view('associates.manufacturing.devices')->extends('associates.master');
+        return view('workshop.manufacturing.devices')->extends('workshop.master');
     }
 
     public function printvariation(){
-        return view('associates.manufacturing.printvariation')->extends('associates.master');
+        return view('workshop.manufacturing.printvariation')->extends('workshop.master');
     }
 
 }

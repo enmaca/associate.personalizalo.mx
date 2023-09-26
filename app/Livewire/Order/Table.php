@@ -29,7 +29,7 @@ class Table extends Component
             'details',
             'customer',
             'payments',
-            'address_book'
+            'address'
         ])->where('status', '!=', 'done')
             ->orWhere('status','!=', 'canceled')->get()->toArray();
 //dd($this->orders);

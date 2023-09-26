@@ -8,10 +8,10 @@ class MaterialsController extends Controller
 {
     //
     public function root(){
-        return view('associates.materials.root')->extends('associates.master');
+        return view('workshop.materials.root')->extends('workshop.master');
     }
 
     public function materialvariation(){
-        return view('associates.materials.materialvariation')->extends('associates.master');
+        return view('workshop.materials.materialvariation')->extends('workshop.master');
     }
 }

@@ -9,15 +9,9 @@ class OrderPayment extends Model
 {
     use HasFactory;
     protected $table = 'order_payments';
+    protected $primaryKey = 'id';
 
-    protected $fillable = [
-        'order_id',
-        'payment_method_id',
-        'ammount',
-        'transaction_data',
-    ];
-
-    public function paymentMethod(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function payment_method(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(PaymentMethod::class, 'id', 'payment_method_id');
     }
