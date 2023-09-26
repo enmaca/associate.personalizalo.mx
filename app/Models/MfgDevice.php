@@ -22,7 +22,7 @@ class MfgDevice extends Model
         'name',
     ];
 
-    public function mfg_area(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function area(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->BelongsTo(MfgArea::class, 'mfg_area_id', 'id');
     }

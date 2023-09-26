@@ -12,6 +12,7 @@
                     <h4 class="card-title mb-0">Equipos de Manufactura</h4>
                 </div><!-- end card header -->
                 <div class="card-body">
+                    @livewire('manufacturing.devices')
                 </div>
             </div>
             <!-- end col -->

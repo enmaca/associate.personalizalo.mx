@@ -28,12 +28,16 @@
                         <input class="form-check-input" type="checkbox" id="checkAll" value="option">
                     </div>
                 </th>
-                <th data-header-field="mfg_areas_name">Nombre</th>
+                <th data-header-field="mfg_device_name">Nombre</th>
+                <th data-header-field="mfg_device_brand">Marca</th>
+                <th data-header-field="mfg_device_model">Modelo</th>
+                <th data-header-field="mfg_device_serial_number">No. de Serie</th>
+                <th data-header-field="mfg_device_print_params">Parametros de Impresión</th>
                 <th data-sort="action">Action</th>
             </tr>
             </thead>
             <tbody class="list form-check-all">
-            @foreach($mfg_areas as $mfg_area)
+            @foreach($mfg_devices as $mfg_device)
                 <tr>
                     <th scope="row">
                         <div class="form-check">
@@ -43,7 +47,11 @@
                     <td class="id" style="display:none;">
                         <a href="javascript:void(0);" class="fw-medium link-primary"></a>
                     </td>
-                    <td class="mfg_area_name">{!! $mfg_area['name'] !!}</td>
+                    <td class="mfg_device_name">{!! $mfg_device['name'] !!}</td>
+                    <td class="mfg_device_brand">{!! $mfg_device['brand'] !!}</td>
+                    <td class="mfg_device_model">{!! $mfg_device['model'] !!}</td>
+                    <td class="mfg_device_serial_number">{!! $mfg_device['serial_number'] !!}</td>
+                    <td class="mfg_device_print_params">{!! $mfg_device['print_params'] !!}</td>
                     <td>
                         <div class="d-flex gap-2">
                             <div class="edit">

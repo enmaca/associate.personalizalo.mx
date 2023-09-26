@@ -14,4 +14,9 @@ class MfgArea extends Model
     protected $fillable = [
         'name',
     ];
+
+    public function devices(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(MfgDevice::class, 'mfg_area_id', 'id');
+    }
 }
