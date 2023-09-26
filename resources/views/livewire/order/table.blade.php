@@ -116,17 +116,7 @@
                 </div>
                 <form class="tablelist-form">
                     <div class="modal-body">
-
-                        <div class="mb-3" id="modal-id" style="display: none;">
-                            <label for="id-field" class="form-label">ID</label>
-                            <input type="text" id="id-field" class="form-control" placeholder="ID" readonly/>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="customername-field" class="form-label">Customer Name</label>
-                            <input type="text" id="customername-field" class="form-control" placeholder="Enter Name"
-                                   required/>
-                        </div>
+                        @livewire('client.search.select')
 
                         <div class="mb-3">
                             <label for="email-field" class="form-label">Email</label>
@@ -168,4 +158,14 @@
 </div>
 @section('script')
     <script src="{{ URL::asset('build/libs/list.js/list.min.js') }}"></script>
+    <script src="{{ URL::asset('build/js/app.js') }}"></script>
 @endsection
+@push('scripts')
+    <script>
+        document.addEventListener('livewire:initialized', () => {
+        @this.on('change-customer-id', (event) => {
+            console.log(event.data.id);
+            });
+        });
+    </script>
+@endpush

@@ -1,11 +1,11 @@
 @yield('css')
 <!-- Layout config Js -->
-<script src="{{ URL::asset('build/js/layout.js') }}"></script>
+<!-- @vite('resources/js/layout.js') -->
 <!-- Bootstrap Css -->
-<link rel="stylesheet" href="{{ URL::asset('build/css/bootstrap.min.css') }}" type="text/css" />
+@vite('resources/scss/bootstrap.scss')
 <!-- Icons Css -->
-<link rel="stylesheet" href="{{ URL::asset('build/css/icons.min.css') }}" type="text/css" />
+@vite('resources/scss/icons.scss')
 <!-- App Css-->
-<link rel="stylesheet" href="{{ URL::asset('build/css/app.min.css') }}" type="text/css" />
+@vite('resources/scss/app.scss')
 <!-- custom Css-->
-<link rel="stylesheet" href="{{ URL::asset('build/css/custom.min.css') }}" type="text/css" />
+@vite('resources/scss/custom.scss')

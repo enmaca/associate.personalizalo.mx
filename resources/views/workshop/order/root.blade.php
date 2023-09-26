@@ -1,8 +1,6 @@
 @extends('workshop.master')
 @section('title')
-    @lang('translation.dashboards')
-@endsection
-@section('css')
+    Listado de Pedidos
 @endsection
 @section('content')
     <div class="row">
@@ -19,8 +17,4 @@
         </div>
         <!-- end col -->
     </div>
-@endsection
-@section('script')
-    <!-- apexcharts -->
-    <script src="{{ URL::asset('build/js/app.js') }}"></script>
 @endsection

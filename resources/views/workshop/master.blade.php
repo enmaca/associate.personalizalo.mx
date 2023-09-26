@@ -10,6 +10,7 @@
     <meta content="Themesbrand" name="author"/>
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ URL::asset('build/images/favicon.ico') }}">
+    @vite('resources/scss/app.scss')
     @include('layouts.head-css')
 </head>
 <body>
@@ -38,6 +39,7 @@
 @include('layouts.customizer')
 <!-- JAVASCRIPT -->
 @include('layouts.vendor-scripts')
+@stack('scripts')
 </body>
 
 </html>
