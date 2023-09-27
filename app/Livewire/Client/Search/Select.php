@@ -9,8 +9,8 @@ use Vinkla\Hashids\Facades\Hashids;
 
 class Select extends Component
 {
-    public $name = 'customer.id';
-    public $id = 'customer.id';
+    public $name = 'customerId';
+    public $id = 'customerId';
     public $label = 'Cliente';
     public $customer_id = 'new';
     public $place_holder_option = [
@@ -51,6 +51,9 @@ class Select extends Component
             $customer_data = $customer_data->toArray();
         }
 
+        $customer_data['select_id_old'] = $this->id;
+        $this->id = 'customerId'.bin2hex(random_bytes(3));
+        $customer_data['select_id_new'] = $this->id;
 
         $this->dispatch('change-customer-id', data: $customer_data );
     }

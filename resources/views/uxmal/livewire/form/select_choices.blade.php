@@ -12,3 +12,8 @@
 @pushonce('scripts')
     @vite('resources/js/plugin/init_choices.js')
 @endpushonce
+@pushonce('onload-excute')
+    if (window.init_choices) {
+        window.init_choices();
+    }
+@endpushonce

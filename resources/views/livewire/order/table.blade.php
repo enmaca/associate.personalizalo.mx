@@ -162,8 +162,22 @@
             inputE.value = value;
             inputE.disabled = !enable;
         }
+        document.addEventListener('livewire:update', () => {
+            console.log('livewire:update');
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            Livewire.hook('element.init', ({ component, el }) => {
+                //
+                console.log('element.init');
+                console.log(el.attributes);
+            })
+        });
+
         document.addEventListener('livewire:initialized', () => {
-        @this.on('change-customer-id', (event) => {
+            console.log('livewire:initialized');
+
+            @this.on('change-customer-id', (event) => {
             console.log(event.data);
             enableFields = true;
             if( event.data.id != 'new')
@@ -172,8 +186,14 @@
             setValueDE('#customer-name-field', event.data.name, enableFields);
             setValueDE('#customer-last_name-field', event.data.last_name, enableFields);
             setValueDE('#customer-email-field', event.data.email, enableFields);
-            init_choices();
+            // Reinit Choices
+            if (window.inited_choices[event.data.select_id_old]) {
+                console.log(window.inited_choices[event.data.select_id_old].constructor.name);
+                console.log('Destroy Element ' + event.data.select_id_old)
+                //window.inited_choices[event.data.select_id_old].destroy();
+                }
             });
         });
     </script>
 @endpush
+

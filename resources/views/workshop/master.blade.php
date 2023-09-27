@@ -40,6 +40,13 @@
 <!-- JAVASCRIPT -->
 @include('layouts.vendor-scripts')
 @stack('scripts')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        @stack('onload-excute')
+        console.log('dom content loaded');
+    });
+</script>
+
 </body>
 
 </html>

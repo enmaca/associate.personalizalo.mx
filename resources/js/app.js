@@ -1861,7 +1861,8 @@ File: Main Js File
 		isCollapseMenu();
 		initMenuItemScroll();
 	}
-	init();
+
+	//init();
 
 	var timeOutFunctionId;
 
