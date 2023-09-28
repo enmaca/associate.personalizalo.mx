@@ -1,6 +1,6 @@
-<div class="mb-3">
+<div wire:ignore data-uxmal-type="select-choices" data-uxmal-id="{!! $id !!}" class="mb-3">
     <label for="{!! $name !!}" class="form-label text-muted">{!! $label !!}</label>
-    <select @if(!empty($wire)) {!! implode(" ", $wire) !!} @endif class="form-control" id="{!! $id !!}" name="{!! $name !!}" data-choices {!! implode(" ", $data_choices_opts) !!}>
+    <select @if(!empty($wire)) {!! implode(" ", $wire) !!} @endif class="form-control" id="{!! $id !!}" name="{!! $name !!}" data-choices {!! implode(" ", $data_choices_opts) !!}  >
         @if( !empty($place_holder_option) )
             <option value="{!! $place_holder_option['value'] !!}">{!! $place_holder_option['name'] !!}</option>
         @endif

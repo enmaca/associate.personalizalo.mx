@@ -89,9 +89,7 @@
             <div class="text-center">
                 <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
                            colors="primary:#121331,secondary:#08a88a" style="width:75px;height:75px"></lord-icon>
-                <h5 class="mt-2">Sorry! No Result Found</h5>
-                <p class="text-muted mb-0">We've searched more than 150+ Orders We did not find any orders for you
-                    search.</p>
+                <h5 class="mt-2">Sin Resultados</h5>
             </div>
         </div>
     </div>
@@ -110,7 +108,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-light p-3">
-                    <h5 class="modal-title" id="exampleModalLabel"></h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Crear Nuevo Pedido</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                             id="close-modal"></button>
                 </div>
@@ -142,7 +140,7 @@
                     <div class="modal-footer">
                         <div class="hstack gap-2 justify-content-end">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success" id="add-btn">Add Customer</button>
+                            <button type="submit" class="btn btn-success" id="add-btn">Crear Pedido</button>
                             <!-- <button type="button" class="btn btn-success" id="edit-btn">Update</button> -->
                         </div>
                     </div>
@@ -162,36 +160,17 @@
             inputE.value = value;
             inputE.disabled = !enable;
         }
-        document.addEventListener('livewire:update', () => {
-            console.log('livewire:update');
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            Livewire.hook('element.init', ({ component, el }) => {
-                //
-                console.log('element.init');
-                console.log(el.attributes);
-            })
-        });
-
         document.addEventListener('livewire:initialized', () => {
             console.log('livewire:initialized');
-
             @this.on('change-customer-id', (event) => {
-            console.log(event.data);
-            enableFields = true;
-            if( event.data.id != 'new')
-                enableFields = false;
-            setValueDE('#customer-mobile-field', event.data.mobile, enableFields);
-            setValueDE('#customer-name-field', event.data.name, enableFields);
-            setValueDE('#customer-last_name-field', event.data.last_name, enableFields);
-            setValueDE('#customer-email-field', event.data.email, enableFields);
-            // Reinit Choices
-            if (window.inited_choices[event.data.select_id_old]) {
-                console.log(window.inited_choices[event.data.select_id_old].constructor.name);
-                console.log('Destroy Element ' + event.data.select_id_old)
-                //window.inited_choices[event.data.select_id_old].destroy();
-                }
+                console.log(event.data);
+                enableFields = true;
+                if (event.data.id != 'new')
+                    enableFields = false;
+                setValueDE('#customer-mobile-field', event.data.mobile, enableFields);
+                setValueDE('#customer-name-field', event.data.name, enableFields);
+                setValueDE('#customer-last_name-field', event.data.last_name, enableFields);
+                setValueDE('#customer-email-field', event.data.email, enableFields);
             });
         });
     </script>

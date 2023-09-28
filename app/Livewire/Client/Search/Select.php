@@ -18,7 +18,9 @@ class Select extends Component
         'name' => 'Nuevo Cliente'
         ];
     public $options = [];
-    public $data_choices_opts = [];
+    public $data_choices_opts = [
+        'data-choices-sorting-false'
+    ];
 
     public $wire = [
             'wire:change="change_customer_id"',
@@ -26,6 +28,10 @@ class Select extends Component
         ];
 
     public function change_customer_id(){
+
+        if( array_key_exists('value', $this->customer_id) )
+            $this->customer_id = $this->customer_id['value'];
+
         if( $this->customer_id == 'new')
             $customer_data = [
                 'id' => $this->customer_id,
@@ -34,7 +40,7 @@ class Select extends Component
                 'last_name' => '',
                 'email' => ''
             ];
-        else if ( $this->customer_id == 'guest' )
+        else if ( (int) $this->customer_id == 4294967295 )
             $customer_data = [
                 'id' => $this->customer_id,
                 'name' => 'Guest',
@@ -43,26 +49,20 @@ class Select extends Component
                 'email' => 'Guest'
             ];
         else {
-            if( is_array($this->customer_id) && array_key_exists('value', $this->customer_id))
-                $this->customer_id = $this->customer_id['value'];
-
             $customer_id = Hashids::decode($this->customer_id)[0];
             $customer_data = Customer::findOrFail($customer_id);
             $customer_data = $customer_data->toArray();
         }
-
-        $customer_data['select_id_old'] = $this->id;
-        $this->id = 'customerId'.bin2hex(random_bytes(3));
-        $customer_data['select_id_new'] = $this->id;
 
         $this->dispatch('change-customer-id', data: $customer_data );
     }
 
     public function render()
     {
-        $this->options = Customer::all()->mapWithKeys(function ($client){
+        $this->options = Customer::orderBy('id', 'desc')->get()->mapWithKeys(function ($client){
             return [ Hashids::encode($client->id) => "{$client->name} [{$client->mobile}]"];
         })->toArray();
+
         return view('uxmal.livewire.form.select_choices');
     }
 }
