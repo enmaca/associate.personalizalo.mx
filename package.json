@@ -25,7 +25,7 @@
         "sass-loader": "^13.2.2",
         "axios": "^1.1.2",
         "choices.js": "^10.2.0",
-        "tom-select": "^2.2.2",
+        "@remotedevforce/tom-select": "^2.2.7",
         "toastify-js": "^1.12.0",
         "flatpickr": "^4.6.13",
         "simplebar": "^6.2.5"

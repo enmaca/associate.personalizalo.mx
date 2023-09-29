@@ -5,9 +5,4 @@
 @import "variables-dark";
 @import "../../node_modules/bootstrap/scss/mixins";
 
-// fixes bootstrap 5.3
-$select-color-dropdown-border-top: $input-border-color;
-$select-color-dropdown: $body-bg;
-$input-border-width: $border-width;
-
-@import "../../node_modules/tom-select/src/scss/tom-select.bootstrap5";
+@import "../../node_modules/@remotedevforce/tom-select/src/scss/tom-select.bootstrap5";

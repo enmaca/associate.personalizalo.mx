@@ -1,4 +1,4 @@
-import TomSelect from "tom-select";
+import TomSelect from "@remotedevforce/tom-select";
 window.inited_tomselect = [];
 window.init_tomselect = function () {
     /**
