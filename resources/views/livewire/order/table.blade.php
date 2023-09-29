@@ -112,7 +112,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                             id="close-modal"></button>
                 </div>
-                <form id="NewOrderFrom" class="tablelist-form">
+                <form id="NewOrderFrom" class="tablelist-form" action="{!! route('orders_new') !!}" method="POST">
+                    @csrf
                     <div class="modal-body">
                         @livewire('client.search.select')
                         <div class="mb-3">

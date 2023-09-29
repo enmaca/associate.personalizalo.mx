@@ -16,8 +16,8 @@
 <body>
 <!-- Begin page -->
 <div id="layout-wrapper">
-    @include('layouts.topbar')
-    @include('layouts.top-tagbar')
+    @include('workshop.topbar')
+    @include('workshop.top-tagbar')
     @include('workshop.sidebar')
     <!-- ============================================================== -->
     <!-- Start right Content here -->
@@ -30,13 +30,13 @@
             <!-- container-fluid -->
         </div>
         <!-- End Page-content -->
-        @include('layouts.footer')
+        @include('workshop.footer')
     </div>
     <!-- end main content-->
 </div>
 <!-- END layout-wrapper -->
 
-@include('layouts.customizer')
+@include('workshop.customizer')
 <!-- JAVASCRIPT -->
 @include('layouts.vendor-scripts')
 @stack('scripts')
@@ -46,7 +46,5 @@
         console.log('dom content loaded');
     });
 </script>
-
 </body>
-
 </html>

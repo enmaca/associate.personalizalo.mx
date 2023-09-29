@@ -19,10 +19,10 @@ Route::get('/logout', [ \App\Http\Controllers\HomeController::class, 'logout' ])
 Route::group(['middleware' => 'auth'], function () {
     Route::redirect('/', '/orders', 301);
 
-    Route::get('/orders', [
-        App\Http\Controllers\OrdersController::class,
-        'root'
-    ])->name('orders_root');
+    Route::controller(\App\Http\Controllers\OrdersController::class)->group(function () {
+        Route::get('/orders','root')->name('orders_root');
+        Route::post('/orders','create')->name('orders_new');
+    });
 
     Route::controller(\App\Http\Controllers\ManufacturingController::class)->group(function () {
         Route::get('/manufacturing', 'dashboard')->name('manufacturing_root');
