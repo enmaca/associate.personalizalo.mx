@@ -112,30 +112,30 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                             id="close-modal"></button>
                 </div>
-                <form id="NewOrderFrom" class="tablelist-form" action="{!! route('orders_new') !!}" method="POST">
+                <form id="NewOrderFrom" class="tablelist-form"  method="POST">
                     @csrf
                     <div class="modal-body">
                         @livewire('client.search.select')
                         <div class="mb-3">
-                            <label for="customer-mobile-field" class="form-label">Celular</label>
-                            <input id="customer-mobile-field" class="form-control" placeholder="Ingresa Número de Celular" required/>
+                            <label for="customerMobile" class="form-label">Celular</label>
+                            <input name="customerMobile" class="form-control" placeholder="Ingresa Número de Celular" required/>
                         </div>
 
                         <div class="mb-3">
-                            <label for="customer-name-field" class="form-label">Nombre</label>
-                            <input id="customer-name-field" class="form-control" placeholder="Ingresa el Nombre"
+                            <label for="customerName" class="form-label">Nombre</label>
+                            <input name="customerName" class="form-control" placeholder="Ingresa el Nombre"
                                    required/>
                         </div>
 
                         <div class="mb-3">
-                            <label for="customer-last_name-field" class="form-label">Apellido</label>
-                            <input id="customer-last_name-field" class="form-control" placeholder="Ingresa el Apellido"
+                            <label for="customerLastName" class="form-label">Apellido</label>
+                            <input name="customerLastName" class="form-control" placeholder="Ingresa el Apellido"
                                    required/>
                         </div>
 
                         <div class="mb-3">
-                            <label for="customer-email-field" class="form-label">Correo Electrónico</label>
-                            <input type="email" id="customer-email-field" class="form-control" placeholder="Ingresa el correo Electrónico"/>
+                            <label for="customerEmail" class="form-label">Correo Electrónico</label>
+                            <input type="email" name="customerEmail" class="form-control" placeholder="Ingresa el correo Electrónico"/>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -159,7 +159,7 @@
         function setValueDE(selector, value, enable){
             let inputE = document.querySelector(selector);
             inputE.value = value;
-            inputE.disabled = !enable;
+            //inputE.disabled = !enable;
         }
         document.addEventListener('livewire:initialized', () => {
             console.log('livewire:initialized');
@@ -168,10 +168,10 @@
                 enableFields = true;
                 if (event.data.id != 'new')
                     enableFields = false;
-                setValueDE('#customer-mobile-field', event.data.mobile, enableFields);
-                setValueDE('#customer-name-field', event.data.name, enableFields);
-                setValueDE('#customer-last_name-field', event.data.last_name, enableFields);
-                setValueDE('#customer-email-field', event.data.email, enableFields);
+                setValueDE('input[name=customerMobile]', event.data.mobile, enableFields);
+                setValueDE('input[name=customerName]', event.data.name, enableFields);
+                setValueDE('input[name=customerLastName]', event.data.last_name, enableFields);
+                setValueDE('input[name=customerEmail]', event.data.email, enableFields);
             });
         });
     </script>

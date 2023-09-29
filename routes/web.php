@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/login', \App\Livewire\Auth\Login::class)->name('login');
-Route::get('/logout', [ \App\Http\Controllers\HomeController::class, 'logout' ])->name('logout');
+Route::get('/logout', [ \App\Http\Controllers\SystemController::class, 'logout' ])->name('logout');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::redirect('/', '/orders', 301);

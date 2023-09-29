@@ -41,6 +41,6 @@ class Login extends Component
     }
     public function render()
     {
-        return view('livewire.auth.login')->extends('layouts.master-without-nav');
+        return view('livewire.auth.login')->extends('workshop.master-without-nav');
     }
 }

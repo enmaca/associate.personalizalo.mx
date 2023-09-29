@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SystemController extends Controller
 {
@@ -28,5 +29,10 @@ class SystemController extends Controller
 
     public function products(){
         return view('workshop.system.products')->extends('workshop.master');
+    }
+
+    public function logout(){
+        Auth::logout();
+        return redirect('/login');
     }
 }

@@ -11,7 +11,7 @@
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ URL::asset('build/images/favicon.ico') }}">
     @vite('resources/scss/app.scss')
-    @include('layouts.head-css')
+    @include('workshop.head-css')
 </head>
 <body>
 <!-- Begin page -->
@@ -38,7 +38,7 @@
 
 @include('workshop.customizer')
 <!-- JAVASCRIPT -->
-@include('layouts.vendor-scripts')
+@include('workshop.vendor-scripts')
 @stack('scripts')
 <script>
     document.addEventListener("DOMContentLoaded", function() {
