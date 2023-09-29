@@ -1,6 +1,3 @@
-@yield('css')
-<!-- Layout config Js -->
-<!-- @vite('resources/js/layout.js') -->
 <!-- Bootstrap Css -->
 @vite('resources/scss/bootstrap.scss')
 <!-- Icons Css -->

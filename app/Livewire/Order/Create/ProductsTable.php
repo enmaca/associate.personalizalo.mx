@@ -11,7 +11,7 @@ class ProductsTable extends Component
 
     public function mount($orderId): void
     {
-        $this->orderId = Hashids::decode($orderId);
+        $this->orderId = Hashids::decode($orderId)[0];
     }
 
 

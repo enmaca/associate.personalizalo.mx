@@ -18,7 +18,9 @@ export default vite.defineConfig({
                     'resources/js/plugins.js',
                     'resources/js/plugins/choices.js',
                     'resources/js/plugins/toastify.js',
+                    'resources/js/plugins/tomselect.js',
                     'resources/scss/bootstrap.scss',
+                    'resources/scss/tomselect.scss',
                     'resources/scss/icons.scss',
                     'resources/scss/app.scss',
                     'resources/scss/custom.scss'

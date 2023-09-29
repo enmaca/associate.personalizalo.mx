@@ -1,6 +1,6 @@
-<div data-uxmal-type="select-choices" data-uxmal-id="{!! $id !!}" class="input-group-md mb-3">
+<div data-uxmal-type="select-tomselect" data-uxmal-id="{!! $id !!}" class="input-group-md mb-3">
     <label for="{!! $name !!}" class="form-label text-muted">{!! $label !!}</label>
-    <select @if(!empty($wire)) {!! implode(" ", $wire) !!} @endif class="form-control" id="{!! $id !!}" name="{!! $name !!}" data-choices {!! implode(" ", $data_choices_opts) !!}  >
+    <select @if(!empty($wire)) {!! implode(" ", $wire) !!} @endif class="form-control" id="{!! $id !!}" name="{!! $name !!}" data-tomselect {!! implode(" ", $data_choices_opts) !!}  >
         @if( !empty($place_holder_option) )
             <option value="{!! $place_holder_option['value'] !!}">{!! $place_holder_option['name'] !!}</option>
         @endif
@@ -9,11 +9,14 @@
         @endforeach
     </select>
 </div>
+@pushonce('scss')
+    @vite('resources/scss/tomselect.scss')
+@endpushonce
 @pushonce('scripts')
-    @vite('resources/js/plugins/choices.js')
+    @vite('resources/js/plugins/tomselect.js')
 @endpushonce
 @pushonce('onload-excute')
-    if (window.init_choices) {
-        window.init_choices();
-    }
+if (window.init_tomselect) {
+    window.init_tomselect();
+}
 @endpushonce

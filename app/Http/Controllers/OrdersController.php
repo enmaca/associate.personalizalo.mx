@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -22,7 +23,7 @@ class OrdersController extends Controller
         $allInput = $request->all();
         if ($allInput['customerId'] != 'new'){
             $clientId = HashIds::decode($allInput['customerId'])[0];
-            $client = Customer::findOrFail($clientId)->toArray();
+            $client = Customer::findOrFail($clientId);
         } else if($allInput['customerId'] == 'new'){
             $client = new Customer();
             $client->mobile = $allInput['customerMobile'];
@@ -41,6 +42,8 @@ class OrdersController extends Controller
         $order_data->code = strtoupper("{$order_date_part}-{$order_six_digit_hex}");
         $order_data->save();
 
+        $products_options = Product::pluck('name', 'id')->toArray();
+
         return view('workshop.order.create', [
             'customer_id' => Hashids::encode($client->id),
             'customer_name' => $client->name,
@@ -48,7 +51,8 @@ class OrdersController extends Controller
             'customer_mobile' => $client->mobile,
             'customer_email' => $client->email,
             'order_id' => Hashids::encode($order_data->id),
-            'order_code' => $order_data->code
+            'order_code' => $order_data->code,
+            'product_options' => $products_options
         ])->extends('workshop.master');
     }
 }
