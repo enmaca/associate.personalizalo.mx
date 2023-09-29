@@ -10,10 +10,10 @@
     </select>
 </div>
 @pushonce('scss')
-    @vite('resources/scss/tomselect.scss')
+    @vite('resources/scss/uxmal/tomselect.scss')
 @endpushonce
 @pushonce('scripts')
-    @vite('resources/js/plugins/tomselect.js')
+    @vite('resources/js/uxmal/tomselect.js')
 @endpushonce
 @pushonce('onload-excute')
 if (window.init_tomselect) {

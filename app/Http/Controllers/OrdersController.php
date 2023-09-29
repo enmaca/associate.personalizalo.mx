@@ -43,6 +43,7 @@ class OrdersController extends Controller
         $order_data->save();
 
         $products_options = Product::pluck('name', 'id')->toArray();
+        $material_options = Materials::pluck('name', 'id')->toArray();
 
         return view('workshop.order.create', [
             'customer_id' => Hashids::encode($client->id),

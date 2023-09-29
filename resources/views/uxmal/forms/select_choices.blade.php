@@ -9,8 +9,11 @@
         @endforeach
     </select>
 </div>
+@pushonce('scss')
+    @vite('resources/scss/uxmal/choices.scss')
+@endpushonce
 @pushonce('scripts')
-    @vite('resources/js/plugins/choices.js')
+    @vite('resources/js/uxmal/choices.js')
 @endpushonce
 @pushonce('onload-excute')
     if (window.init_choices) {

@@ -1,0 +1,9 @@
+//Core files
+@import "../../../node_modules/bootstrap/scss/functions";
+@import "../../../node_modules/bootstrap/scss/variables";
+@import "../variables";
+@import "../variables-dark";
+@import "../../../node_modules/bootstrap/scss/mixins";
+
+@import "../../../node_modules/@remotedevforce/tom-select/src/scss/tom-select.bootstrap5";
+@import "../plugins/tom-select";
