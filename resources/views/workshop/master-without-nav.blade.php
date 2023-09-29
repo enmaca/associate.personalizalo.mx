@@ -15,17 +15,13 @@
 
     <!-- include head css -->
     @include('workshop.head-css')
-
     @livewireStyles
 </head>
 
 <body>
 
 @yield('content')
-
-<!-- vendor-scripts -->
-@include('workshop.vendor-scripts')
-
+@vite('resources/js/app.js')
 @livewireScripts
 </body>
 

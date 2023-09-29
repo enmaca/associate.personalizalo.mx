@@ -10,7 +10,7 @@
     </select>
 </div>
 @pushonce('scripts')
-    @vite('resources/js/plugin/init_choices.js')
+    @vite('resources/js/plugins/choices.js')
 @endpushonce
 @pushonce('onload-excute')
     if (window.init_choices) {
