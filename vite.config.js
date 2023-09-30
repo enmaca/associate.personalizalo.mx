@@ -20,6 +20,7 @@ export default vite.defineConfig({
                     'resources/js/uxmal/choices.js',
                     'resources/js/uxmal/toastify.js',
                     'resources/js/uxmal/tomselect.js',
+                    'resources/js/uxmal/list.js',
                     'resources/scss/bootstrap.scss',
                     'resources/scss/datatables.scss',
                     'resources/scss/uxmal/tomselect.scss',

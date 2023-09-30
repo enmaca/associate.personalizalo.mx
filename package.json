@@ -29,6 +29,7 @@
         "rtlcss": "^4.1.0",
         "sass-loader": "^13.2.2",
         "simplebar": "^6.2.5",
-        "toastify-js": "^1.12.0"
+        "toastify-js": "^1.12.0",
+        "list.js": "^2.3.1"
     }
 }

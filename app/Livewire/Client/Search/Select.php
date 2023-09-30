@@ -59,7 +59,7 @@ class Select extends Component
 
     public function render()
     {
-        $this->options = Customer::orderBy('id', 'desc')->get()->mapWithKeys(function ($client){
+        $this->options = Customer::orderBy('id', 'asc')->get()->mapWithKeys(function ($client){
             return [ Hashids::encode($client->id) => "{$client->name} [{$client->mobile}]"];
         })->toArray();
 

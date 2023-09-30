@@ -29,4 +29,5 @@ class AppServiceProvider extends ServiceProvider
             return "<?php echo \Vinkla\Hashids\Facades\Hashids::decode($expression)[0]; ?>";
         });
     }
+
 }

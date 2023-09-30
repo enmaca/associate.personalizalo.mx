@@ -21,4 +21,10 @@ class Product extends Model
     {
         return $this->hasMany(ManufacturingCost::class, 'catalog_product_id', 'id');
     }
+
+    public function taxes(): \Illuminate\Database\Eloquent\Relations\belongsToMany
+    {
+        return $this->belongsToMany(Tax::class, 'taxes_details', 'reference_id', 'catalog_taxes_id')
+            ->wherePivot('reference_type', 'catalog_products');
+    }
 }

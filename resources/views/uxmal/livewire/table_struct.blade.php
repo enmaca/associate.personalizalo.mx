@@ -1,12 +1,16 @@
-<div id="customerList">
+<div id="{!! $table['id'] !!}">
     <div class="row g-4 mb-3">
         <div class="col-sm-auto">
             <div>
-                <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal" id="create-btn"
-                        data-bs-target="#showModal"><i class="ri-add-line align-bottom me-1"></i> Add
-                </button>
-                <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i>
-                </button>
+                @isset($table['buttons'])
+                    @foreach($table['buttons'] as $button_data)
+                    <button type="button" class="btn btn-success add-btn" data-bs-toggle="modal" id="create-btn"
+                            data-bs-target="#showModal"><i class="ri-add-line align-bottom me-1"></i> Add
+                    </button>
+                    <button class="btn btn-soft-danger" onClick="deleteMultiple()"><i class="ri-delete-bin-2-line"></i>
+                    </button>
+                    @endforeach
+                @endisset
             </div>
         </div>
         <div class="col-sm">
@@ -20,7 +24,7 @@
     </div>
 
     <div class="table-responsive table-card mt-3 mb-1">
-        <table class="table align-middle table-nowrap" id="customerTable">
+        <table class="table align-middle table-nowrap" id="customerTable" data-listjs>
             <thead class="table-light">
             <tr>
                 <th scope="col" style="width: 50px;">
@@ -90,6 +94,9 @@
         </div>
     </div>
 </div>
-@section('script')
-    <script src="{{ URL::asset('build/libs/list.js/list.min.js') }}"></script>
-@endsection
+@pushonce('scripts')
+    @vite('resources/js/uxmal/list.js')
+@endpushonce
+@pushonce('onload-excute')
+    if (window.init_listjs) { window.init_listjs(); }
+@endpushonce

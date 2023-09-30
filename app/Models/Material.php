@@ -36,11 +36,6 @@ class Material extends Model
         'deleted_at',
     ];
 
-    public function tax(): \Illuminate\Database\Eloquent\Relations\HasOne
-    {
-        return $this->hasOne(Tax::class, 'id', 'catalog_tax_id');
-    }
-
     public function unit_of_measure(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(UnitOfMeasure::class, 'id', 'catalog_uom_id');
@@ -54,5 +49,11 @@ class Material extends Model
     public function initialInventory(): bool
     {
         return $this->is_initial_inventory ?? false;
+    }
+
+    public function taxes(): \Illuminate\Database\Eloquent\Relations\belongsToMany
+    {
+        return $this->belongsToMany(Tax::class, 'taxes_details', 'reference_id', 'catalog_taxes_id')
+            ->wherePivot('reference_type', 'catalog_materials');
     }
 }

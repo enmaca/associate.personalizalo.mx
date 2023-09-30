@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\LaborCost;
+use App\Models\MfgArea;
+use App\Models\MfgOverhead;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Material;
 use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -43,7 +47,10 @@ class OrdersController extends Controller
         $order_data->save();
 
         $products_options = Product::pluck('name', 'id')->toArray();
-        $material_options = Materials::pluck('name', 'id')->toArray();
+        $material_options = Material::pluck('name', 'id')->toArray();
+        $laborcost_options = LaborCost::pluck('name', 'id')->toArray();
+        $mfgoverhead_options = MfgOverhead::pluck('name', 'id')->toArray();
+        $mfgareas_options = MfgArea::pluck('name', 'id')->toArray();
 
         return view('workshop.order.create', [
             'customer_id' => Hashids::encode($client->id),
@@ -53,7 +60,11 @@ class OrdersController extends Controller
             'customer_email' => $client->email,
             'order_id' => Hashids::encode($order_data->id),
             'order_code' => $order_data->code,
-            'product_options' => $products_options
+            'product_options' => $products_options,
+            'material_options' => $material_options,
+            'laborcost_options' => $laborcost_options,
+            'mfgoverhead_options' => $mfgoverhead_options,
+            'mfgareas_options' => $mfgareas_options
         ])->extends('workshop.master');
     }
 }
