@@ -20,3 +20,21 @@
         </div>
     </div>
 </div>
+@section('javascript')
+    @pushonce('DOMContentLoaded')
+        if (document.getElementById("current-time") !== null) {
+            setInterval(() => {
+                // date
+                let d = new Date();
+                let dateOptions = {weekday: 'short', month: 'short', day: 'numeric'};
+                let date = d.toLocaleDateString(undefined, dateOptions);
+                // time
+                let hours = d.getHours();
+                let ampm = hours >= 12 ? ' PM' : ' AM';
+                hours = hours % 12;
+                let time = ("0" + hours).slice(-2) + ':' + ("0" + d.getMinutes()).slice(-2) + ampm;
+                document.getElementById("current-time").innerHTML = date + " | " + time;
+            }, 1000);
+        }
+    @endpushonce
+@stop

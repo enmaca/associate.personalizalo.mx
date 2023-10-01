@@ -15,6 +15,7 @@
                     @isset($table['search'])
                         <input
                                 type="text"
+                                id="{!! $table['id'] !!}Search"
                                 class="form-control search"
                                 @isset($table['search']['placeholder']) placeholder="{!! $table['search']['placeholder'] !!}" @endisset
                                 @isset($table['search']['attributes']) {!! join( " ", $table['search']['attributes']) !!} @endisset>
@@ -31,7 +32,7 @@
                 @isset($table['header']['checkbok'])
                     <th scope="col" style="width: 50px;">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="checkAll{!! $table['id'] !!}" value="option">
+                            <input class="form-check-input" type="checkbox" id="checkAll{!! $table['id'] !!}" value="all">
                         </div>
                     </th>
                 @endisset
@@ -48,7 +49,7 @@
                         @isset($table['header']['checkbok'])
                             <td scope="row">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="chk_child" value="{!! $td['id'] !!}">
+                                    <input class="chk_child form-check-input" type="checkbox" name="chk_child" data-check-id="{!! $td['id'] !!}">
                                 </div>
                             </td>
                         @endisset
@@ -80,13 +81,17 @@
         </div>
     </div>
     @isset($table['listjs']['attributes'])
-    @php
-        $has_pagination = false;
-        if( is_array($table['listjs']['attributes']))
-            foreach( $table['listjs']['attributes'] as $listjs_attr)
-                if( strpos(trim($listjs_attr), 'data-listjs-pagination') === 0 && !empty($listjs_attr) )
-                    $has_pagination = true;
-    @endphp
+        @php
+            $has_pagination = false;
+            if( is_array($table['listjs']['attributes']))
+                foreach( $table['listjs']['attributes'] as $listjs_attr){
+                    if( str_starts_with(trim($listjs_attr), 'data-listjs-pagination') ){
+                        $has_pagination = true;
+                        break;
+                    }
+                }
+
+        @endphp
     @endisset
     @if($has_pagination == true)
         <div class="d-flex justify-content-end">
@@ -94,7 +99,9 @@
                 <a class="page-item pagination-prev disabled" href="#">
                     Anterior
                 </a>
-                <ul class="pagination listjs-pagination mb-0"></ul>
+                <ul class="pagination listjs-pagination mb-0">
+                    <!-- Pagination Starts Here -->
+                </ul>
                 <a class="page-item pagination-next" href="#">
                     Siguiente
                 </a>
@@ -104,7 +111,4 @@
 </div>
 @pushonce('scripts')
     @vite('resources/js/uxmal/list.js')
-@endpushonce
-@pushonce('onload-excute')
-    if (window.init_listjs) { window.init_listjs(); }
 @endpushonce

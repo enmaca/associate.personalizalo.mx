@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AddressBook;
 use App\Models\Customer;
 use App\Models\LaborCost;
 use App\Models\MfgArea;
 use App\Models\MfgOverhead;
 use App\Models\Order;
+use App\Models\OrderPayment;
+use App\Models\OrderProductDetail;
 use App\Models\Product;
 use App\Models\Material;
 use Illuminate\Http\Request;
@@ -17,6 +20,16 @@ class OrdersController extends Controller
     public function root(Request $request)
     {
         return view('workshop.order.root')->extends('workshop.master');
+    }
+
+    public function edit(Request $request, $hashed_id){
+        $order_id = Hashids::decode($hashed_id);
+        $order_data = Order::with(['details', 'customer', 'payments', 'address'])->findOrFail($order_id);
+        dd($order_data->toArray());
+
+        switch( $order_data->status ){
+            case 'created':
+        }
     }
 
     /**

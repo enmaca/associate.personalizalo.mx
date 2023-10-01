@@ -28,8 +28,4 @@
 @pushonce('scripts')
     @vite('resources/js/uxmal/tomselect.js')
 @endpushonce
-@pushonce('onload-excute')
-if (window.init_tomselect) {
-    window.init_tomselect();
-}
-@endpushonce
+<!-- if (window.init_tomselect) { window.init_tomselect(); } } -->

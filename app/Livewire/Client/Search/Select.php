@@ -63,6 +63,6 @@ class Select extends Component
             return [ Hashids::encode($client->id) => "{$client->name} [{$client->mobile}]"];
         })->toArray();
 
-        return view('uxmal.livewire.forms.select_choices');
+        return view('livewire.client.search.select');
     }
 }

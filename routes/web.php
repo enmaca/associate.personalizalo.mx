@@ -16,12 +16,17 @@ use Illuminate\Support\Facades\Route;
 Route::get('/login', \App\Livewire\Auth\Login::class)->name('login');
 Route::get('/logout', [ \App\Http\Controllers\SystemController::class, 'logout' ])->name('logout');
 
+Route::get('/test', [
+    \App\Http\Controllers\Test::class,
+    'test'])->name('test');
+
 Route::group(['middleware' => 'auth'], function () {
     Route::redirect('/', '/orders', 301);
 
     Route::controller(\App\Http\Controllers\OrdersController::class)->group(function () {
         Route::get('/orders','root')->name('orders_root');
         Route::post('/orders','create')->name('orders_new');
+        Route::get('/orders/{hashed_id}','edit')->name('orders_edit');
     });
 
     Route::controller(\App\Http\Controllers\ManufacturingController::class)->group(function () {

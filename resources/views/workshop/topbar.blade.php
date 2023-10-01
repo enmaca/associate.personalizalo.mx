@@ -2,17 +2,13 @@
     <div class="layout-width">
         <div class="navbar-header">
             <div class="d-flex">
-                <!-- LOGO -->
-                <div class="navbar-brand-box">
-                    <a href="/" class="logo">
-                        <span class="logo-sm">
-                            <img src="{{ URL::asset('build/images/kikas-design/android-chrome-256x256.png') }}" alt="" height="22">
-                        </span>
-                        <span class="logo-lg">
-                            <img src="{{ URL::asset('build/images/kikas-design/android-chrome-256x256.png') }}" alt="" height="25">
-                        </span>
-                    </a>
-                </div>
+                <button type="button" class="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger" id="topnav-hamburger-icon">
+                    <span class="hamburger-icon">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </button>
             </div>
 
             <div class="d-flex align-items-center">

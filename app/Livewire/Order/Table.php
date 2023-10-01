@@ -62,18 +62,9 @@ class Table extends Component
                         'name' => 'edit',
                         'data' => [
                             'type' => 'button',
-                            'class' => 'btn btn-soft-success add-btn',
-                            'onclick' => "__edit('" . Hashids::encode($order['id']) . "')",
+                            'class' => 'btn btn-soft-primary add-btn',
+                            'onclick' => "goToOrder('" . Hashids::encode($order['id']) . "')",
                             'slot' => '<i class="ri-edit-box-line"></i>',
-                        ]
-                    ],
-                    [
-                        'name' => 'cancel',
-                        'data' => [
-                            'type' => 'button',
-                            'class' => 'btn btn-soft-danger',
-                            'onclick' => "__cancel('" . Hashids::encode($order['id']) . "')",
-                            'slot' => '<i class="ri-shield-fill"></i>',
                         ]
                     ]
                 ]

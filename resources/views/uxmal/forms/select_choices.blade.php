@@ -15,8 +15,4 @@
 @pushonce('scripts')
     @vite('resources/js/uxmal/choices.js')
 @endpushonce
-@pushonce('onload-excute')
-    if (window.init_choices) {
-        window.init_choices();
-    }
-@endpushonce
+<!-- if (window.init_choices) { window.init_choices(); } -->

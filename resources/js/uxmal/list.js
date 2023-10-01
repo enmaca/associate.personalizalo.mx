@@ -1,4 +1,5 @@
 import List from "list.js"
+import {toInteger} from "lodash";
 
 window.inited_listjs = [];
 window.init_listjs = function () {
@@ -17,7 +18,7 @@ window.init_listjs_elem = function ( element ) {
     let isListJStVal = element.attributes;
 
     if (isListJStVal["data-listjs-pagination"]) {
-        listjsData.page = isListJStVal["data-listjs-pagination"].value.toString();
+        listjsData.page = toInteger(isListJStVal["data-listjs-pagination"].value);
         listjsData.pagination = true;
     }
 
@@ -25,7 +26,6 @@ window.init_listjs_elem = function ( element ) {
         listjsData.valueNames = JSON.parse(isListJStVal["data-listjs-value_names"].value.toString());
         console.log(listjsData.valueNames);
     }
-
 
     console.log('Init ListJS Element with Options: ', listjsData);
     window.inited_listjs[element.id] = new List(element, listjsData);

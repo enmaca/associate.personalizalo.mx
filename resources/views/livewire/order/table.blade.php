@@ -4,11 +4,13 @@
             'listjs' => [
                 'attributes' => [
                    "data-listjs-value_names='" .json_encode([
+                       'chk_child',
                        'order_code',
                        'customer_name',
                        'customer_mobile',
                        'order_delivery_date'
-                    ])."'"
+                    ])."'",
+                    'data-listjs-pagination=10'
                 ]
             ],
             'header' => [
@@ -100,25 +102,24 @@
                         @livewire('client.search.select')
                         <div class="mb-3">
                             <label for="customerMobile" class="form-label">Celular</label>
-                            <input name="customerMobile" class="form-control" placeholder="Ingresa Número de Celular"
+                            <input id="customerMobile" name="customerMobile" class="form-control" placeholder="Ingresa Número de Celular"
                                    required/>
                         </div>
 
                         <div class="mb-3">
                             <label for="customerName" class="form-label">Nombre</label>
-                            <input name="customerName" class="form-control" placeholder="Ingresa el Nombre"
+                            <input id="customerName" name="customerName" class="form-control" placeholder="Ingresa el Nombre"
                                    required/>
                         </div>
 
                         <div class="mb-3">
                             <label for="customerLastName" class="form-label">Apellido</label>
-                            <input name="customerLastName" class="form-control" placeholder="Ingresa el Apellido"
+                            <input id="customerLastName" name="customerLastName" class="form-control" placeholder="Ingresa el Apellido"
                                    required/>
                         </div>
-
                         <div class="mb-3">
                             <label for="customerEmail" class="form-label">Correo Electrónico</label>
-                            <input type="email" name="customerEmail" class="form-control"
+                            <input id="customerEmail" type="email" name="customerEmail" class="form-control"
                                    placeholder="Ingresa el correo Electrónico"/>
                         </div>
                     </div>
@@ -140,25 +141,28 @@
             inputE.value = value;
             //inputE.disabled = !enable;
         }
-        document.addEventListener('livewire:initialized', () => {
-            console.log('livewire:initialized');
-            @this.on('change-customer-id', (event) => {
-                console.log(event.data);
-                enableFields = true;
-                if (event.data.id != 'new')
-                    enableFields = false;
-                setValueDE('input[name=customerMobile]', event.data.mobile, enableFields);
-                setValueDE('input[name=customerName]', event.data.name, enableFields);
-                setValueDE('input[name=customerLastName]', event.data.last_name, enableFields);
-                setValueDE('input[name=customerEmail]', event.data.email, enableFields);
-            });
-        });
+        function goToOrder( order_id ){
+            window.location.href = '/orders/' + order_id;
+        }
     </script>
 @endpushonce
+@section("javascript")
+@pushonce('livewire:initialized')
+    @this.on('change-customer-id', (event) => {
+        console.log(event.data);
+        enableFields = true;
+        if (event.data.id != 'new')
+            enableFields = false;
+            setValueDE('input[name=customerMobile]', event.data.mobile, enableFields);
+            setValueDE('input[name=customerName]', event.data.name, enableFields);
+            setValueDE('input[name=customerLastName]', event.data.last_name, enableFields);
+            setValueDE('input[name=customerEmail]', event.data.email, enableFields);
+    });
+    if (window.init_listjs) { window.init_listjs(); }
+@endpushonce
+@stop
 @pushonce('scripts')
     @vite('resources/js/uxmal/list.js')
 @endpushonce
-@pushonce('onload-excute')
-    if (window.init_listjs) { window.init_listjs(); }
-@endpushonce
+
 
