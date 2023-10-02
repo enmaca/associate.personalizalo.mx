@@ -5,10 +5,13 @@ namespace App\Livewire\Order;
 use Livewire\Component;
 use App\Models\Order;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Enums\OrderStatusEnum;
+use App\Enums\ShipmentStatusEnum;
 
 class Table extends Component
 {
     public $order_status_tr = [
+        'created' => 'Incompleto',
         'new' => 'Nuevo',
         'processing' => 'En Proceso',
         'finished' => 'Terminado',
@@ -26,8 +29,6 @@ class Table extends Component
 
     public function render()
     {
-
-
         $orders = Order::with([
             'details',
             'customer',
@@ -55,8 +56,8 @@ class Table extends Component
                 'customer_mobile' => $order['customer']['mobile'],
                 'order_delivery_date' => $order['delivery_date'],
                 'order_address_book' => '',
-                'order_status' => '<span class="badge text-success  bg-success-subtle text-uppercase">' . $this->order_status_tr[$order['status']] . '</span>',
-                'order_shipment_status' => '<span class="badge text-success  bg-success-subtle text-uppercase">' . $this->shipment_status_tr[$order['shipment_status']] . '</span>',
+                'order_status' => '<span class="badge text-success  bg-success-subtle text-uppercase">' . OrderStatusEnum::tryFrom($order['status'])->label() . '</span>',
+                'order_shipment_status' => '<span class="badge text-success  bg-success-subtle text-uppercase">' . ShipmentStatusEnum::tryFrom($order['shipment_status'])->label() . '</span>',
                 'action' => [
                     [
                         'name' => 'edit',

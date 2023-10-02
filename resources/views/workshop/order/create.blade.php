@@ -53,7 +53,7 @@
                 <div class="card-body">
                     <div class="row gy-4">
                         <div class="col-md-6 col-sm-12">
-                            @include('uxmal.forms.select_tomselect', [
+                            @include('uxmal.form.select_tomselect', [
                                 'id' => 'productSelect',
                                 'name' => 'productSelect',
                                 'label' => 'Agregar Producto',
@@ -80,7 +80,7 @@
                 <div class="card-body">
                     <div class="row gy-4">
                         <div class="col-md-6 col-sm-12">
-                            @include('uxmal.forms.select_tomselect', [
+                            @include('uxmal.form.select_tomselect', [
                                 'id' => 'materialSelect',
                                 'name' => 'materialSelect',
                                 'label' => 'Agregar Material Adicional',
@@ -97,7 +97,7 @@
                                 ])
                         </div>
                         <div class="col-md-6 col-sm-12">
-                            @include('uxmal.forms.select_tomselect', [
+                            @include('uxmal.form.select_tomselect', [
                                 'id' => 'laborCostSelect',
                                 'name' => 'laborCostSelect',
                                 'label' => 'Agregar Mano de Obra',
@@ -114,7 +114,7 @@
                                 ])
                         </div>
                         <div class="col-md-6 col-sm-12">
-                            @include('uxmal.forms.select_tomselect', [
+                            @include('uxmal.form.select_tomselect', [
                                 'id' => 'mfgOverHeadSelect',
                                 'name' => 'mfgOverHeadSelect',
                                 'label' => 'Agregar Indirectos',
@@ -131,7 +131,7 @@
                                 ])
                         </div>
                         <div class="col-md-6 col-sm-12">
-                            @include('uxmal.forms.select_tomselect', [
+                            @include('uxmal.form.select_tomselect', [
                                 'id' => 'mfgAreasSelect',
                                 'name' => 'mfgAreasSelect',
                                 'label' => 'Area de Manufactura',
@@ -156,6 +156,7 @@
                             <button type="button" class="btn btn-primary">Tipo de Impresión</button>
                         </div>
                     </div>
+                    @livewire('order.create.products-table', ['orderId' => $order_id ])
                     @livewire('order.create.dynamic-table', ['orderId' => $order_id ])
                 </div>
             </div>
@@ -179,3 +180,8 @@
         });
     </script>
 @endpushonce
+@section('javascript')
+@pushonce('DOMContentLoaded')
+    if (window.init_tomselect) { window.init_tomselect(); }
+@endpushonce
+@stop

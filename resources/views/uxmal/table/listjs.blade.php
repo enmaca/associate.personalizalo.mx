@@ -4,7 +4,7 @@
             <div>
                 @isset($table['top-buttons'])
                     @foreach($table['top-buttons'] as $button_data)
-                        @include('uxmal.buttons.bootstrap', ['data' => $button_data])
+                        @include('uxmal.button.bootstrap', ['data' => $button_data])
                     @endforeach
                 @endisset
             </div>
@@ -59,7 +59,7 @@
                                     <div class="d-flex gap-2">
                                     @foreach( $td[$columns['name']] as $td_button)
                                         <div class="{!! $td_button['name'] !!}">
-                                            @include('uxmal.buttons.bootstrap', ['data' => $td_button['data']])
+                                            @include('uxmal.button.bootstrap', ['data' => $td_button['data']])
                                         </div>
                                     @endforeach
                                     </div>

@@ -24,11 +24,33 @@ class OrdersController extends Controller
 
     public function edit(Request $request, $hashed_id){
         $order_id = Hashids::decode($hashed_id);
-        $order_data = Order::with(['details', 'customer', 'payments', 'address'])->findOrFail($order_id);
-        dd($order_data->toArray());
+        if( !is_int($order_id[0]))
+            Abort(403, '{order_id} Malformed');
 
+        $order_data = Order::with(['details', 'customer', 'payments', 'address'])->findOrFail($order_id[0]);
+
+        $products_options = Product::pluck('name', 'id')->toArray();
+        $material_options = Material::pluck('name', 'id')->toArray();
+        $laborcost_options = LaborCost::pluck('name', 'id')->toArray();
+        $mfgoverhead_options = MfgOverhead::pluck('name', 'id')->toArray();
+        $mfgareas_options = MfgArea::pluck('name', 'id')->toArray();
         switch( $order_data->status ){
             case 'created':
+                return view('workshop.order.create', [
+                    'customer_id' => Hashids::encode($order_data->customer->id),
+                    'customer_name' => $order_data->customer->name,
+                    'customer_last_name' => $order_data->customer->last_name,
+                    'customer_mobile' => $order_data->customer->mobile,
+                    'customer_email' => $order_data->customer->email,
+                    'order_id' => Hashids::encode($order_data->id),
+                    'order_code' => $order_data->code,
+                    'product_options' => $products_options,
+                    'material_options' => $material_options,
+                    'laborcost_options' => $laborcost_options,
+                    'mfgoverhead_options' => $mfgoverhead_options,
+                    'mfgareas_options' => $mfgareas_options
+                ])->extends('workshop.master');
+                break;
         }
     }
 
