@@ -14,8 +14,12 @@
 @endphp
 <div class="{!! join(" ", $data['class']) !!}" {!! join(" ", $data['attributes']) !!}>
     @isset($data['elements'])
-        @include('uxmal.form.elements', [
+        @include('uxmal.elements', [
             'data' => $data['elements']
+        ])
+    @else
+        @include('uxmal.elements', [
+            'data' => $data
         ])
     @endisset
 </div>

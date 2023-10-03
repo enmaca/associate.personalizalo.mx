@@ -22,5 +22,5 @@ if(empty($data['method']))
 @endphp
 <form id="{!! $data['id'] !!}" class="{!! join(" ", $data['class']) !!}" method="{!! $data['method'] !!}">
     @csrf
-    @include('uxmal.form.elements', [ 'data' => $data['elements']])
+    @include('uxmal.elements', [ 'data' => $data['elements']])
 </form>

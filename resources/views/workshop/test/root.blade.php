@@ -15,9 +15,30 @@
                     @php
                         $modalStruct = [
                             'row' => [
-
+                                'elements' => [
+                                    [
+                                        'uxmal' => 'button',
+                                        'data' => [
+                                            'type' => 'button',
+                                            'class' => 'btn btn-success add-btn',
+                                            'onclick' => '',
+                                            'attributes' => [
+                                                'id="create-btn"',
+                                                'data-bs-toggle="modal"',
+                                                'data-bs-target="#createOrderModal"'
+                                            ],
+                                            'slot' => '<i class="ri-add-line align-bottom me-1"></i>Crear Pedido',
+                                        ]
+                                    ]
+                                ]
                             ],
                             'modal' => [
+                                'header' => [
+                                    'label' => 'Crear Pedido',
+                                    'row' => [
+
+                                    ]
+                                ],
                                 'body' => [
                                     'form' => [
                                         'id' => 'NewOrderFrom',
@@ -85,6 +106,22 @@
                                                 ]
                                             ]
                                         ]
+                                    ],
+                                    'footer' => [
+                                        'elements' => [
+                                            [
+                                                'uxmal' => 'button',
+                                                'data' => [
+                                                    'type' => 'submit',
+                                                    'class' => 'btn btn-success',
+                                                    'onclick' => '',
+                                                    'attributes' => [
+                                                        'id="add-btn"'
+                                                    ],
+                                                    'slot' => 'Crear Pedido',
+                                                ]
+                                            ]
+                                            ]
                                     ]
                                 ]
                             ];
