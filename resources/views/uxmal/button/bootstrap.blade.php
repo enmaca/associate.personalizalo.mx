@@ -16,7 +16,7 @@ $data = [
             onclick="{!! $data['onclick'] !!}"
         @endisset
         @isset($data['attributes'])
-            {!! join(" ", $data['attributes']) !!}>
+            {!! join(" ", $data['attributes']) !!}
         @endisset
-        {!! $data['slot'] !!}
+        >{!! $data['slot'] !!}
 </button>
