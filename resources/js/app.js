@@ -1,5 +1,5 @@
 import 'bootstrap/dist/js/bootstrap.bundle.js';
-import 'simplebar'
+import SimpleBar from 'simplebar';
 
 (function () {
     ("use strict");

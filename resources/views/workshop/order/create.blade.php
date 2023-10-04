@@ -163,6 +163,11 @@
         </div>
         <!-- end col -->
     </div>
+    @include('uxmal.modal.bootstrap', [
+        'data' => [
+
+        ]
+    ]);
 @endsection
 @pushonce('scripts')
     <script>
@@ -170,7 +175,12 @@
             console.log('productSelected Button was clicked!');
         });
         document.getElementById('meterialSelected').addEventListener('click', function() {
-            console.log('meterialSelected Button was clicked!');
+            let selectEl = document.querySelector('#materialSelect');
+            let materialSelectedId = selectEl.value;
+            let materialSelectedText = selectEl.options[selectEl.selectedIndex].text;
+            console.log('meterialSelected [value] => ', materialSelectedId);
+            console.log('meterialSelected [text] => ', materialSelectedText);
+
         });
         document.getElementById('laborSelected').addEventListener('click', function() {
             console.log('laborSelected Button was clicked!');
@@ -183,5 +193,6 @@
 @section('javascript')
 @pushonce('DOMContentLoaded')
     if (window.init_tomselect) { window.init_tomselect(); }
+    if (window.init_listjs) { window.init_listjs(); }
 @endpushonce
 @stop

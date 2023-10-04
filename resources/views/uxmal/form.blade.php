@@ -19,8 +19,11 @@ if(empty($data['class']))
 if(empty($data['method']))
     $data['method'] = 'POST';
 
+if(empty($data['action']))
+    $data['action'] = '';
+
 @endphp
-<form id="{!! $data['id'] !!}" class="{!! join(" ", $data['class']) !!}" method="{!! $data['method'] !!}">
+<form id="{!! $data['id'] !!}" class="{!! join(" ", $data['class']) !!}" method="{!! $data['method'] !!}" action="{!! $data['action'] !!}">
     @csrf
     @include('uxmal.elements', [ 'data' => $data['elements']])
 </form>
