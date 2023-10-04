@@ -99,7 +99,7 @@
                 'form' => [
                     'id' => 'NewOrderFrom',
                     'class' => [],
-                    'action' => route('test'),
+                    'action' => route('orders_new'),
                     'method' => 'POST',
                     'elements' => [
                             'row' => [
@@ -170,7 +170,7 @@
                             'data' => [
                                 'type' => 'submit',
                                 'class' => 'btn btn-success',
-                                'onclick' => '',
+                                'onclick' => 'submitNewOrderFrom()',
                                 'attributes' => [
                                     'id="add-btn"'
                                 ],
@@ -186,10 +186,13 @@
         function setValueDE(selector, value, enable){
             let inputE = document.querySelector(selector);
             inputE.value = value;
-            //inputE.disabled = !enable;
+            inputE.disabled = !enable;
         }
         function goToOrder( order_id ){
             window.location.href = '/orders/' + order_id;
+        }
+        function submitNewOrderFrom(){
+            document.getElementById('NewOrderFrom').submit();
         }
     </script>
 @endpushonce

@@ -1,3 +1,4 @@
+@if(!empty($table['data']))
 <div id="{!! $table['id'] !!}" data-listjs @isset($table['listjs']['attributes']) {!! join(" ", $table['listjs']['attributes']) !!} @endisset>
     <div class="row g-4 mb-3">
         <div class="col-sm-auto">
@@ -112,3 +113,4 @@
 @pushonce('scripts')
     @vite('resources/js/uxmal/list.js')
 @endpushonce
+@endif
