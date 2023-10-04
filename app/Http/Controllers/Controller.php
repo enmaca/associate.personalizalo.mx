@@ -102,6 +102,11 @@ class Controller extends BaseController
                     'name' => 'Usuarios',
                     'href' => route('system_users')
                 ],
+                [
+                    'icon' => 'bi bi-p-square',
+                    'name' => 'Personalizador',
+                    'href' => route('customizer.index')
+                ],
             ],
             'HERRAMIENTAS' => [
                 [

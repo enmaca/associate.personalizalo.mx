@@ -1,5 +1,7 @@
-import 'bootstrap/dist/js/bootstrap.bundle.js';
+
+import * as bootstrap from "bootstrap";
 import SimpleBar from 'simplebar';
+import 'simplebar/dist/simplebar.css';
 
 (function () {
     ("use strict");
@@ -1656,3 +1658,5 @@ import SimpleBar from 'simplebar';
         timeOutFunctionId = setTimeout(setResize, 2000);
     });
 })();
+
+new SimpleBar(document.getElementById("navbar-nav"));

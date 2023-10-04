@@ -110,6 +110,7 @@
                     </div>
                 </div>
 
+                @if(Auth::user())
                 <div class="dropdown ms-sm-3 header-item topbar-user">
                     <button type="button" class="btn" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="d-flex align-items-center">
@@ -134,6 +135,7 @@
                         <a class="dropdown-item " href="{{ url('logout') }}"><i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span class="align-middle" key="t-logout">logout</span></a>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
     </div>

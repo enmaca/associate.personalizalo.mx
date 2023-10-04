@@ -20,17 +20,18 @@
         "browser-sync": "^2.29.1",
         "choices.js": "^10.2.0",
         "flatpickr": "^4.6.13",
+        "konva": "^9.2.1",
         "laravel-echo": "^1.15.3",
+        "list.js": "^2.3.1",
         "lodash": "^4.17.21",
         "popper.js": "^1.16.1",
         "postcss": "^8.4.23",
         "postcss-import": "^15.1.0",
+        "prismjs": "^1.29.0",
         "resolve-url-loader": "^5.0.0",
         "rtlcss": "^4.1.0",
         "sass-loader": "^13.2.2",
         "simplebar": "^6.2.5",
-        "toastify-js": "^1.12.0",
-        "list.js": "^2.3.1",
-        "prismjs": "^1.29.0"
+        "toastify-js": "^1.12.0"
     }
 }

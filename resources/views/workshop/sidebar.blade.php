@@ -25,7 +25,7 @@
     <div id="scrollbar">
         <div class="container-fluid">
             <div id="two-column-menu"></div>
-            <ul class="navbar-nav" id="navbar-nav">
+            <ul class="navbar-nav" id="navbar-nav" style="height: calc(100vh - 100px)">
                 @foreach( $menu as $title => $contents)
                     <li class="menu-title"><span data-key="t-menu">{{ $title }}</span></li>
                     @foreach($contents as $sub_menu)

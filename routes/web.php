@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CustomizerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,8 @@ Route::get('/logout', [ \App\Http\Controllers\SystemController::class, 'logout' 
 Route::get('/test', [
     \App\Http\Controllers\Test::class,
     'test'])->name('test');
+
+Route::resource('customizer', CustomizerController::class);
 
 Route::group(['middleware' => 'auth'], function () {
     Route::redirect('/', '/orders', 301);
