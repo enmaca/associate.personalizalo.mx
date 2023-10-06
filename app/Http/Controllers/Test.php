@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Components\Uxmal\Form;
 
 class Test extends Controller
 {

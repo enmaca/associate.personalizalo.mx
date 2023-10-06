@@ -2,6 +2,6 @@
 
 namespace App\Components\Uxmal;
 
-class Listjs extends Uxmal {
+class FormSelectTomselect extends Uxmal {
 
 }
