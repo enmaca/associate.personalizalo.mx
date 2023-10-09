@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en" data-layout="vertical" data-topbar="light"
+      data-sidebar="light" data-sidebar-size="lg" data-sidebar-image="none" data-preloader="disable">
+
+<head>
+    <meta charset="utf-8"/>
+    <title> translation.dashboards </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description"/>
+    <meta content="Themesbrand" name="author"/>
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="http://127.0.0.1:8000/build/images/favicon.ico">
+    <!-- Bootstrap Css -->
+    <script type="module" src="http://[::1]:5173/@vite/client" data-navigate-track="reload"></script>
+    <link rel="stylesheet" href="http://[::1]:5173/resources/scss/bootstrap.scss" data-navigate-track="reload"/>
+    <!-- Icons Css -->
+    <script type="module" src="http://[::1]:5173/@vite/client" data-navigate-track="reload"></script>
+    <link rel="stylesheet" href="http://[::1]:5173/resources/scss/icons.scss" data-navigate-track="reload"/>
+    <!-- App Css-->
+    <script type="module" src="http://[::1]:5173/@vite/client" data-navigate-track="reload"></script>
+    <link rel="stylesheet" href="http://[::1]:5173/resources/scss/app.scss" data-navigate-track="reload"/>
+    <!-- custom Css-->
+    <script type="module" src="http://[::1]:5173/@vite/client" data-navigate-track="reload"></script>
+    <link rel="stylesheet" href="http://[::1]:5173/resources/scss/custom.scss" data-navigate-track="reload"/>
+</head>
+<body>
+<!-- Begin page -->
+<div id="layout-wrapper">
+    <div class="main-content">
+        <div class="page-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title mb-0">Modal Bootstrap</h4>
+                            </div><!-- end card header -->
+                            <div class="card-body">
+                                <div>
+                                    <!--
+                        only placeholder
+                        -->
+                                    <button class="btn btn-success add-btn" onclick="" id="create-btn"
+                                            data-bs-toggle="modal" data-bs-target="#createOrderModal">Crear Pedido
+                                    </button>
+                                </div>
+                                <div class="modal fade" id="createOrderModal" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-light p-3">
+                                                <h5 class="modal-title" id="exampleModalLabel">Crear Pedido</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"
+                                                        id="close-modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="NewOrderFrom" action="http://127.0.0.1:8000/test"
+                                                      method="POST">
+                                                    <input type="hidden" name="_token"
+                                                           value="eHkvjnORKNiJvMNSErrzCAJZNWwGE86bTrVzflgO"
+                                                           autocomplete="off">
+                                                    <div class="col-6">
+                                                        <div>
+                                                            <label for="customerMobileId"
+                                                                   class="form-label">Celular</label>
+                                                            <input name="customerMobile"
+                                                                   placeholder="Ingresa Número de Celular" required
+                                                                   id="customerMobileId"/>
+                                                        </div>
+
+                                                        <div>
+                                                            <label for="customerNameId"
+                                                                   class="form-label">Nombre</label>
+                                                            <input name="customerName" placeholder="Ingresa el Nombre"
+                                                                   required id="customerNameId"/>
+                                                        </div>
+
+                                                        <div>
+                                                            <label for="customerLastNameId"
+                                                                   class="form-label">Apellido</label>
+                                                            <input name="customerLastName"
+                                                                   placeholder="Ingresa el Apellido" required
+                                                                   id="customerLastNameId"/>
+                                                        </div>
+
+                                                        <div>
+                                                            <label for="customerEmailId" class="form-label">Correo
+                                                                Electrónico</label>
+                                                            <input name="customerEmail"
+                                                                   placeholder="Ingresa el Correo Electrónico" required
+                                                                   id="customerEmailId"/>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <div class="hstack gap-2 justify-content-end">
+                                                    <!--
+        only placeholder
+        -->
+                                                    <button class="btn btn-success" onclick="" id="add-btn"
+                                                            slot="Crear Pedido">defaultLabel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end col -->
+                </div>
+            </div>
+            <!-- container-fluid -->
+        </div>
+    </div>
+    <!-- end main content-->
+</div>
+<!-- END layout-wrapper -->
+<script type="module" src="http://[::1]:5173/@vite/client" data-navigate-track="reload"></script>
+<script type="module" src="http://[::1]:5173/resources/js/app.js" data-navigate-track="reload"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log('DOMContentLoaded');
+    });
+    document.addEventListener('livewire:initialized', () => {
+        console.log('livewire:initialized');
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+{
+  "__commonjsHelpers-725317a4.js": {
+    "file": "assets/_commonjsHelpers-725317a4.js"
+  },
+  "_bootstrap.bundle-8fcc7b31.js": {
+    "file": "assets/bootstrap.bundle-8fcc7b31.js",
+    "imports": [
+      "__commonjsHelpers-725317a4.js"
+    ]
+  },
+  "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff": {
+    "file": "assets/bootstrap-icons-4d4572ef.woff",
+    "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff"
+  },
+  "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2": {
+    "file": "assets/bootstrap-icons-bacd70af.woff2",
+    "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
+  },
+  "src/resources/images/auth-one-bg.jpg": {
+    "file": "assets/auth-one-bg-4e267e88.jpg",
+    "src": "src/resources/images/auth-one-bg.jpg"
+  },
+  "src/resources/images/flags/us.svg": {
+    "file": "assets/us-de148770.svg",
+    "src": "src/resources/images/flags/us.svg"
+  },
+  "src/resources/images/modal-bg.png": {
+    "file": "assets/modal-bg-f849fc08.png",
+    "src": "src/resources/images/modal-bg.png"
+  },
+  "src/resources/images/sidebar/img-1.jpg": {
+    "file": "assets/img-1-f2d8b78a.jpg",
+    "src": "src/resources/images/sidebar/img-1.jpg"
+  },
+  "src/resources/images/sidebar/img-2.jpg": {
+    "file": "assets/img-2-68e6fda9.jpg",
+    "src": "src/resources/images/sidebar/img-2.jpg"
+  },
+  "src/resources/images/sidebar/img-3.jpg": {
+    "file": "assets/img-3-d0db49dd.jpg",
+    "src": "src/resources/images/sidebar/img-3.jpg"
+  },
+  "src/resources/images/sidebar/img-4.jpg": {
+    "file": "assets/img-4-04b70876.jpg",
+    "src": "src/resources/images/sidebar/img-4.jpg"
+  },
+  "src/resources/js/app.js": {
+    "file": "assets/app-84b4ce07.js",
+    "imports": [
+      "_bootstrap.bundle-8fcc7b31.js",
+      "__commonjsHelpers-725317a4.js"
+    ],
+    "isEntry": true,
+    "src": "src/resources/js/app.js"
+  },
+  "src/resources/js/bootstrap.js": {
+    "file": "assets/bootstrap-02317797.js",
+    "isEntry": true,
+    "src": "src/resources/js/bootstrap.js"
+  },
+  "src/resources/js/datatables.js": {
+    "file": "assets/datatables-a6b27755.js",
+    "imports": [
+      "_bootstrap.bundle-8fcc7b31.js",
+      "__commonjsHelpers-725317a4.js"
+    ],
+    "isEntry": true,
+    "src": "src/resources/js/datatables.js"
+  },
+  "src/resources/js/layout.js": {
+    "file": "assets/layout-b81e9c19.js",
+    "isEntry": true,
+    "src": "src/resources/js/layout.js"
+  },
+  "src/resources/js/plugins.js": {
+    "file": "assets/plugins-ca69d510.js",
+    "isEntry": true,
+    "src": "src/resources/js/plugins.js"
+  },
+  "src/resources/js/uxmal/choices.js": {
+    "file": "assets/choices-a665bbfa.js",
+    "imports": [
+      "__commonjsHelpers-725317a4.js"
+    ],
+    "isEntry": true,
+    "src": "src/resources/js/uxmal/choices.js"
+  },
+  "src/resources/js/uxmal/list.js": {
+    "file": "assets/list-fe1321f8.js",
+    "imports": [
+      "__commonjsHelpers-725317a4.js"
+    ],
+    "isEntry": true,
+    "src": "src/resources/js/uxmal/list.js"
+  },
+  "src/resources/js/uxmal/toastify.css": {
+    "file": "assets/toastify-cc075105.css",
+    "src": "src/resources/js/uxmal/toastify.css"
+  },
+  "src/resources/js/uxmal/toastify.js": {
+    "css": [
+      "assets/toastify-cc075105.css"
+    ],
+    "file": "assets/toastify-ad86d372.js",
+    "imports": [
+      "__commonjsHelpers-725317a4.js"
+    ],
+    "isEntry": true,
+    "src": "src/resources/js/uxmal/toastify.js"
+  },
+  "src/resources/js/uxmal/tomselect.js": {
+    "file": "assets/tomselect-e25b52f0.js",
+    "isEntry": true,
+    "src": "src/resources/js/uxmal/tomselect.js"
+  },
+  "src/resources/scss/app.scss": {
+    "file": "assets/app-20f5c1ad.css",
+    "isEntry": true,
+    "src": "src/resources/scss/app.scss"
+  },
+  "src/resources/scss/bootstrap.scss": {
+    "file": "assets/bootstrap-84a7a62b.css",
+    "isEntry": true,
+    "src": "src/resources/scss/bootstrap.scss"
+  },
+  "src/resources/scss/custom.scss": {
+    "file": "assets/custom-e3b0c442.css",
+    "isEntry": true,
+    "src": "src/resources/scss/custom.scss"
+  },
+  "src/resources/scss/datatables.scss": {
+    "file": "assets/datatables-816c3fd8.css",
+    "isEntry": true,
+    "src": "src/resources/scss/datatables.scss"
+  },
+  "src/resources/scss/icons.scss": {
+    "file": "assets/icons-7136dd35.css",
+    "isEntry": true,
+    "src": "src/resources/scss/icons.scss"
+  },
+  "src/resources/scss/uxmal/choices.scss": {
+    "file": "assets/choices-c95e0d78.css",
+    "isEntry": true,
+    "src": "src/resources/scss/uxmal/choices.scss"
+  },
+  "src/resources/scss/uxmal/tomselect.scss": {
+    "file": "assets/tomselect-9d1a07a7.css",
+    "isEntry": true,
+    "src": "src/resources/scss/uxmal/tomselect.scss"
+  }
+}
