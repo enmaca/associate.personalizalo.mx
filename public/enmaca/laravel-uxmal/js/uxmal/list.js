@@ -7,8 +7,8 @@ window.init_listjs = function () {
      * Choices Select plugin
      */
     console.log('executing window.init_listjs()');
-    let tomsElements = document.querySelectorAll("[data-listjs]");
-    Array.from(tomsElements).forEach(function (item) {
+    let listJSsElements = document.querySelectorAll("[data-listjs]");
+    Array.from(listJSsElements).forEach(function (item) {
         window.init_listjs_elem(item);
     });
 }
@@ -22,9 +22,8 @@ window.init_listjs_elem = function ( element ) {
         listjsData.pagination = true;
     }
 
-    if (isListJStVal["data-listjs-value_names"]) {
-        listjsData.valueNames = JSON.parse(isListJStVal["data-listjs-value_names"].value.toString());
-        console.log(listjsData.valueNames);
+    if (isListJStVal["data-listjs-value-names"]) {
+        listjsData.valueNames = JSON.parse(isListJStVal["data-listjs-value-names"].value.toString());
     }
 
     console.log('Init ListJS Element with Options: ', listjsData);

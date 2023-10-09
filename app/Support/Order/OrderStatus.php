@@ -4,8 +4,6 @@ namespace App\Support\Order;
 use App\Enums\OrderStatusEnum;
 class OrderStatus extends \Enmaca\LaravelUxmal\Support\ListJSTableColumn {
 
-    public $enumClass;
-
     public function __construct($attributes = [])
     {
         $this->enumClass = OrderStatusEnum::class;

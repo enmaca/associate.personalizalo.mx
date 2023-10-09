@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use Illuminate\Support\Facades\View;
 
 class Test extends Controller
 {
@@ -99,6 +100,10 @@ class Test extends Controller
             ]
         ]);
 
+
+
+
+
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
             ])->extends('uxmal::layout.master');
@@ -116,7 +121,10 @@ class Test extends Controller
             'class' => 'col-lg-12'
             ]);
 
-        $listjs_card = $row_col_lg_12->component('ui.card', ['header' => ['title' => 'header-title'],
+        $listjs_card = $row_col_lg_12->component('ui.card', [
+            'header' => [
+                'title' => 'header-title'
+            ],
             'body' => true,
             'footer' => 'footer-content']);
 
@@ -125,35 +133,34 @@ class Test extends Controller
 
         $listjs->setColumns([
             'id' => [
-                'tbhTitle' => null,
+                'tbhContent' => '<div class="form-check"><input class="form-check-input" type="checkbox" id="checkAll()" value="all"></div>',
                 'type' => 'primaryKey',
-                'handler' => \App\Support\Order\OrderId::class,
-                'visible' => false
+                'handler' => \App\Support\Order\OrderId::class
             ],
             'code' => [
-                'tbhTitle' => 'Código de pedido'
+                'tbhContent' => 'Código de pedido'
             ],
             'customer.name' => [
-                'tbhTitle' => 'Cliente',
+                'tbhContent' => 'Cliente',
             ],
             'status' => [
-                'tbhTitle' => 'Estatus',
+                'tbhContent' => 'Estatus',
                 'handler' => \App\Support\Order\OrderStatus::class
             ],
             'delivery_date' => [
-                'tbhTitle' => 'Fecha de entrega',
+                'tbhContent' => 'Fecha de entrega',
                 'handler' => \App\Support\Order\OrderDeliverDate::class
             ],
             'shipment_status' => [
-                'tbhTitle' => 'Estatus de envio',
+                'tbhContent' => 'Estatus de envio',
                 'handler' => \App\Support\Order\OrderShipmentStatus::class
             ],
             'payment_status' => [
-                'tbhTitle' => 'Estatus de pago',
+                'tbhContent' => 'Estatus de pago',
                 'handler' => \App\Support\Order\OrderPaymentStatus::class
             ],
             'payment_ammount' => [
-                'tbhTitle' => 'Pago',
+                'tbhContent' => 'Pago',
                 'handler' => \App\Support\Order\OrderPaymentAmmount::class
             ]
         ]);
@@ -177,6 +184,11 @@ class Test extends Controller
                 'payment_ammount']);
             // ->whereIn('id', [1,2,3,4,5]);
 
+        View::startPush('DOMContentLoaded','if (window.init_listjs) { window.init_listjs(); }');
+
+        $listjs->setPagination(10);
+
+        $listjs->setSearch(true, ['placeholder' => 'Buscar en pedidos...']);
 
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
