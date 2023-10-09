@@ -19,7 +19,7 @@ class OrdersController extends Controller
 {
     public function root(Request $request)
     {
-        return view('workshop.order.root')->extends('workshop.master');
+        return view('workshop.order.root')->extends('uxmal::layout.master');
     }
 
     public function edit(Request $request, $hashed_id){
@@ -49,7 +49,7 @@ class OrdersController extends Controller
                     'laborcost_options' => $laborcost_options,
                     'mfgoverhead_options' => $mfgoverhead_options,
                     'mfgareas_options' => $mfgareas_options
-                ])->extends('workshop.master');
+                ])->extends('uxmal::layout.master');
                 break;
         }
     }
@@ -100,6 +100,6 @@ class OrdersController extends Controller
             'laborcost_options' => $laborcost_options,
             'mfgoverhead_options' => $mfgoverhead_options,
             'mfgareas_options' => $mfgareas_options
-        ])->extends('workshop.master');
+        ])->extends('uxmal::layout.master');
     }
 }

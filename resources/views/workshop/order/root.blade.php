@@ -1,4 +1,4 @@
-@extends('workshop.master')
+@extends('uxmal::layout.master')
 @section('title')
     Listado de Pedidos
 @endsection

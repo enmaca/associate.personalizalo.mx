@@ -2,6 +2,16 @@
 
 namespace App\Components\Uxmal;
 
+use Renderable;
+use Uxmal\Components\Form;
+use Uxmal\Components\FormButton;
+use Uxmal\Components\FormInput;
+use Uxmal\Components\FormSelectChoices;
+use Uxmal\Components\FormSelectTomselect;
+use Uxmal\Components\Livewire;
+use Uxmal\Components\Modal;
+use Uxmal\Components\Row;
+
 class Uxmal implements Renderable {
     protected string $type;
     protected array $elements = [];
@@ -38,6 +48,12 @@ class Uxmal implements Renderable {
                 $child = new FormInput($attributes);
                 break;
 
+            /**
+             * Livewire
+             */
+            case 'livewire':
+                $child = new Livewire($attributes);
+                break;
             default:
                 throw new \Exception("Missing Type [".$type."]");
         }

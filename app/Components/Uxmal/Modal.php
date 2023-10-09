@@ -2,6 +2,8 @@
 
 namespace App\Components\Uxmal;
 
+use Uxmal;
+
 class Modal extends Uxmal {
 
     protected Uxmal $header;
