@@ -107,7 +107,7 @@ class Test extends Controller
         ])->extends('uxmal::layout.master');
     }
 
-    public function test()
+    public function listjs()
     {
 
         $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
@@ -192,6 +192,108 @@ class Test extends Controller
         $listjs->setPagination(10);
 
         $listjs->setSearch(true, ['placeholder' => 'Buscar en pedidos...']);
+
+
+        return view('workshop.test', [
+            'uxmal_data' => $uxmal->toArray()
+        ])->extends('uxmal::layout.master');
+    }
+
+    public function button()
+    {
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+
+        $row = $uxmal->component('ui.row', [
+            'class' => 'row'
+        ]);
+
+        $row_col_lg_12 = $row->component('ui.row', [
+            'class' => 'col-lg-12'
+        ]);
+
+
+
+
+        $row_col_lg_12->component('form.button', [
+            'attributes' => [
+                'onclick' => 'console.log("NewCheck")'
+            ],
+            'type' => 'button',
+            'slot' => 'buttonCodeEnmaca'
+        ]);
+        $row_col_lg_12->component('form.button', [
+            'options' => [
+                'type' => 'outline'
+            ],
+            'attributes' => [
+                'onclick' => 'console.log("NewCheck")'
+            ],
+            'type' => 'button',
+            'slot' => 'buttonCodeEnmaca'
+        ]);
+        $row_col_lg_12->component('form.button', [
+            'options' => [
+                'type' => 'soft'
+            ],
+            'attributes' => [
+                'onclick' => 'console.log("NewCheck")'
+            ],
+            'type' => 'button',
+            'slot' => 'buttonCodeEnmaca'
+        ]);
+        $row_col_lg_12->component('form.button', [
+            'options' => [
+                'type' => 'darken'
+            ],
+            'attributes' => [
+                'onclick' => 'console.log("NewCheck")'
+            ],
+            'type' => 'button',
+            'slot' => 'buttonCodeEnmaca'
+        ]);
+        $row_col_lg_12->component('form.button', [
+            'options' => [
+                'type' => 'ghost'
+            ],
+            'attributes' => [
+                'onclick' => 'console.log("NewCheck")'
+            ],
+            'type' => 'button',
+            'slot' => 'buttonCodeEnmaca'
+        ]);
+
+
+        $form = $row_col_lg_12->component('form', $formStruct->toArray());
+
+
+
+        //dd($uxmal->toArray());
+
+        return view('workshop.test', [
+            'uxmal_data' => $uxmal->toArray()
+        ])->extends('uxmal::layout.master');
+    }
+
+    public function test()
+    {
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+
+        $row = $uxmal->component('ui.row', [
+            'class' => 'row'
+        ]);
+
+        $row_col_lg_12 = $row->component('ui.row', [
+            'class' => 'col-lg-12'
+        ]);
+
+
+        $form = $row_col_lg_12->component('form', [
+            'attributes' => [
+                'id' => 'formIdEnmaca',
+                'action' => '/test'
+            ]
+        ]);
+
 
 
         return view('workshop.test', [
