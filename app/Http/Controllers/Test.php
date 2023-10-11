@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\View;
 class Test extends Controller
 {
     //
-    public function modal() {
+    public function modal()
+    {
 
         $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
         $row = $uxmal->component('ui.row');
@@ -101,15 +102,13 @@ class Test extends Controller
         ]);
 
 
-
-
-
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
-            ])->extends('uxmal::layout.master');
+        ])->extends('uxmal::layout.master');
     }
 
-    public function test() {
+    public function test()
+    {
 
         $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
 
@@ -119,23 +118,28 @@ class Test extends Controller
 
         $row_col_lg_12 = $row->component('ui.row', [
             'class' => 'col-lg-12'
-            ]);
+        ]);
 
-        $listjs_card = $row_col_lg_12->component('ui.card', [
+
+        $card_struct = new \Enmaca\LaravelUxmal\Support\Components\Ui\Card([
             'header' => [
-                'title' => 'header-title'
+                'title' => 'headerTitle'
             ],
-            'body' => true,
-            'footer' => 'footer-content']);
+            'footer' => [
+                'slot' => 'footerSlot'
+            ]
+        ]);
+
+        $listjs_card = $row_col_lg_12->component('ui.card', $card_struct->toArray());
 
 
         $listjs = $listjs_card->body->component('ui.listjs');
 
         $listjs->setColumns([
             'id' => [
-                'tbhContent' => '<div class="form-check"><input class="form-check-input" type="checkbox" id="checkAll()" value="all"></div>',
+                'tbhContent' => 'checkbox',
                 'type' => 'primaryKey',
-                'handler' => \App\Support\Order\OrderId::class
+                'handler' => \App\Support\Order\OrderIdCheckbox::class
             ],
             'code' => [
                 'tbhContent' => 'Código de pedido'
@@ -168,11 +172,12 @@ class Test extends Controller
 
         $listjs->Model(Order::class)
             ->with([
-            'customer' => function ($query) {
-                $query->select([
-                    'id',
-                    'name'
-                ]);}])
+                'customer' => function ($query) {
+                    $query->select([
+                        'id',
+                        'name'
+                    ]);
+                }])
             ->select([
                 'id',
                 'customer_id',
@@ -182,15 +187,14 @@ class Test extends Controller
                 'shipment_status',
                 'payment_status',
                 'payment_ammount']);
-            // ->whereIn('id', [1,2,3,4,5]);
-
-        View::startPush('DOMContentLoaded','if (window.init_listjs) { window.init_listjs(); }');
+        // ->whereIn('id', [1,2,3,4,5]);
 
         $listjs->setPagination(10);
 
         $listjs->setSearch(true, ['placeholder' => 'Buscar en pedidos...']);
 
-        return view('uxmal::master-default', [
+
+        return view('workshop.test', [
             'uxmal_data' => $uxmal->toArray()
         ])->extends('uxmal::layout.master');
     }
