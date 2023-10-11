@@ -137,9 +137,9 @@ class Test extends Controller
 
         $listjs->setColumns([
             'id' => [
-                'tbhContent' => '<div class="form-check"><input class="form-check-input" type="checkbox" id="checkAll()" value="all"></div>',
+                'tbhContent' => 'checkbox',
                 'type' => 'primaryKey',
-                'handler' => \App\Support\Order\OrderId::class
+                'handler' => \App\Support\Order\OrderIdCheckbox::class
             ],
             'code' => [
                 'tbhContent' => 'Código de pedido'
@@ -189,29 +189,12 @@ class Test extends Controller
                 'payment_ammount']);
         // ->whereIn('id', [1,2,3,4,5]);
 
-        View::startPush('DOMContentLoaded', 'if (window.init_listjs) { window.init_listjs(); }');
-
         $listjs->setPagination(10);
 
         $listjs->setSearch(true, ['placeholder' => 'Buscar en pedidos...']);
 
-        $test = new \Enmaca\LaravelUxmal\Support\Components\Form\Input\Checkbox([
-            'input' => [
-                'attributes' => [
-                    'value' => '@@value@@'
-                ]
-            ],
-            'label' => [
-                'slot' => 'MyCheckBox'
-            ]
-        ]);
 
-        $input_checkbox = new \Enmaca\LaravelUxmal\Components\Form\Input\Checkbox($test->toArray());
-
-
-        //dd($input_checkbox->toArray());
-
-        return view('uxmal::master-default', [
+        return view('workshop.test', [
             'uxmal_data' => $uxmal->toArray()
         ])->extends('uxmal::layout.master');
     }
