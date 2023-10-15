@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use Illuminate\Support\Facades\View;
 
 class Test extends Controller
 {
@@ -112,28 +111,15 @@ class Test extends Controller
 
         $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
 
-        $row = $uxmal->component('ui.row', [
-            'class' => 'row'
-        ]);
-
-        $row_col_lg_12 = $row->component('ui.row', [
-            'class' => 'col-lg-12'
-        ]);
-
-
-        $card_struct = new \Enmaca\LaravelUxmal\Support\Components\Ui\Card([
-            'header' => [
-                'title' => 'headerTitle'
-            ],
-            'footer' => [
-                'slot' => 'footerSlot'
+        $main_row = $uxmal->component('ui.row', [
+            'attributes' => [
+                'class' => [
+                    'row' => true
+                ]
             ]
         ]);
 
-        $listjs_card = $row_col_lg_12->component('ui.card', $card_struct->toArray());
-
-
-        $listjs = $listjs_card->body->component('ui.listjs');
+        $listjs = \Enmaca\LaravelUxmal\Uxmal::component('ui.listjs');
 
         $listjs->setColumns([
             'id' => [
@@ -193,8 +179,15 @@ class Test extends Controller
 
         $listjs->setSearch(true, ['placeholder' => 'Buscar en pedidos...']);
 
+        $card = $main_row->component('ui.card', [
+            'options' => [
+                'header' => 'HeaderTitle',
+                'body' => $listjs,
+                'footer' => 'FooterTitle'
+            ]
+        ]);
 
-        return view('workshop.test', [
+        return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
         ])->extends('uxmal::layout.master');
     }
@@ -274,30 +267,105 @@ class Test extends Controller
         ])->extends('uxmal::layout.master');
     }
 
-    public function test()
+    public function test__()
     {
         $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
 
-        $row = $uxmal->component('ui.row', [
-            'class' => 'row'
-        ]);
-
-        $row_col_lg_12 = $row->component('ui.row', [
-            'class' => 'col-lg-12'
-        ]);
-
-
-        $form = $row_col_lg_12->component('form', [
+        $main_row = $uxmal->component('ui.row', [
             'attributes' => [
-                'id' => 'formIdEnmaca',
-                'action' => '/test'
+                'class' => [
+                    'row' => true
+                ]
+            ]
+        ]);
+
+        $listjs = \Enmaca\LaravelUxmal\Uxmal::component('ui.listjs', [
+
+        ]);
+
+        $listjs->setColumns([
+            'id' => [
+                'tbhContent' => 'checkbox-all',
+                'type' => 'primaryKey',
+                'handler' => \App\Support\Order\OrderIdCheckbox::class
+            ],
+            'code' => [
+                'tbhContent' => 'Código de pedido'
+            ],
+            'customer.name' => [
+                'tbhContent' => 'Cliente',
+            ],
+            'status' => [
+                'tbhContent' => 'Estatus',
+                'handler' => \App\Support\Order\OrderStatus::class
+            ],
+            'delivery_date' => [
+                'tbhContent' => 'Fecha de entrega',
+                'handler' => \App\Support\Order\OrderDeliverDate::class
+            ],
+            'shipment_status' => [
+                'tbhContent' => 'Estatus de envio',
+                'handler' => \App\Support\Order\OrderShipmentStatus::class
+            ],
+            'payment_status' => [
+                'tbhContent' => 'Estatus de pago',
+                'handler' => \App\Support\Order\OrderPaymentStatus::class
+            ],
+            'payment_ammount' => [
+                'tbhContent' => 'Pago',
+                'handler' => \App\Support\Order\OrderPaymentAmmount::class
             ]
         ]);
 
 
+        $listjs->Model(Order::class)
+            ->with([
+                'customer' => function ($query) {
+                    $query->select([
+                        'id',
+                        'name'
+                    ]);
+                }])
+            ->select([
+                'id',
+                'customer_id',
+                'code',
+                'status',
+                'delivery_date',
+                'shipment_status',
+                'payment_status',
+                'payment_ammount']);
+        // ->whereIn('id', [1,2,3,4,5]);
 
-        return view('workshop.test', [
+        $listjs->setPagination(10);
+
+        $listjs->setSearch(true, ['placeholder' => 'Buscar en pedidos...']);
+
+        $card = $main_row->component('ui.card', [
+            'options' => [
+                'header' => 'HeaderTitle',
+                'body' => $listjs,
+                'footer' => 'FooterTitle'
+            ]
+        ]);
+
+        return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
+        ])->extends('uxmal::layout.master');
+    }
+
+
+    public function test(){
+
+        $test2 = new \App\Support\Uxmal\Order\ModalOrderSearchByClientMobile(['context' => 'search']);
+        dd($test2->toArray());
+
+        $test = new \App\Support\Uxmal\Order\ModalOrderSearchByClientMobile();
+
+        dd($test->toArray());
+
+        return view('uxmal::master-default', [
+            'uxmal_data' => $test->toArray()
         ])->extends('uxmal::layout.master');
     }
 }

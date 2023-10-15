@@ -4,7 +4,7 @@ namespace App\Support\Order;
 
 use App\Enums\OrderPaymentStatusEnum;
 
-class OrderPaymentStatus extends \Enmaca\LaravelUxmal\Support\ListJSTableColumn
+class OrderPaymentStatus extends \Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\TableColumn
 {
 
     public function __construct($attributes = [])

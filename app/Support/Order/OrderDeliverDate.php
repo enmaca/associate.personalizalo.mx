@@ -2,7 +2,7 @@
 
 namespace App\Support\Order;
 
-class OrderDeliverDate extends \Enmaca\LaravelUxmal\Support\ListJSTableColumn {
+class OrderDeliverDate extends \Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\TableColumn {
 
     public function parseValue($value){
         if(empty($value))

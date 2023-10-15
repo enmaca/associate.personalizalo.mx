@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Types\Type;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
+     * @throws Exception
      */
     public function boot(): void
     {
