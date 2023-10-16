@@ -1,13 +1,18 @@
 <?php
 
-namespace App\Support\Uxmal\Order;
+namespace App\Support\Uxmal\Client;
 
-class ModalOrderSearchByClientMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
+class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
 {
 
     public function build()
     {
         $form = \Enmaca\LaravelUxmal\Uxmal::component('form');
+
+        $form->component('livewire', [
+            'path' => 'input.modal-search-by-mobile.customer-mobile'
+        ]);
+        /*
         $form->componentsInDiv(['attributes' => [
             'class' => 'mb-3'
         ]], [[
@@ -27,7 +32,7 @@ class ModalOrderSearchByClientMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
                 ]
             ]]
         ]);
-
+*/
 
         $form->componentsInDiv(['attributes' => [
             'class' => 'mb-3'
@@ -79,24 +84,35 @@ class ModalOrderSearchByClientMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
 
         $modal = \Enmaca\LaravelUxmal\Uxmal::component('ui.modal', [
             'options' => [
-                'title' => 'Modal Title',
+                'title' => 'Buscar/Crear Cliente',
                 'body' => $form,
                 'saveBtn' => [
+                    'label' => 'Crear Pedido',
                     'onclick' => 'console.log("clicked")'
                 ]
             ]
         ]);
 
-        $this->_callBtn = match ($this->attributes['context']) {
-            'search' => $modal->getShowButton([
-                'options' => [
-                    'label' => 'Buscar por Cliente'
-                ]], 'array'),
-            default => $modal->getShowButton([
-                'options' => [
-                    'label' => 'Crear Pedido'
-                ]], 'array'),
-        };
+        switch($this->attributes['context']){
+            case 'createclient':
+                $this->_callBtn = $modal->getShowButton([
+                    'options' => [
+                        'label' => 'Agregar Cliente'
+                    ]], 'object');
+                break;
+            case 'createorder':
+                $this->_callBtn =  $modal->getShowButton([
+                    'options' => [
+                        'label' => 'Crear Pedido'
+                    ]], 'object');
+                break;
+            default:
+                $this->_callBtn =  $modal->getShowButton([
+                    'options' => [
+                        'label' => 'Mostrar'
+                    ]], 'object');
+                break;
+        }
 
         $this->_content = $modal;
 

@@ -6,11 +6,7 @@ class FormOrderHome extends \Enmaca\LaravelUxmal\Abstract\Form
 {
     public function build()
     {
-        $this->_content = new \Enmaca\LaravelUxmal\Uxmal();
-
-        $form = $this->_content->component('form');
-
-        $form->componentsInDiv(['attributes' => [
+        $this->_content->componentsInDiv(['attributes' => [
             'class' => 'mb-3'
         ]], [[
             'path' => 'form.input',
@@ -31,7 +27,7 @@ class FormOrderHome extends \Enmaca\LaravelUxmal\Abstract\Form
         ]);
 
 
-        $form->componentsInDiv(['attributes' => [
+        $this->_content->componentsInDiv(['attributes' => [
             'class' => 'mb-3'
         ]
         ], [[
@@ -47,7 +43,7 @@ class FormOrderHome extends \Enmaca\LaravelUxmal\Abstract\Form
             ]]
         ]);
 
-        $form->componentsInDiv(['attributes' => [
+        $this->_content->componentsInDiv(['attributes' => [
             'class' => 'mb-3'
         ]
         ], [[
@@ -63,7 +59,7 @@ class FormOrderHome extends \Enmaca\LaravelUxmal\Abstract\Form
             ]]
         ]);
 
-        $form->componentsInDiv(['attributes' => [
+        $this->_content->componentsInDiv(['attributes' => [
             'class' => 'mb-3'
         ]
         ], [[

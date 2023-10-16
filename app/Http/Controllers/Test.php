@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Customer;
+use Illuminate\Http\Request;
 
 class Test extends Controller
 {
@@ -254,7 +256,7 @@ class Test extends Controller
             'type' => 'button',
             'slot' => 'buttonCodeEnmaca'
         ]);
-
+        $formStruct = null;
 
         $form = $row_col_lg_12->component('form', $formStruct->toArray());
 
@@ -357,15 +359,46 @@ class Test extends Controller
 
     public function test(){
 
-        $test2 = new \App\Support\Uxmal\Order\ModalOrderSearchByClientMobile(['context' => 'search']);
-        dd($test2->toArray());
+        $form = new \Enmaca\LaravelUxmal\Uxmal();
 
-        $test = new \App\Support\Uxmal\Order\ModalOrderSearchByClientMobile();
+        $form->component('form.select.tomselect', [
+            'options' => [
+               'label' => 'Buscar Cliente',
+                'select.model' => \App\Models\Customer::class,
+                'select.placeholder' => 'Ingresa nombre, telefono o email...',
+                'tomselect.populate-url' => '/test/tomselect_populate',
+                'tomselect.load-url' => '/test/tomselect_load'
+            ]
+        ]);
 
-        dd($test->toArray());
+        return view('uxmal::simple-default', [
+            'uxmal_data' => $form->toArray()
+        ])->extends('uxmal::layout.simple');
+    }
 
-        return view('uxmal::master-default', [
-            'uxmal_data' => $test->toArray()
-        ])->extends('uxmal::layout.master');
+    public function tomselect_load(Request $request){
+
+        $search = json_decode($request->getContent(), true);
+
+        $customers = Customer::query()
+            ->where('mobile', 'like', "%{$search}%")
+            ->orWhere('name', 'like', "%{$search}%")
+            ->orWhere('last_name', 'like', "%{$search}%")
+            ->orWhere('email', 'like', "%{$search}%")
+            ->get();
+
+        $items = [];
+        foreach( $customers as $customer ){
+            $items[] = [
+                'id' => $customer->id,
+                'name' => "{$customer->name}"
+            ];
+        }
+
+        return response()->json([
+            'incomplete_results' => false,
+            'items' => $items,
+            'total_count' => count($items)
+        ]);
     }
 }

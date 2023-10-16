@@ -587,7 +587,7 @@
             "dist": {
                 "type": "path",
                 "url": "../laravel-uxmal",
-                "reference": "02e250570f78e522ad2b92ea351f8ff407552b9e"
+                "reference": "ebb4310828b0c63b5949cf25ffcd28d21ff73bf3"
             },
             "require": {
                 "laravel/framework": "^10.0",
