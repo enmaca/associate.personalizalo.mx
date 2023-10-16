@@ -387,11 +387,12 @@ class Test extends Controller
             ->orWhere('email', 'like', "%{$search}%")
             ->get();
 
+
         $items = [];
-        foreach( $customers as $customer ){
+        foreach(  $customers->toArray() as $customer ){
             $items[] = [
-                'id' => $customer->id,
-                'name' => "{$customer->name}"
+                'value' => $customer['id'],
+                'label' => "{$customer['name']} {$customer['last_name']} [{$customer['mobile']}] ({$customer['email']})"
             ];
         }
 
