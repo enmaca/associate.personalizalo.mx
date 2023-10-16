@@ -25,3 +25,4 @@ Homestead.json
 /public/build/
 /public/enmaca/
 /public/workshop/
+composer.lock
