@@ -2,7 +2,7 @@
 
 namespace App\Support\Order;
 use App\Enums\OrderStatusEnum;
-class OrderStatus extends \Enmaca\LaravelUxmal\Support\ListJSTableColumn {
+class OrderStatus extends \Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\TableColumn {
 
     public function __construct($attributes = [])
     {

@@ -1,4 +1,4 @@
-@extends('uxmal::layout.master')
+@extends('uxmal::layouts.master')
 @section('title')
     @lang('translation.dashboards')
 @endsection

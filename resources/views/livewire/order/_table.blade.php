@@ -202,11 +202,11 @@
             console.log(event.data);
             enableFields = true;
             if (event.data.id != 'new')
-            enableFields = false;
-            setValueDE('input[name=customerMobile]', event.data.mobile, enableFields);
-            setValueDE('input[name=customerName]', event.data.name, enableFields);
-            setValueDE('input[name=customerLastName]', event.data.last_name, enableFields);
-            setValueDE('input[name=customerEmail]', event.data.email, enableFields);
+                enableFields = false;
+                setValueDE('input[name=customerMobile]', event.data.mobile, enableFields);
+                setValueDE('input[name=customerName]', event.data.name, enableFields);
+                setValueDE('input[name=customerLastName]', event.data.last_name, enableFields);
+                setValueDE('input[name=customerEmail]', event.data.email, enableFields);
             });
             if (window.init_listjs) { window.init_listjs(); }
 @endpushonce

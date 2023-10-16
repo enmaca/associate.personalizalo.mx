@@ -13,13 +13,68 @@ use App\Models\OrderProductDetail;
 use App\Models\Product;
 use App\Models\Material;
 use Illuminate\Http\Request;
+use \Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Vite;
 use Vinkla\Hashids\Facades\Hashids;
 
 class OrdersController extends Controller
 {
     public function root(Request $request)
     {
-        return view('workshop.order.root')->extends('uxmal::layout.master');
+
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+
+        $main_row = $uxmal->component('ui.row', [
+            'attributes' => [
+                'class' => [
+                    'row' => true
+                ]
+            ]
+        ]);
+
+        /**
+         * Create Predefined Modal with context 'createorder'
+         */
+        $client_modal = \App\Support\Uxmal\Client\ModalSearchByMobile::Object(['context' => 'createorder']);
+
+        /**
+         * Create Predefined ListJS with Conext 'orderhome'
+         */
+        $order_listjs = \App\Support\Uxmal\Order\ListjsOrderHome::Object(['context' => 'orderhome']);
+
+        /**
+         * Set the top button to a listjs object from $modalStruct
+         */
+        $order_listjs->setTopButtons($client_modal['button']);
+
+        /**
+         * Create the main Card of Page with ListJS in the Body
+         */
+        $main_row->component('ui.card', [
+            'options' => [
+                'header' => 'Pedidos Pendientes',
+                'body' => $order_listjs->toArray(),
+                'footer' => '&nbsp;'
+            ]
+        ]);
+
+        /**
+         * Add Modal Button to Main Uxmal Struct
+         */
+        $uxmal->addElement($client_modal['modal']);
+
+        /**
+         * PushOnce to scripts
+         */
+        View::startPush('scripts', '<script src="'.Vite::asset('resources/js/orders/root.js', 'workshop').'" type="module"></script>');
+        View::startPush('livewire:initialized', Vite::content('resources/js/orders/root_livewire.js', 'workshop'));
+
+        /**
+         * Set View
+         */
+        return view('uxmal::master-default', [
+            'uxmal_data' => $uxmal->toArray()
+        ])->extends('uxmal::layout.master');
     }
 
     public function edit(Request $request, $hashed_id){

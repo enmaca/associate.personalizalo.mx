@@ -31,7 +31,7 @@
 @endpushonce
 @stop
 @pushonce('scripts')
-    @vite('resources/js/uxmal/list.js')
+
 @endpushonce
 
 

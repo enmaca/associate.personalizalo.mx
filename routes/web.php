@@ -19,6 +19,9 @@ Route::get('/logout', [ \App\Http\Controllers\SystemController::class, 'logout' 
 Route::get('/test', [
     \App\Http\Controllers\Test::class,
     'test'])->name('test');
+Route::post('/test/tomselect_load', [
+    \App\Http\Controllers\Test::class,
+    'tomselect_load'])->name('test_tomselect_load');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::redirect('/', '/orders', 301);

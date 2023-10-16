@@ -6,7 +6,7 @@ use Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\Checkbox as SupportCheckbox
 use Illuminate\Support\Facades\View;
 use Vinkla\Hashids\Facades\Hashids;
 
-class OrderIdCheckbox extends \Enmaca\LaravelUxmal\Support\ListJSTableColumn {
+class OrderIdCheckbox extends \Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\TableColumn {
 
     public function parseValue($value){
         $value = Hashids::encode($value);

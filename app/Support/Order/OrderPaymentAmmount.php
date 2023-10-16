@@ -2,7 +2,7 @@
 
 namespace App\Support\Order;
 
-class OrderPaymentAmmount extends \Enmaca\LaravelUxmal\Support\ListJSTableColumn {
+class OrderPaymentAmmount extends \Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\TableColumn {
 
     public function parseValue($value){
         if(empty($value))
