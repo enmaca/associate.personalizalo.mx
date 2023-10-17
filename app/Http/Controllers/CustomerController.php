@@ -30,14 +30,14 @@ class CustomerController extends Controller
 
     }
 
-    public function get_id(Request $request, int $customer_id)
+    public function get_id(Request $request, mixed $customer_id)
     {
         $context = $request->input('context');
 
         switch ($context) {
             case 'by_name_mobile_email':
             default:
-                $client = Customer::findOrFail($customer_id);
+                $client = Customer::findByHashId($customer_id);
                 return response()->json($client);
         }
 

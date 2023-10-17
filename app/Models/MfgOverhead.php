@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MfgOverhead extends Model
+class MfgOverhead extends BaseModel
 {
     use HasFactory;
     protected $table = 'mfg_overhead';

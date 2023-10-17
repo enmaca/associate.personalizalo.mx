@@ -28,7 +28,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::controller(\App\Http\Controllers\OrdersController::class)->group(function () {
         Route::get('/orders','root')->name('orders_root');
-        Route::post('/orders','create')->name('orders_new');
+        Route::post('/orders','create')->name('orders_create');
         Route::get('/orders/{hashed_id}','edit')->name('orders_edit');
     });
 

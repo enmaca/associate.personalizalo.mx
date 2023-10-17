@@ -1,15 +1,14 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Customer extends Model
+class Customer extends BaseModel
 {
     use HasFactory;
-    protected $table = 'customers';
 
+    protected $table = 'customers';
 
     public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

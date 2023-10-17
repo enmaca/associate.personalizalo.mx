@@ -9,7 +9,6 @@ use Vinkla\Hashids\Facades\Hashids;
 class OrderIdCheckbox extends \Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\TableColumn {
 
     public function parseValue($value){
-        $value = Hashids::encode($value);
         $checkboxStruct = new SupportCheckbox([
             'input' => [
                 'attributes' => [

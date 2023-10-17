@@ -17,9 +17,10 @@ class SelectByNameMobileEmail extends \Enmaca\LaravelUxmal\Abstract\SelectTomSel
 
         $customers = Customer::orderBy('created_at', 'desc')->take(25)->get();
 
-        $items = $customers->mapWithKeys(function ($customer) {
-            return [$customer['id']  => "{$customer['name']} {$customer['last_name']} [{$customer['mobile']}] ({$customer['email']})"];
-        });
+        $items = [];
+
+        foreach( $customers as $customer )
+            $items[$customer->hashId] = "{$customer->name} {$customer->last_name} [{$customer->mobile}] ({$customer->email})";
 
 
         $this->_content = $uxmal->component('form.select.tomselect', [
@@ -28,8 +29,9 @@ class SelectByNameMobileEmail extends \Enmaca\LaravelUxmal\Abstract\SelectTomSel
                 'tomselect.label' => 'Buscar Cliente',
                 'tomselect.placeholder' => 'Buscar por nombre, telefono o email...',
                 'tomselect.load-url' => '/customer/search_tomselect?context=by_name_mobile_email',
-                'tomselect.options' => $items->toArray(),
-                'tomselect.allow-empty-option' => true
+                'tomselect.options' => $items,
+                'tomselect.allow-empty-option' => true,
+                'tomselect.event-change-handler' => 'onChangeSelectedByNameMobileEmail'
             ]
         ]);
     }
@@ -54,17 +56,10 @@ class SelectByNameMobileEmail extends \Enmaca\LaravelUxmal\Abstract\SelectTomSel
             ])
             ->get();
 
-        $items = $customers->mapWithKeys(function ($customer) {
-            return [
-                'value' => $customer['id'],
-                'label' => "{$customer['name']} {$customer['last_name']} [{$customer['mobile']}] ({$customer['email']})"
-            ];
-        });
-
-        foreach ($customers->toArray() as $customer) {
+        foreach ($customers as $customer) {
             $items[] = [
-                'value' => $customer['id'],
-                'label' => "{$customer['name']} {$customer['last_name']} [{$customer['mobile']}] ({$customer['email']})"
+                'value' => $customer->hashId,
+                'label' => "{$customer->name} {$customer->last_name} [{$customer->mobile}] ({$customer->email})"
             ];
         }
 
