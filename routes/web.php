@@ -55,10 +55,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/system/products', 'products')->name('system_products');
     });
 
-    Route::get('/clients', [
-        App\Http\Controllers\ClientsController::class,
-        'root'
-    ])->name('clients_root');
+    Route::controller( App\Http\Controllers\CustomerController::class)->group(function(){
+        Route::get('/customer', 'root')->name('customers');
+        Route::get('/customer/{id}', 'get_id')->name('customer_get_id');
+        Route::post('/customer/search_tomselect', 'search_tomselect')->name('customer_search_tomselect');
+    });
 
     Route::controller( \App\Http\Controllers\DigitalArtController::class)->group(function(){
         Route::get('/digital_art/{id}', 'download')->name('digital_art_get');

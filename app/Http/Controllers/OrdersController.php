@@ -35,7 +35,7 @@ class OrdersController extends Controller
         /**
          * Create Predefined Modal with context 'createorder'
          */
-        $client_modal = \App\Support\Uxmal\Client\ModalSearchByMobile::Object(['context' => 'createorder']);
+        $client_modal = \App\Support\Uxmal\Customer\ModalSearchByMobile::Object(['context' => 'createorder']);
 
         /**
          * Create Predefined ListJS with Conext 'orderhome'
@@ -113,7 +113,7 @@ class OrdersController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function create(Request $request){
+    public function Dommcreate(Request $request){
         $allInput = $request->all();
         if ($allInput['customerId'] != 'new'){
             $clientId = HashIds::decode($allInput['customerId'])[0];
@@ -156,5 +156,14 @@ class OrdersController extends Controller
             'mfgoverhead_options' => $mfgoverhead_options,
             'mfgareas_options' => $mfgareas_options
         ])->extends('uxmal::layout.master');
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function create(Request $request){
+        $allInput = $request->all();
+        dd($allInput);
     }
 }

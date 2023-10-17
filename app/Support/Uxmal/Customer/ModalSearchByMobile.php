@@ -1,18 +1,36 @@
 <?php
 
-namespace App\Support\Uxmal\Client;
+namespace App\Support\Uxmal\Customer;
 
 class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
 {
 
     public function build()
     {
-        $form = \Enmaca\LaravelUxmal\Uxmal::component('form');
+        $form = \Enmaca\LaravelUxmal\Uxmal::component('form', [
+            'options' => [
+                'id' => 'NewOrderFrom',
+                'action' => '/orders',
+                'method' => 'POST'
+            ]
+        ]);
 
+        $form->addElement(SelectByNameMobileEmail::Object());
+/*
         $form->component('livewire', [
             'path' => 'input.modal-search-by-mobile.customer-mobile'
         ]);
+*/
         /*
+
+        $form->component('form.input.hidden', [
+            'options' => [
+                'name' => 'customerId',
+                'value' => 'new'
+            ]
+        ]);
+        */
+
         $form->componentsInDiv(['attributes' => [
             'class' => 'mb-3'
         ]], [[
@@ -32,7 +50,6 @@ class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
                 ]
             ]]
         ]);
-*/
 
         $form->componentsInDiv(['attributes' => [
             'class' => 'mb-3'
@@ -88,7 +105,7 @@ class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
                 'body' => $form,
                 'saveBtn' => [
                     'label' => 'Crear Pedido',
-                    'onclick' => 'console.log("clicked")'
+                    'onclick' => 'submitNewOrderFrom()'
                 ]
             ]
         ]);

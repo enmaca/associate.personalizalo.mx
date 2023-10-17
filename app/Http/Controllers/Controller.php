@@ -107,12 +107,12 @@ class Controller extends BaseController
                 [
                     'icon' => 'bounding-box',
                     'name' => 'CMYKW',
-                    'href' => route('clients_root')
+                    'href' => route('customers')
                 ],
                 [
                     'icon' => 'boxes',
                     'name' => 'Nesting',
-                    'href' => route('clients_root')
+                    'href' => route('customers')
                 ]
             ],
         ];
