@@ -61,6 +61,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/customer/search_tomselect', 'search_tomselect')->name('customer_search_tomselect');
     });
 
+    Route::controller( App\Http\Controllers\ProductsController::class)->group(function(){
+        Route::get('/products', 'root')->name('products');
+        Route::get('/products/{id}', 'get_id')->name('products_get_id');
+        Route::post('/products/search_tomselect', 'search_tomselect')->name('products_search_tomselect');
+    });
+
     Route::controller( \App\Http\Controllers\DigitalArtController::class)->group(function(){
         Route::get('/digital_art/{id}', 'download')->name('digital_art_get');
     });

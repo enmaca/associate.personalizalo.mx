@@ -77,6 +77,91 @@ class OrdersController extends Controller
         ])->extends('uxmal::layout.master');
     }
 
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function create(Request $request)
+    {
+        $allInput = $request->all();
+        $customer_data = null;
+        $order_data = null;
+        if (isset($allInput['customerId'])) {
+            $customer_data = Customer::findByHashId($allInput['customerId']);
+
+            if (!isset($allInput['customerId']) || empty($customer_data)) {
+                $customer_data = new Customer();
+                $customer_data->mobile = $allInput['customerMobile'];
+                $customer_data->name = $allInput['customerName'];
+                $customer_data->last_name = $allInput['customerLastName'];
+                $customer_data->email = $allInput['customerEmail'];
+                $customer_data->save();
+            }
+        } else if (isset($allInput['orderId'])) {
+            //TODO: Get OrderData
+        }
+
+        if (empty($order_data))
+            $order_data = Order::CreateToCustomer($customer_data->id);
+
+
+        $products_options = Product::select('name', 'id');
+        $material_options = Material::pluck('name', 'id');
+        $laborcost_options = LaborCost::pluck('name', 'id');
+        $mfgoverhead_options = MfgOverhead::pluck('name', 'id');
+        $mfgareas_options = MfgArea::pluck('name', 'id');
+
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+
+        $main_row = $uxmal->component('ui.row', [
+            'attributes' => [
+                'class' => [
+                    'row' => true
+                ]
+            ]
+        ]);
+
+        $form = \App\Support\Uxmal\Order\FormCreate::Object([
+            'values' => [
+                'customer_id' => $customer_data->hashId,
+                'customer_name' => $customer_data->name,
+                'customer_last_name' => $customer_data->last_name,
+                'customer_mobile' => $customer_data->mobile,
+                'customer_email' => $customer_data->email,
+                'order_id' => $order_data->hashed_id,
+                'order_code' => $order_data->code
+            ]]);
+
+        $main_row->component('ui.card', [
+            'options' => [
+                'header' => 'Pedido '. $order_data->code,
+                'body' => $form->toArray(),
+                'footer' => '&nbsp;'
+            ]
+        ]);
+
+        $modal = \App\Support\Uxmal\Products\ModalSelectProductWithDigitalArt::Object();
+
+        $main_row->addElement($modal['modal']);
+
+        /*
+                dump(
+                    'product_options' => $products_options,
+                    'material_options' => $material_options,
+                    'laborcost_options' => $laborcost_options,
+                    'mfgoverhead_options' => $mfgoverhead_options,
+                    'mfgareas_options' => $mfgareas_options]);
+
+                */
+
+        View::startPush('scripts', '<script src="' . Vite::asset('resources/js/orders/create.js', 'workshop') . '" type="module"></script>');
+
+        return view('uxmal::master-default', [
+            'uxmal_data' => $uxmal->toArray()
+
+        ])->extends('uxmal::layout.master');
+    }
+
     public function edit(Request $request, $hashed_id)
     {
         $order_id = Hashids::decode($hashed_id);
@@ -108,58 +193,6 @@ class OrdersController extends Controller
                 ])->extends('uxmal::layout.master');
                 break;
         }
-    }
-
-    /**
-     * @param Request $request
-     * @return mixed
-     */
-    public function create(Request $request)
-    {
-        $allInput = $request->all();
-        $customer_data = null;
-        $order_data = null;
-        if (isset($allInput['customerId'])){
-            $customer_data = Customer::findByHashId($allInput['customerId']);
-
-            if (!isset($allInput['customerId']) || empty($customer_data)) {
-                $customer_data = new Customer();
-                $customer_data->mobile = $allInput['customerMobile'];
-                $customer_data->name = $allInput['customerName'];
-                $customer_data->last_name = $allInput['customerLastName'];
-                $customer_data->email = $allInput['customerEmail'];
-                $customer_data->save();
-            }
-        } else if(isset($allInput['orderId']) ){
-            //TODO: Get OrderData
-        }
-
-        if( empty( $order_data ))
-            $order_data = Order::CreateToCustomer($customer_data->id);
-
-
-        $products_options = Product::select('name', 'id');
-        $material_options = Material::pluck('name', 'id');
-        $laborcost_options = LaborCost::pluck('name', 'id');
-        $mfgoverhead_options = MfgOverhead::pluck('name', 'id');
-        $mfgareas_options = MfgArea::pluck('name', 'id');
-
-        dd(['customer_id' => $customer_data->hashId,
-            'customer_name' => $customer_data->name,
-            'customer_last_name' => $customer_data->last_name,
-            'customer_mobile' => $customer_data->mobile,
-            'customer_email' => $customer_data->email,
-            'order_id' => $order_data->hashed_id,
-            'order_code' => $order_data->code,
-            'product_options' => $products_options,
-            'material_options' => $material_options,
-            'laborcost_options' => $laborcost_options,
-            'mfgoverhead_options' => $mfgoverhead_options,
-            'mfgareas_options' => $mfgareas_options]);
-        return view('uxmal::master-default', [
-            'uxmal_data' => []
-
-        ])->extends('uxmal::layout.master');
     }
 
     /**

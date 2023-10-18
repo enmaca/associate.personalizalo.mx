@@ -13,7 +13,8 @@ export default defineConfig({
                 'resources/css/app.css',
                 'resources/js/app.js',
                 'resources/js/orders/root.js',
-                'resources/js/orders/root_livewire.js'
+                'resources/js/orders/root_livewire.js',
+                'resources/js/orders/create.js'
             ],
             refresh: true,
         }),

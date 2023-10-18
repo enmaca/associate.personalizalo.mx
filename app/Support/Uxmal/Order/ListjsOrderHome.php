@@ -4,7 +4,7 @@ namespace App\Support\Uxmal\Order;
 
 class ListjsOrderHome extends \Enmaca\LaravelUxmal\Abstract\ListJs
 {
-    public function build()
+    public function build(): void
     {
         $this->_content->setColumns([
             'id' => [

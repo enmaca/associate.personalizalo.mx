@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Input\ModalSearchByMobile;
+namespace App\Livewire\toDelete\Input\ModalSearchByMobile;
 
 use App\Models\Customer;
 use Livewire\Component;

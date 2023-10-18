@@ -56,6 +56,8 @@ class SelectByNameMobileEmail extends \Enmaca\LaravelUxmal\Abstract\SelectTomSel
             ])
             ->get();
 
+        $items = [];
+
         foreach ($customers as $customer) {
             $items[] = [
                 'value' => $customer->hashId,
