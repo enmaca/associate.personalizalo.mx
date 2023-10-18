@@ -3,24 +3,23 @@
 namespace App\Livewire\Products\Modal;
 
 use App\Models\Product;
-use JetBrains\PhpStorm\NoReturn;
 use Livewire\Component;
 use Livewire\Attributes\On;
 
 class SelectByDigitalArtBody extends Component
 {
-
+    public $content;
 
     public function mount()
     {
-
+        $this->content = 'Initial Content';
     }
 
-    #[NoReturn] #[On('update')]
-    public function updating($params): void
+    #[On('select-by-digital-art-body::product.changed')]
+    public function product_changed($product): void
     {
-        dd($params);
-
+        $this->content = $product;
+        $this->dispatch('select-by-digital-art-body::showmodal');
     }
 
 
@@ -28,9 +27,13 @@ class SelectByDigitalArtBody extends Component
     {
         $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
         $uxmal->component('ui.row', [
-            'attributes' => ['class' => ['row' => true]],
-            'slot' => bin2hex(random_bytes(8))
-
+            'attributes' => [
+                'wire:model' => 'content',
+                'class' => [
+                    'row' => true
+                ]
+            ],
+            'slot' => $this->content
         ]);
         return view('uxmal::livewire', ['data' => $uxmal->toArray()]);
     }
