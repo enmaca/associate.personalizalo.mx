@@ -29,12 +29,12 @@ class OrdersController extends Controller
         /**
          * Create Predefined Modal with context 'createorder'
          */
-        $client_modal = \App\Support\Uxmal\Customer\ModalSearchByMobile::Object(['context' => 'createorder']);
+        $client_modal = \App\Support\UxmalComponents\Customer\ModalSearchByMobile::Object(['context' => 'createorder']);
 
         /**
          * Create Predefined ListJS with Conext 'orderhome'
          */
-        $order_listjs = \App\Support\Uxmal\Order\ListjsOrderHome::Object(['context' => 'orderhome']);
+        $order_listjs = \App\Support\UxmalComponents\Order\ListjsOrderHome::Object(['context' => 'orderhome']);
 
         /**
          * Set the top button to a listjs object from $modalStruct
@@ -115,7 +115,7 @@ class OrdersController extends Controller
             ]
         ]);
 
-        $form = \App\Support\Uxmal\Order\FormCreate::Object([
+        $form = \App\Support\UxmalComponents\Order\FormCreate::Object([
             'options' => [
                 'form.id' => 'customerData',
                 'form.action' => '/customer',
@@ -139,7 +139,7 @@ class OrdersController extends Controller
             ]
         ]);
 
-        $modal = \App\Support\Uxmal\Products\ModalSelectProductWithDigitalArt::Object();
+        $modal = \App\Support\UxmalComponents\Products\ModalSelectProductWithDigitalArt::Object();
 
         $main_row->addElement($modal['modal']);
 

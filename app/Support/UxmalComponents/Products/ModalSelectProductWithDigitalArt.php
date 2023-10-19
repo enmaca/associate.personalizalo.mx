@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support\Uxmal\Products;
+namespace App\Support\UxmalComponents\Products;
 
 class ModalSelectProductWithDigitalArt extends \Enmaca\LaravelUxmal\Abstract\Modal
 {

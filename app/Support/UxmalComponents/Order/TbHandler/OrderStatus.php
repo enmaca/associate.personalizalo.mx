@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support\Order;
+namespace App\Support\UxmalComponents\Order\TbHandler;
 use App\Enums\OrderStatusEnum;
 class OrderStatus extends \Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\TableColumn {
 

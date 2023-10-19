@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support\Order;
+namespace App\Support\UxmalComponents\Order\TbHandler;
 
 use App\Enums\ShipmentStatusEnum;
 

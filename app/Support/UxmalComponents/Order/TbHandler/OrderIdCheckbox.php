@@ -1,11 +1,9 @@
 <?php
-
-namespace App\Support\Order;
+namespace App\Support\UxmalComponents\Order\TbHandler;
 
 use Enmaca\LaravelUxmal\Components\Ui\Listjs\Checkbox as ComponentCheckbox;
 use Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\Checkbox as SupportCheckbox;
 use Illuminate\Support\Facades\View;
-use Vinkla\Hashids\Facades\Hashids;
 
 class OrderIdCheckbox extends \Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\TableColumn
 {

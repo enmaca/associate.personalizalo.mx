@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Support\Uxmal\Customer;
+namespace App\Support\UxmalComponents\Customer;
+
+use App\Support\UxmalComponents\Customer\SelectByNameMobileEmail;
 
 class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
 {

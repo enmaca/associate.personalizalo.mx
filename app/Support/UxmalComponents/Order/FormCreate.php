@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support\Uxmal\Order;
+namespace App\Support\UxmalComponents\Order;
 
 use Enmaca\LaravelUxmal\Uxmal;
 use Illuminate\Support\Str;
@@ -53,7 +53,7 @@ class FormCreate extends \Enmaca\LaravelUxmal\Abstract\Form
 
 
 
-        $search_product_tomselect =  \App\Support\Uxmal\Products\SelectByName::Object();
+        $search_product_tomselect =  \App\Support\UxmalComponents\Products\SelectByName::Object();
 
         $card_products_content = new \Enmaca\LaravelUxmal\Uxmal();
 

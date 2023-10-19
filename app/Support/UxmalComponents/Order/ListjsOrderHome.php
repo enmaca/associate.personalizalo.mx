@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support\Uxmal\Order;
+namespace App\Support\UxmalComponents\Order;
 
 class ListjsOrderHome extends \Enmaca\LaravelUxmal\Abstract\ListJs
 {
@@ -10,7 +10,7 @@ class ListjsOrderHome extends \Enmaca\LaravelUxmal\Abstract\ListJs
             'id' => [
                 'tbhContent' => 'checkbox-all',
                 'type' => 'primaryKey',
-                'handler' => \App\Support\Order\OrderIdCheckbox::class
+                'handler' => \App\Support\UxmalComponents\Order\TbHandler\OrderIdCheckbox::class
             ],
             'code' => [
                 'tbhContent' => 'Código de pedido'
@@ -20,23 +20,23 @@ class ListjsOrderHome extends \Enmaca\LaravelUxmal\Abstract\ListJs
             ],
             'status' => [
                 'tbhContent' => 'Estatus',
-                'handler' => \App\Support\Order\OrderStatus::class
+                'handler' => \App\Support\UxmalComponents\Order\TbHandler\OrderStatus::class
             ],
             'delivery_date' => [
                 'tbhContent' => 'Fecha de entrega',
-                'handler' => \App\Support\Order\OrderDeliverDate::class
+                'handler' => \App\Support\UxmalComponents\Order\TbHandler\OrderDeliverDate::class
             ],
             'shipment_status' => [
                 'tbhContent' => 'Estatus de envio',
-                'handler' => \App\Support\Order\OrderShipmentStatus::class
+                'handler' => \App\Support\UxmalComponents\Order\TbHandler\OrderShipmentStatus::class
             ],
             'payment_status' => [
                 'tbhContent' => 'Estatus de pago',
-                'handler' => \App\Support\Order\OrderPaymentStatus::class
+                'handler' => \App\Support\UxmalComponents\Order\TbHandler\OrderPaymentStatus::class
             ],
             'payment_ammount' => [
                 'tbhContent' => 'Pago',
-                'handler' => \App\Support\Order\OrderPaymentAmmount::class
+                'handler' => \App\Support\UxmalComponents\Order\TbHandler\OrderPaymentAmmount::class
             ]
         ]);
 

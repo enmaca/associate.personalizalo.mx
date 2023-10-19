@@ -24,7 +24,7 @@ class CustomerController extends Controller
         switch ($context) {
             case 'by_name_mobile_email':
             default:
-                $searchObj = new \App\Support\Uxmal\Customer\SelectByNameMobileEmail();
+                $searchObj = new \App\Support\UxmalComponents\Customer\SelectByNameMobileEmail();
                 return $searchObj->search($search);
         }
 

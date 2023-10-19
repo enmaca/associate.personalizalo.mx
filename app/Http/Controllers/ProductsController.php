@@ -26,7 +26,7 @@ class ProductsController extends Controller
 
         switch ($context) {
             default:
-                $searchObj = new \App\Support\Uxmal\Products\SelectByName();
+                $searchObj = new \App\Support\UxmalComponents\Products\SelectByName();
                 return $searchObj->search($search);
         }
 

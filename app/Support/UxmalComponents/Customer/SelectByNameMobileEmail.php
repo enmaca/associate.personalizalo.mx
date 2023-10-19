@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support\Uxmal\Customer;
+namespace App\Support\UxmalComponents\Customer;
 
 use App\Models\Customer;
 
