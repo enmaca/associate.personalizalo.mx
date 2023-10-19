@@ -26,7 +26,6 @@ class SelectByNameMobileEmail extends \Enmaca\LaravelUxmal\Abstract\SelectTomSel
         $this->_content = $uxmal->component('form.select.tomselect', [
             'options' => [
                 'tomselect.name' => 'customerId',
-                'tomselect.label' => 'Buscar Cliente',
                 'tomselect.placeholder' => 'Buscar por nombre, telefono o email...',
                 'tomselect.load-url' => '/customer/search_tomselect?context=by_name_mobile_email',
                 'tomselect.options' => $items,

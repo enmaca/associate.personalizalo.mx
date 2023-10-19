@@ -60,18 +60,18 @@ class ListjsOrderHome extends \Enmaca\LaravelUxmal\Abstract\ListJs
                 'payment_ammount']);
 // ->whereIn('id', [1,2,3,4,5]);
 
-        $buttons_row =new \Enmaca\LaravelUxmal\Uxmal();
+        $buttons_row = new \Enmaca\LaravelUxmal\Uxmal();
 
-        switch($this->attributes['context']){
+        switch ($this->attributes['context']) {
             case 'orderhome':
                 $buttons_row->component('form.button', [
                     'options' => [
-                        'type' => 'normal',
-                        'style' => 'primary',
-                        'onclick' => 'createOrder()'
-                    ],
-                    'type' => 'button',
-                    'slot' => 'Crear Pedido'
+                        'button.name' => 'orderHome',
+                        'button.type' => 'normal',
+                        'button.style' => 'primary',
+                        'button.onclick' => 'createOrder()',
+                        'button.label' => 'Crear Pedido'
+                    ]
                 ]);
                 break;
             default:

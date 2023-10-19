@@ -52,9 +52,9 @@ class OrdersController extends Controller
          */
         $main_row->component('ui.card', [
             'options' => [
-                'header' => 'Pedidos Pendientes',
-                'body' => $order_listjs->toArray(),
-                'footer' => '&nbsp;'
+                'card.header' => 'Pedidos Pendientes',
+                'card.body' => $order_listjs->toArray(),
+                'card.footer' => '&nbsp;'
             ]
         ]);
 

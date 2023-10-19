@@ -9,18 +9,18 @@ class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
     {
         $form = \Enmaca\LaravelUxmal\Uxmal::component('form', [
             'options' => [
-                'id' => 'NewOrderFrom',
-                'action' => '/orders',
-                'method' => 'POST'
+                'form.id' => 'NewOrderFrom',
+                'form.action' => '/orders',
+                'form.method' => 'POST'
             ]
         ]);
 
         $form->addElement(SelectByNameMobileEmail::Object());
-/*
-        $form->component('livewire', [
-            'path' => 'input.modal-search-by-mobile.customer-mobile'
-        ]);
-*/
+        /*
+                $form->component('livewire', [
+                    'path' => 'input.modal-search-by-mobile.customer-mobile'
+                ]);
+        */
         /*
 
         $form->component('form.input.hidden', [
@@ -37,17 +37,15 @@ class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
             'path' => 'form.input',
             'attributes' => [
                 'options' => [
-                    'type' => 'text',
-                    'label' => 'Celular',
+                    'input.type' => 'text',
+                    'input.label' => 'Celular',
                     'input.name' => 'customerMobile',
                     'input.placeholder' => '(+52) XXXXXXXXXX',
                     'input.required' => true,
-                    'input.mask.cleave' => [
-                        'type' => 'phone',
-                        'phoneregioncode' => 'MX',
-                        'prefix' => '+52 '
-                    ] //TODO: CLEAVE INTEGRATION  https://github.com/nosir/cleave.js https://github.com/nosir/cleave.js/blob/master/doc/options.md
-                ]
+                    'input.mask.cleave.type' => 'phone',
+                    'input.mask.cleave.phone.region-code' => 'MX',
+                    'input.mask.cleave.prefix' => '+52 '
+                ] //TODO: CLEAVE INTEGRATION  https://github.com/nosir/cleave.js https://github.com/nosir/cleave.js/blob/master/doc/options.md
             ]]
         ]);
 
@@ -58,8 +56,8 @@ class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
             'path' => 'form.input',
             'attributes' => [
                 'options' => [
-                    'type' => 'text',
-                    'label' => 'Nombre',
+                    'input.type' => 'text',
+                    'input.label' => 'Nombre',
                     'input.name' => 'customerName',
                     'input.placeholder' => 'Ingresa el nombre del cliente',
                     'input.required' => true,
@@ -74,8 +72,8 @@ class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
             'path' => 'form.input',
             'attributes' => [
                 'options' => [
-                    'type' => 'text',
-                    'label' => 'Apellido',
+                    'input.type' => 'text',
+                    'input.label' => 'Apellido',
                     'input.name' => 'customerLastName',
                     'input.placeholder' => 'Ingresa el apellido del cliente',
                     'input.required' => true,
@@ -90,8 +88,8 @@ class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
             'path' => 'form.input',
             'attributes' => [
                 'options' => [
-                    'type' => 'text',
-                    'label' => 'Correo Electrónico',
+                    'input.type' => 'text',
+                    'input.label' => 'Correo Electrónico',
                     'input.name' => 'customerEmail',
                     'input.placeholder' => 'Ingresa el correo electrónico del cliente',
                     'input.required' => true
@@ -101,32 +99,34 @@ class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
 
         $modal = \Enmaca\LaravelUxmal\Uxmal::component('ui.modal', [
             'options' => [
-                'title' => 'Buscar/Crear Cliente',
-                'body' => $form,
-                'saveBtn' => [
-                    'label' => 'Crear Pedido',
-                    'onclick' => 'submitNewOrderFrom()'
-                ]
+                'modal.name' => 'customerSearchByMobile',
+                'modal.title' => 'Buscar/Crear Cliente',
+                'modal.body' => $form,
+                'modal.saveBtn.label' => 'Crear Pedido',
+                'modal.saveBtn.onclick' => 'submitNewOrderFrom()'
             ]
         ]);
 
-        switch($this->attributes['context']){
+        switch ($this->attributes['context']) {
             case 'createclient':
                 $this->_callBtn = $modal->getShowButton([
                     'options' => [
-                        'label' => 'Agregar Cliente'
+                        'button.name' => 'clientAdd',
+                        'button.label' => 'Agregar Cliente'
                     ]], 'object');
                 break;
             case 'createorder':
-                $this->_callBtn =  $modal->getShowButton([
+                $this->_callBtn = $modal->getShowButton([
                     'options' => [
-                        'label' => 'Crear Pedido'
+                        'button.name' => 'orderCreate',
+                        'button.label' => 'Crear Pedido'
                     ]], 'object');
                 break;
             default:
-                $this->_callBtn =  $modal->getShowButton([
+                $this->_callBtn = $modal->getShowButton([
                     'options' => [
-                        'label' => 'Mostrar'
+                        'button.name' => 'showBtn',
+                        'button.label' => 'Mostrar'
                     ]], 'object');
                 break;
         }
