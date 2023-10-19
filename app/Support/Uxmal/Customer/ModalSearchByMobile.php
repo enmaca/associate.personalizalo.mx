@@ -15,7 +15,9 @@ class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
             ]
         ]);
 
-        $form->addElement(SelectByNameMobileEmail::Object());
+        $main_row = $form->component('ui.row', ['options' => [ 'row.append-attributes' => [ 'class' => 'gy-4'] ]]);
+
+        $main_row->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]], SelectByNameMobileEmail::Object());
         /*
                 $form->component('livewire', [
                     'path' => 'input.modal-search-by-mobile.customer-mobile'
@@ -31,9 +33,7 @@ class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
         ]);
         */
 
-        $form->componentsInDiv(['attributes' => [
-            'class' => 'mb-3'
-        ]], [[
+        $main_row->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[
             'path' => 'form.input',
             'attributes' => [
                 'options' => [
@@ -49,10 +49,7 @@ class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
             ]]
         ]);
 
-        $form->componentsInDiv(['attributes' => [
-            'class' => 'mb-3'
-        ]
-        ], [[
+        $main_row->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[
             'path' => 'form.input',
             'attributes' => [
                 'options' => [
@@ -65,10 +62,7 @@ class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
             ]]
         ]);
 
-        $form->componentsInDiv(['attributes' => [
-            'class' => 'mb-3'
-        ]
-        ], [[
+        $main_row->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[
             'path' => 'form.input',
             'attributes' => [
                 'options' => [
@@ -81,10 +75,7 @@ class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
             ]]
         ]);
 
-        $form->componentsInDiv(['attributes' => [
-            'class' => 'mb-3'
-        ]
-        ], [[
+        $main_row->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[
             'path' => 'form.input',
             'attributes' => [
                 'options' => [

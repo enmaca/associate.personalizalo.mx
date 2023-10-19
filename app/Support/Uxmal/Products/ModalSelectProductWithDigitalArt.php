@@ -9,23 +9,22 @@ class ModalSelectProductWithDigitalArt extends \Enmaca\LaravelUxmal\Abstract\Mod
     {
         $modal = \Enmaca\LaravelUxmal\Uxmal::component('ui.modal', [
             'options' => [
-                'name' => 'selectProductWithDigitalArt',
-                'title' => 'Agregar Producto (Arte Digital)',
-                'body' => \Enmaca\LaravelUxmal\Uxmal::component('livewire', [
+                'modal.name' => 'selectProductWithDigitalArt',
+                'modal.title' => 'Agregar Producto (Arte Digital)',
+                'modal.body' => \Enmaca\LaravelUxmal\Uxmal::component('livewire', [
                     'path' => 'products.modal.select-by-digital-art-body'
                 ]),
-                'saveBtn' => [
-                    'label' => 'Agregar al Pedido',
-                    'onclick' => 'addProductToOrder()'
-                ]
+                'modal.saveBtn.label' => 'Agregar al Pedido',
+                'modal.saveBtn.onclick' => 'addProductToOrder()'
             ]
         ]);
 
-        switch($this->attributes['context']){
+        switch ($this->attributes['context']) {
             default:
-                $this->_callBtn =  $modal->getShowButton([
+                $this->_callBtn = $modal->getShowButton([
                     'options' => [
-                        'label' => 'Mostrar'
+                        'button.name' => 'showModalProductWithDigitalArt',
+                        'button.label' => 'Mostrar'
                     ]], 'object');
                 break;
         }

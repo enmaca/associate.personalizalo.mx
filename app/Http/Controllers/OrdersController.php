@@ -24,13 +24,7 @@ class OrdersController extends Controller
 
         $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
 
-        $main_row = $uxmal->component('ui.row', [
-            'attributes' => [
-                'class' => [
-                    'row' => true
-                ]
-            ]
-        ]);
+        $main_row = $uxmal->component('ui.row', []);
 
         /**
          * Create Predefined Modal with context 'createorder'
@@ -122,6 +116,11 @@ class OrdersController extends Controller
         ]);
 
         $form = \App\Support\Uxmal\Order\FormCreate::Object([
+            'options' => [
+                'form.id' => 'customerData',
+                'form.action' => '/customer',
+                'form.method' => 'PUT'
+            ],
             'values' => [
                 'customer_id' => $customer_data->hashId,
                 'customer_name' => $customer_data->name,
@@ -134,9 +133,9 @@ class OrdersController extends Controller
 
         $main_row->component('ui.card', [
             'options' => [
-                'header' => 'Pedido '. $order_data->code,
-                'body' => $form->toArray(),
-                'footer' => '&nbsp;'
+                'card.header' => 'Pedido '. $order_data->code,
+                'card.body' => $form->toArray(),
+                'card.footer' => '&nbsp;'
             ]
         ]);
 
