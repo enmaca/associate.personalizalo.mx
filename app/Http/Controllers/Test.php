@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DigitalArt;
 use App\Models\Order;
 use App\Models\Customer;
 use Illuminate\Http\Request;
@@ -208,8 +209,6 @@ class Test extends Controller
         ]);
 
 
-
-
         $row_col_lg_12->component('form.button', [
             'attributes' => [
                 'onclick' => 'console.log("NewCheck")'
@@ -260,7 +259,6 @@ class Test extends Controller
         $formStruct = null;
 
         $form = $row_col_lg_12->component('form', $formStruct->toArray());
-
 
 
         //dd($uxmal->toArray());
@@ -358,13 +356,14 @@ class Test extends Controller
     }
 
 
-    public function __test(){
+    public function __test()
+    {
 
         $form = new \Enmaca\LaravelUxmal\Uxmal();
 
         $form->component('form.select.tomselect', [
             'options' => [
-               'label' => 'Buscar Cliente',
+                'label' => 'Buscar Cliente',
                 'select.model' => \App\Models\Customer::class,
                 'select.placeholder' => 'Ingresa nombre, telefono o email...',
                 'tomselect.populate-url' => '/test/tomselect_populate',
@@ -377,7 +376,8 @@ class Test extends Controller
         ])->extends('uxmal::layout.simple');
     }
 
-    public function tomselect_load(Request $request){
+    public function tomselect_load(Request $request)
+    {
 
         $search = json_decode($request->getContent(), true);
 
@@ -390,7 +390,7 @@ class Test extends Controller
 
 
         $items = [];
-        foreach(  $customers->toArray() as $customer ){
+        foreach ($customers->toArray() as $customer) {
             $items[] = [
                 'value' => $customer['id'],
                 'label' => "{$customer['name']} {$customer['last_name']} [{$customer['mobile']}] ({$customer['email']})"
@@ -404,46 +404,33 @@ class Test extends Controller
         ]);
     }
 
-    public function test(){
+    public function test()
+    {
         //'components.'
         $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
 
+        $DAdata = DigitalArt::where('da_category_id', 2)->select('id', 'thumbnail_path')->get();
+        $items = [];
+        foreach ($DAdata->toArray() as $digital_art)
+            $items[] = [
+                'id' => $digital_art['id'],
+                'slot' => '<img src="' . $digital_art['thumbnail_path'] . '" alt="Image 2">'
+            ];
+
+
         $uxmal->component('ui.swiper', [
             'options' => [
-                'swiper.name' => '/test/tomselect_populate',
-                'swiper.items' => [
-                    [
-                        'attributes' => 'swiper-slide',
-                        'slot' => 'Slide 1'
-                    ],[
-                        'attributes' => 'swiper-slide',
-                        'slot' => 'Slide 2'
-                    ],[
-                        'attributes' => 'swiper-slide',
-                        'slot' => 'Slide 3'
-                    ],[
-                        'attributes' => 'swiper-slide',
-                        'slot' => 'Slide 4'
-                    ],[
-                        'attributes' => 'swiper-slide',
-                        'slot' => 'Slide 5'
-                    ],[
-                        'attributes' => 'swiper-slide',
-                        'slot' => 'Slide 6'
-                    ],[
-                        'attributes' => 'swiper-slide',
-                        'slot' => 'Slide 7'
-                    ],[
-                        'attributes' => 'swiper-slide',
-                        'slot' => 'Slide 8'
-                    ],[
-                        'attributes' => 'swiper-slide',
-                        'slot' => 'Slide 9'
-                    ],[
-                        'attributes' => 'swiper-slide',
-                        'slot' => 'Slide 10'
-                    ],
-                ]
+                'swiper.container.style' => [
+                    'width' => '100%',
+                    'height' => '300px'
+                ],
+                'swiper.name' => 'digitalArtSwiper',
+                'swiper.items' => $items,
+                'swiper.config.slides-per-view' => 3,
+                'swiper.config.grid.rows' => 1,
+                'swiper.config.space-between' => 30,
+                'swiper.config.pagination.el' => '.swiper-pagination',
+                'swiper.config.pagination.clickable' => true
             ]
         ]);
 
