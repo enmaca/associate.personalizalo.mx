@@ -18,23 +18,35 @@ class SelectByDigitalArtBody extends Component
     #[On('select-by-digital-art-body::product.changed')]
     public function product_changed($product): void
     {
-        $this->content = $product;
+
+        $product_data = Product::With(['digital_category.arts'])->findByHashId($product); //
+
+       dd($product_data->digital_category->arts);
+
+        $this->content = $debug;
+
+
         $this->dispatch('select-by-digital-art-body::showmodal');
     }
 
 
     public function render()
     {
+
+
+
         $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
         $uxmal->component('ui.row', [
-            'attributes' => [
-                'wire:model' => 'content',
-                'class' => [
-                    'row' => true
-                ]
+            'options' => [
+                'row.append-attributes' => [
+                    'wire:model' => 'content'
+                ],
+                'row.slot' => $this->content
             ],
-            'slot' => $this->content
         ]);
+
+
+
         return view('uxmal::livewire', ['data' => $uxmal->toArray()]);
     }
 

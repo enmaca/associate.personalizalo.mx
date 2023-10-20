@@ -10,6 +10,26 @@ window.onChangeSelectedProductToAdd = function (value) {
     //openModal('selectProductWithDigitalArtId');
 }
 
+window.onChangeSelectedLaborCostByName = function(value) {
+    console.log('onChangeSelectedLaborCostByName:', value);
+}
+
+window.onChangeSelectedMaterialByNameSkuDesc = function (value){
+    console.log('onChangeSelectedMaterialByNameSkuDesc:', value);
+}
+
+window.onChangeSelectedMfgAreaByName = function (value){
+    console.log('onChangeSelectedMfgAreaByName:', value);
+}
+
+window.onChangeSelectedMfgDeviceByName = function (value){
+    console.log('onChangeSelectedMfgDeviceByName:', value);
+}
+
+window.onChangeSelectedMfgOverHeadByName = function (value){
+    console.log('onChangeSelectedMfgOverHeadByName:', value);
+}
+
 window.openModal = function (identifier) {
     const element = document.getElementById(identifier);
     if (!element) {

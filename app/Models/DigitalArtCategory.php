@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DigitalArtCategory extends Model
+class DigitalArtCategory extends BaseModel
 {
     use HasFactory;
 
@@ -22,6 +22,11 @@ class DigitalArtCategory extends Model
         'created_at',
         'updated_at',
     ];
+
+    public function arts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(DigitalArt::class, 'da_category_id', 'id');
+    }
 
     public function parent(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

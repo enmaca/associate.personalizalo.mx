@@ -15,7 +15,8 @@ class ModalSelectProductWithDigitalArt extends \Enmaca\LaravelUxmal\Abstract\Mod
                     'path' => 'products.modal.select-by-digital-art-body'
                 ]),
                 'modal.saveBtn.label' => 'Agregar al Pedido',
-                'modal.saveBtn.onclick' => 'addProductToOrder()'
+                'modal.saveBtn.onclick' => 'addProductToOrder()',
+                'modal.size' => 'large'
             ]
         ]);
 

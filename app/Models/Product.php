@@ -12,7 +12,7 @@ class Product extends BaseModel
     protected $table = 'catalog_products';
     protected $primaryKey = 'id';
 
-    public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function digital_category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->BelongsTo(DigitalArtCategory::class, 'digital_art_category_id', 'id');
     }

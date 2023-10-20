@@ -80,6 +80,7 @@ class OrdersController extends Controller
         $allInput = $request->all();
         $customer_data = null;
         $order_data = null;
+
         if (isset($allInput['customerId'])) {
             $customer_data = Customer::findByHashId($allInput['customerId']);
 
@@ -110,12 +111,12 @@ class OrdersController extends Controller
         $main_row = $uxmal->component('ui.row', [
             'attributes' => [
                 'class' => [
-                    'row' => true
+                    'row gy-4' => true
                 ]
             ]
         ]);
 
-        $form = \App\Support\UxmalComponents\Order\FormCreate::Object([
+        $form = \App\Support\UxmalComponents\Order\FormCreateEdit::Object([
             'options' => [
                 'form.id' => 'customerData',
                 'form.action' => '/customer',
@@ -140,6 +141,7 @@ class OrdersController extends Controller
         ]);
 
         $modal = \App\Support\UxmalComponents\Products\ModalSelectProductWithDigitalArt::Object();
+
 
         $main_row->addElement($modal['modal']);
 

@@ -11,9 +11,11 @@ class Test extends Controller
     //
     public function modal()
     {
+//'components.ui.swiper'
 
         $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
-        $row = $uxmal->component('ui.row');
+
+        $row = $uxmal->component('ui.swiper');
 
         $row->component('form.button', [
             'class' => 'btn btn-success add-btn',
@@ -101,7 +103,6 @@ class Test extends Controller
                 ]
             ]
         ]);
-
 
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
@@ -357,7 +358,7 @@ class Test extends Controller
     }
 
 
-    public function test(){
+    public function __test(){
 
         $form = new \Enmaca\LaravelUxmal\Uxmal();
 
@@ -401,5 +402,53 @@ class Test extends Controller
             'items' => $items,
             'total_count' => count($items)
         ]);
+    }
+
+    public function test(){
+        //'components.'
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+
+        $uxmal->component('ui.swiper', [
+            'options' => [
+                'swiper.name' => '/test/tomselect_populate',
+                'swiper.items' => [
+                    [
+                        'attributes' => 'swiper-slide',
+                        'slot' => 'Slide 1'
+                    ],[
+                        'attributes' => 'swiper-slide',
+                        'slot' => 'Slide 2'
+                    ],[
+                        'attributes' => 'swiper-slide',
+                        'slot' => 'Slide 3'
+                    ],[
+                        'attributes' => 'swiper-slide',
+                        'slot' => 'Slide 4'
+                    ],[
+                        'attributes' => 'swiper-slide',
+                        'slot' => 'Slide 5'
+                    ],[
+                        'attributes' => 'swiper-slide',
+                        'slot' => 'Slide 6'
+                    ],[
+                        'attributes' => 'swiper-slide',
+                        'slot' => 'Slide 7'
+                    ],[
+                        'attributes' => 'swiper-slide',
+                        'slot' => 'Slide 8'
+                    ],[
+                        'attributes' => 'swiper-slide',
+                        'slot' => 'Slide 9'
+                    ],[
+                        'attributes' => 'swiper-slide',
+                        'slot' => 'Slide 10'
+                    ],
+                ]
+            ]
+        ]);
+
+        return view('uxmal::simple-default', [
+            'uxmal_data' => $uxmal->toArray()
+        ])->extends('uxmal::layout.simple');
     }
 }
