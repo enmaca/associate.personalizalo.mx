@@ -404,33 +404,70 @@ class Test extends Controller
         ]);
     }
 
-    public function test()
+    public function _test()
     {
         //'components.'
         $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+
+        $main_row = $uxmal->component('ui.row'); //  [ 'options' => [ 'row.type' => 'flex' ]]
 
         $DAdata = DigitalArt::where('da_category_id', 2)->select('id', 'thumbnail_path')->get();
         $items = [];
         foreach ($DAdata->toArray() as $digital_art)
             $items[] = [
                 'id' => $digital_art['id'],
-                'slot' => '<img src="' . $digital_art['thumbnail_path'] . '" alt="Image 2">'
+                'slot' => '<img  class="image-fluid border rounded mx-auto m-2" src="' . $digital_art['thumbnail_path'] . '" style="max-width: 100%; max-height: 360px" alt="Image 2" onclick="console.log(this)">'
             ];
 
 
-        $uxmal->component('ui.swiper', [
+        $main_row->component('ui.swiper', [
             'options' => [
-                'swiper.container.style' => [
-                    'width' => '100%',
-                    'height' => '300px'
-                ],
                 'swiper.name' => 'digitalArtSwiper',
                 'swiper.items' => $items,
-                'swiper.config.slides-per-view' => 3,
+                'swiper.config.slides-per-view' => 5,
                 'swiper.config.grid.rows' => 1,
-                'swiper.config.space-between' => 30,
-                'swiper.config.pagination.el' => '.swiper-pagination',
-                'swiper.config.pagination.clickable' => true
+                'swiper.config.space-between' => 10,
+                'swiper.config.pagination' => 'progress',
+                'swiper.config.navigation' => true,
+                'swiper.config.effect' => 'cube',
+                'swiper.config.cubeEffect' => [
+                    'shadow' => true,
+                    'slideShadows' => true,
+                    'shadowOffset' => 20,
+                    'shadowScale' => 0.94,
+                ]
+            ]
+        ]);
+
+        return view('uxmal::simple-default', [
+            'uxmal_data' => $uxmal->toArray()
+        ])->extends('uxmal::layout.simple');
+    }
+
+    public function test()
+    {
+        //'components.'
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+
+        $main_row = $uxmal->component('ui.row'); //  [ 'options' => [ 'row.type' => 'flex' ]]
+
+        $DAdata = DigitalArt::where('da_category_id', 2)->select('id', 'thumbnail_path')->get();
+        $items = [];
+        foreach ($DAdata as $digital_art)
+            $items[] = [
+                'slot' => '<img class="image-fluid border rounded mx-auto m-2" src="' . $digital_art->thumbnail_path . '" style="max-width: 100%; max-height: 360px" alt="Image 2" onclick="console.log(\''.$digital_art->hashId.'\')">'
+            ];
+
+
+        $main_row->component('ui.swiper', [
+            'options' => [
+                'swiper.name' => 'digitalArtSwiper',
+                'swiper.items' => $items,
+                'swiper.config.slides-per-view' => 5,
+                'swiper.config.grid.rows' => 1,
+                'swiper.config.space-between' => 10,
+                'swiper.config.pagination' => 'progress',
+                'swiper.config.navigation' => true
             ]
         ]);
 

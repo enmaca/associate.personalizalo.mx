@@ -134,7 +134,7 @@ class OrdersController extends Controller
 
         $main_row->component('ui.card', [
             'options' => [
-                'card.header' => 'Pedido '. $order_data->code,
+                'card.header' => 'Pedido ' . $order_data->code,
                 'card.body' => $form->toArray(),
                 'card.footer' => '&nbsp;'
             ]
@@ -155,7 +155,9 @@ class OrdersController extends Controller
 
                 */
 
+        View::startPush('scss', '<link rel="stylesheet" href="' . asset('enmaca/laravel-uxmal/assets/swiper.css') . '" type="text/css"/>');
         View::startPush('scripts', '<script src="' . Vite::asset('resources/js/orders/create.js', 'workshop') . '" type="module"></script>');
+        View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/swiper.js') . '" type="module"></script>');
 
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()

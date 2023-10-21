@@ -5,28 +5,28 @@ window.onChangeSelectedProductToAdd = function (value) {
     console.log('onChangeSelectedProductToAdd:', value);
     // let liveWObj = Livewire.getByName();
     // console.log('livewire object:', liveWObj);
-    Livewire.dispatch('select-by-digital-art-body::product.changed', { product: value } );
+    Livewire.dispatch('select-by-digital-art-body::product.changed', {product: value});
     //element.dispatchEvent(new Event('input'));
     //openModal('selectProductWithDigitalArtId');
 }
 
-window.onChangeSelectedLaborCostByName = function(value) {
+window.onChangeSelectedLaborCostByName = function (value) {
     console.log('onChangeSelectedLaborCostByName:', value);
 }
 
-window.onChangeSelectedMaterialByNameSkuDesc = function (value){
+window.onChangeSelectedMaterialByNameSkuDesc = function (value) {
     console.log('onChangeSelectedMaterialByNameSkuDesc:', value);
 }
 
-window.onChangeSelectedMfgAreaByName = function (value){
+window.onChangeSelectedMfgAreaByName = function (value) {
     console.log('onChangeSelectedMfgAreaByName:', value);
 }
 
-window.onChangeSelectedMfgDeviceByName = function (value){
+window.onChangeSelectedMfgDeviceByName = function (value) {
     console.log('onChangeSelectedMfgDeviceByName:', value);
 }
 
-window.onChangeSelectedMfgOverHeadByName = function (value){
+window.onChangeSelectedMfgOverHeadByName = function (value) {
     console.log('onChangeSelectedMfgOverHeadByName:', value);
 }
 
@@ -38,6 +38,10 @@ window.openModal = function (identifier) {
     }
     const modalInstance = new Modal(element);
     modalInstance.show();
+    setTimeout(function () {
+        let swiperEl = element.querySelector('[data-swiper]');
+        if (swiperEl) window.init_swiper_elem(swiperEl)
+    }, 500);
 }
 
 window.closeModal = function (identifier) {
@@ -55,3 +59,4 @@ document.addEventListener('livewire:initialized', () => {
         openModal('selectProductWithDigitalArtId');
     });
 });
+
