@@ -17,7 +17,8 @@ class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
                 'card.header' => 'Datos Generales/Cliente',
                 'card.body' => null,
                 'card.footer' => 'Agregar Boton de Editar',
-                'card.border.style' => 'primary'
+                'card.style' => 'primary',
+                'card.name' => 'clientCard'
             ]
         ]);
 
@@ -28,7 +29,8 @@ class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
                 'card.header' => 'Dirección de Entrega/Estatus de Entrega',
                 'card.body' => null,
                 'card.footer' => '',
-                'card.border.style' => 'success'
+                'card.style' => 'success',
+                'card.name' => 'deliveryCard'
             ]
         ]);
 
@@ -39,7 +41,8 @@ class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
                 'card.header' => 'Productos',
                 'card.body' => null,
                 'card.footer' => '',
-                'card.border.style' => 'info'
+                'card.style' => 'info',
+                'card.name' => 'productCard'
             ]
         ]);
 
@@ -50,7 +53,7 @@ class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
                 'card.header' => 'Costos Directos',
                 'card.body' => null,
                 'card.footer' => '',
-                'card.border.style' => 'warning'
+                'card.style' => 'warning'
             ]
         ]);
 
@@ -61,7 +64,7 @@ class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
                 'card.header' => 'Información de Pago',
                 'card.body' => null,
                 'card.footer' => '',
-                'card.border.style' => 'dark'
+                'card.style' => 'dark'
             ]
         ]);
 

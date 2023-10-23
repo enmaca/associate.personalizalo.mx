@@ -32,13 +32,13 @@ class Product extends BaseModel
         $d2r_variations = [];
         $d2r_relations['color'] = [];
         $d2r_relations['size'] = [];
-        $_data = MaterialVariationsGroup::with('items')->findOrFail($id)->toArray();
-
-        foreach( $_data['items'] as $material ){
+        $_data = MaterialVariationsGroup::with('items')->findOrFail($id);
+        // TODO Build with variation group type enum switch
+        foreach( $_data->items->toArray() as $material ){
             $_material_data = Material::findOrFail($material['catalog_material_id'])->toArray();
 
             if(!empty($_material_data['opt_color'])){
-                $_material_data['opt_color'] = '#'.$_material_data['opt_color'];
+                $_material_data['opt_color'] = $_material_data['opt_color'];
                 $d2r_variations['color'][$_material_data['opt_color']] = true;
             }
 
@@ -58,6 +58,7 @@ class Product extends BaseModel
         }
 
         return [
+            'hashId' => $_data->hashId,
             'variations' => [
                 'color' => array_keys($d2r_variations['color']),
                 'size' => array_keys($d2r_variations['size'])
@@ -69,22 +70,26 @@ class Product extends BaseModel
 
     public static function ProcessMfgPrintVariationGroupCosts($id): array {
 
-        $_data = PrintVariationsGroup::with('items')->findOrFail($id)->toArray();
+        $_data = PrintVariationsGroup::with('items')->findOrFail($id);
         $data2return =[
-            'name' => $_data['name'],
-            'mockup_id' => $_data['mockup_id'],
+            'hashId' => $_data->hashId,
+            'name' => $_data->name,
+            'mockup_id' => $_data->mockup_id,
+            'name' => $_data->name,
+            'mockup_id' => $_data->mockup_id,
             'items' => []
         ];
-        foreach( $_data['items'] as $print ){
-            unset($print['created_at']);
-            unset($print['created_by']);
-            unset($print['updated_at']);
-            // unset($print['id']);
-            unset($print['pvg_id']);
-            if( !empty($print['variation_metadata']))
-                $print['variation_metadata'] = json_decode($print['variation_metadata']);
-            $data2return['items'][] = $print;
-        }
+        foreach( $_data->items as $print )
+            $data2return['items'][] = [
+                'hashId' => $print->hashId,
+                'display_name' => $print->display_name,
+                'preview_path' => $print->preview_path,
+                'mockup_layer_id' => $print->mockup_layer_id,
+                'variation_metadata' => json_decode($print['variation_metadata']),
+                'price' => $print->price,
+                'taxes' => $print->taxes
+            ];
+
         return $data2return;
     }
 }

@@ -1,0 +1,35 @@
+.print-variant {
+  input:checked + label {
+    border-color: var(--bs-dark) !important;
+  }
+}
+
+.color-variant {
+  label {
+   // display: inline-block;
+  //  cursor: pointer;
+  //  border: 1px solid transparent;
+  }
+
+  input:checked + label {
+   // border: 1px solid var(--bs-dark);
+  }
+
+  input.disabled + label {
+  //  border-color: var(--bs-dark);
+  //  border-style: dashed;
+  //  opacity: 0.65;
+  }
+}
+
+.size-variant {
+  input:checked + label {
+    background-color: var(--bs-dark);
+    color: var(--bs-light);
+  }
+
+  input.disabled + label {
+    border-style: dashed;
+    opacity: 0.65;
+  }
+}

@@ -5,6 +5,7 @@ window.onChangeSelectedProductToAdd = function (value) {
     console.log('onChangeSelectedProductToAdd:', value);
     // let liveWObj = Livewire.getByName();
     // console.log('livewire object:', liveWObj);
+    uxmalSetCardLoading('productCard', true);
     Livewire.dispatch('select-by-digital-art-body::product.changed', {product: value});
     //element.dispatchEvent(new Event('input'));
     //openModal('selectProductWithDigitalArtId');
@@ -30,6 +31,15 @@ window.onChangeSelectedMfgOverHeadByName = function (value) {
     console.log('onChangeSelectedMfgOverHeadByName:', value);
 }
 
+document.addEventListener('livewire:initialized', () => {
+    Livewire.on('select-by-digital-art-body::showmodal', (event) => {
+        openModal('selectProductWithDigitalArtId');
+        uxmalSetCardLoading('productCard', false);
+    });
+});
+
+
+
 window.openModal = function (identifier) {
     const element = document.getElementById(identifier);
     if (!element) {
@@ -53,10 +63,3 @@ window.closeModal = function (identifier) {
     const modalInstance = new Modal(element);
     modalInstance.show();
 }
-
-document.addEventListener('livewire:initialized', () => {
-    Livewire.on('select-by-digital-art-body::showmodal', (event) => {
-        openModal('selectProductWithDigitalArtId');
-    });
-});
-
