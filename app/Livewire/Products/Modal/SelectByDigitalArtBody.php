@@ -14,7 +14,7 @@ class SelectByDigitalArtBody extends Component
 
     public function mount()
     {
-        $this->content = 'Initial Content';
+        $this->content = 'Initial::Content';
     }
 
     #[On('select-by-digital-art-body::product.changed')]

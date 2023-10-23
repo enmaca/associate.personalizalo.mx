@@ -17,6 +17,11 @@ class SelectByNameSkuDesc extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
 
         $materials = Material::orderBy('created_at', 'desc')->take(25)->get();
 
+        $aggregate = [];
+
+        if(isset($this->attributes['options']['event-change-handler']))
+            $aggregate['tomselect.event-change-handler'] = $this->attributes['options']['event-change-handler'];
+
         $items = [];
 
         foreach( $materials as $material )
@@ -28,9 +33,8 @@ class SelectByNameSkuDesc extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
                 'tomselect.placeholder' => 'Buscar por nombre, sku, color, talla...',
                 'tomselect.load-url' => '/maerial/search_tomselect?context=by_name_sku_desc',
                 'tomselect.options' => $items,
-                'tomselect.allow-empty-option' => true,
-                'tomselect.event-change-handler' => 'onChangeSelectedMaterialByNameSkuDesc'
-            ]
+                'tomselect.allow-empty-option' => true
+            ] + $aggregate
         ]);
     }
 

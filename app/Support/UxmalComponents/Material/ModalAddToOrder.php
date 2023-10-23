@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Support\UxmalComponents\Products;
+namespace App\Support\UxmalComponents\Material;
 
-class ModalSelectProductWithDigitalArt extends \Enmaca\LaravelUxmal\Abstract\Modal
+class ModalAddToOrder extends \Enmaca\LaravelUxmal\Abstract\Modal
 {
 
     public function build()
@@ -13,13 +13,13 @@ class ModalSelectProductWithDigitalArt extends \Enmaca\LaravelUxmal\Abstract\Mod
 
         $modal = \Enmaca\LaravelUxmal\Uxmal::component('ui.modal', [
             'options' => [
-                'modal.name' => 'selectProductWithDigitalArt',
-                'modal.title' => 'Agregar Producto (Arte Digital)',
+                'modal.name' => 'selectedMaterialToAddToOrder',
+                'modal.title' => 'Agregar Material Directo',
                 'modal.body' => \Enmaca\LaravelUxmal\Uxmal::component('livewire', [
-                    'path' => 'products.modal.select-by-digital-art-body'
+                    'path' => 'material.modal.add-material-to-order'
                 ]),
                 'modal.saveBtn.label' => 'Agregar al Pedido',
-                'modal.size' => 'large'
+                'modal.size' => 'normal'
             ] + $aggregate
         ]);
 
@@ -27,7 +27,7 @@ class ModalSelectProductWithDigitalArt extends \Enmaca\LaravelUxmal\Abstract\Mod
             default:
                 $this->_callBtn = $modal->getShowButton([
                     'options' => [
-                        'button.name' => 'showModalSelectProductWithDigitalArt',
+                        'button.name' => 'showModalSelectedMaterialToAddToOrder',
                         'button.label' => 'Mostrar'
                     ]], 'object');
                 break;

@@ -6,12 +6,8 @@ window.order_id = null;
 console.log('resources/js/order/create.js Loaded')
 window.onChangeSelectedProductToAdd = function (value) {
     console.log('onChangeSelectedProductToAdd:', value);
-    // let liveWObj = Livewire.getByName();
-    // console.log('livewire object:', liveWObj);
     uxmalSetCardLoading('productCard', true);
     Livewire.dispatch('select-by-digital-art-body::product.changed', {product: value});
-    //element.dispatchEvent(new Event('input'));
-    //openModal('selectProductWithDigitalArtId');
 }
 
 window.onChangeSelectedLaborCostByName = function (value) {
@@ -20,6 +16,8 @@ window.onChangeSelectedLaborCostByName = function (value) {
 
 window.onChangeSelectedMaterialByNameSkuDesc = function (value) {
     console.log('onChangeSelectedMaterialByNameSkuDesc:', value);
+    uxmalSetCardLoading('dynamicCard', true);
+    Livewire.dispatch('add-material-to-order::material.changed', {material: value});
 }
 
 window.onChangeSelectedMfgAreaByName = function (value) {
@@ -47,7 +45,7 @@ window.addProductToOrder = () => {
         formData.append('customer_id', window.customer_id);
 
         console.log('form.action => ', formElement.action);
-        console.log('form.data => ',[...formData]);
+        console.log('form.data => ', [...formData]);
 
         /* Use fetch to send the form data
         fetch(formElement.action, {
@@ -73,9 +71,11 @@ document.addEventListener('livewire:initialized', () => {
         openModal('selectProductWithDigitalArtId');
         uxmalSetCardLoading('productCard', false);
     });
+    Livewire.on('add-material-to-order::showmodal', (event) => {
+        openModal('selectedMaterialToAddToOrderId');
+        uxmalSetCardLoading('dynamicCard', false);
+    });
 });
-
-
 
 
 window.openModal = function (identifier) {
@@ -102,11 +102,11 @@ window.closeModal = function (identifier) {
     modalInstance.show();
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     let divElement = document.querySelector('div[data-uxmal-order-data]');
     if (divElement) {
         let order_data = JSON.parse(divElement.getAttribute('data-uxmal-order-data').toString());
-        if(order_data){
+        if (order_data) {
             window.order_id = order_data.order_id;
             window.customer_id = order_data.customer_id;
         }

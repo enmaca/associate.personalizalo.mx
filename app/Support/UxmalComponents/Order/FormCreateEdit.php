@@ -36,7 +36,7 @@ class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
 
         $this->Row(true, $delivery_card);
 
-        $delivery_card = FormCreateEdit\ProductCard::Object([
+        $productCard = FormCreateEdit\ProductCard::Object([
             'values' => $this->attributes['values'],
             'options' => [
                 'card.header' => 'Productos',
@@ -47,29 +47,31 @@ class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
             ]
         ]);
 
-        $this->Row(true, $delivery_card);
+        $this->Row(true, $productCard);
 
-        $delivery_card = FormCreateEdit\DynamicCard::Object([
+        $dynamicCard = FormCreateEdit\DynamicCard::Object([
             'options' => [
                 'card.header' => 'Costos Directos',
                 'card.body' => null,
                 'card.footer' => '',
-                'card.style' => 'warning'
+                'card.style' => 'warning',
+                'card.name' => 'dynamicCard'
             ]
         ]);
 
-        $this->Row(true, $delivery_card);
+        $this->Row(true, $dynamicCard);
 
-        $delivery_card = FormCreateEdit\PaymentCard::Object([
+        $paymentCard = FormCreateEdit\PaymentCard::Object([
             'options' => [
                 'card.header' => 'Información de Pago',
                 'card.body' => null,
                 'card.footer' => '',
-                'card.style' => 'dark'
+                'card.style' => 'dark',
+                'card.name' => 'paymentCard'
             ]
         ]);
 
-        $this->Row(true, $delivery_card);
+        $this->Row(true, $paymentCard);
     }
 }
 

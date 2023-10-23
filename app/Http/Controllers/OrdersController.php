@@ -146,10 +146,15 @@ class OrdersController extends Controller
             ]
         ]);
 
-        $modal = \App\Support\UxmalComponents\Products\ModalSelectProductWithDigitalArt::Object();
+        /**
+         * Add Modals
+         */
+        $modalSelectedProductWithDigitalArt = \App\Support\UxmalComponents\Products\ModalSelectProductWithDigitalArt::Object(['options' => ['saveBtn.onclick' => 'addProductToOrder()']]);
+        $uxmal->addElement($modalSelectedProductWithDigitalArt['modal']);
 
+        $modalAddToOrder = \App\Support\UxmalComponents\Material\ModalAddToOrder::Object(['options' => ['saveBtn.onclick' => 'addMaterialToOrder()']]);
+        $uxmal->addElement($modalAddToOrder['modal']);
 
-        $uxmal->addElement($modal['modal']);
 
         /*
                 dump(

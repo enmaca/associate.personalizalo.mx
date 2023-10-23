@@ -13,7 +13,7 @@ class DynamicCard extends \Enmaca\LaravelUxmal\Abstract\Card
 
         $this->setBodyFieldRowClass('col-xxl-6 mb-3');
 
-        $search_product_tomselect =  \App\Support\UxmalComponents\Material\SelectByNameSkuDesc::Object();
+        $search_product_tomselect = \App\Support\UxmalComponents\Material\SelectByNameSkuDesc::Object(['options' => ['event-change-handler' => 'onChangeSelectedMaterialByNameSkuDesc']]);
         $this->BodyInput($search_product_tomselect);
 
         $search_labor_cost_tomselect = \App\Support\UxmalComponents\LaborCost\SelectByName::Object();
