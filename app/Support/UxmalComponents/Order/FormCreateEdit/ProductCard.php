@@ -10,7 +10,9 @@ class ProductCard extends \Enmaca\LaravelUxmal\Abstract\Card
     public function build(): void
     {
 
-        $search_product_tomselect =  \App\Support\UxmalComponents\Products\SelectByName::Object();
+        $search_product_tomselect =  \App\Support\UxmalComponents\Products\SelectByName::Object([
+            'values' => $this->attributes['values']
+        ]);
         $this->BodyRow();
 
         $this->BodyInput( $search_product_tomselect);

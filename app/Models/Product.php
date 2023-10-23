@@ -30,30 +30,36 @@ class Product extends BaseModel
 
     public static function ProcessMfgMaterialVariationsGroupCosts($id): array {
         $d2r_variations = [];
+        $d2r_variations_ids = [];
         $d2r_relations['color'] = [];
         $d2r_relations['size'] = [];
         $_data = MaterialVariationsGroup::with('items')->findOrFail($id);
-        // TODO Build with variation group type enum switch
-        foreach( $_data->items->toArray() as $material ){
-            $_material_data = Material::findOrFail($material['catalog_material_id'])->toArray();
 
-            if(!empty($_material_data['opt_color'])){
-                $_material_data['opt_color'] = $_material_data['opt_color'];
-                $d2r_variations['color'][$_material_data['opt_color']] = true;
+        // TODO Build with variation group type enum switch
+        foreach( $_data->items as $material ){
+
+            $_material_data = Material::findOrFail($material->catalog_material_id);
+
+
+            if(!empty($_material_data->opt_color)){
+                $d2r_variations_ids['color'] = $_material_data->hashId;
+                $d2r_variations['color'][$_material_data->opt_color] = true;
             }
 
-            if(!empty($_material_data['opt_size']))
-                $d2r_variations['size'][$_material_data['opt_size']] = true;
+            if(!empty($_material_data->opt_size)){
+                $d2r_variations_ids['size'] = $_material_data->hashId;
+                $d2r_variations['size'][$_material_data->opt_size] = true;
+            }
 
-            if( !empty($_material_data['opt_size']) && !empty($_material_data['opt_color'])){
-                if( !array_key_exists($_material_data['opt_color'], $d2r_relations['color'] ))
-                    $d2r_relations['color'][$_material_data['opt_color']] = [];
+            if( !empty($_material_data->opt_size) && !empty($_material_data->opt_color)){
+                if( !array_key_exists($_material_data->opt_color, $d2r_relations['color'] ))
+                    $d2r_relations['color'][$_material_data->opt_color] = [];
 
-                if( !array_key_exists($_material_data['opt_size'], $d2r_relations['size'] ))
-                    $d2r_relations['size'][$_material_data['opt_size']] = [];
+                if( !array_key_exists($_material_data->opt_size, $d2r_relations['size'] ))
+                    $d2r_relations['size'][$_material_data->opt_size] = [];
 
-                $d2r_relations['size'][$_material_data['opt_size']][$_material_data['opt_color']] = $_material_data['invt_quantity'];
-                $d2r_relations['color'][$_material_data['opt_color']][$_material_data['opt_size']] = $_material_data['invt_quantity'];
+                $d2r_relations['size'][$_material_data->opt_size][$_material_data->opt_color] = $_material_data->invt_quantity;
+                $d2r_relations['color'][$_material_data->opt_color][$_material_data->opt_size] = $_material_data->invt_quantity;
             }
         }
 
@@ -63,6 +69,7 @@ class Product extends BaseModel
                 'color' => array_keys($d2r_variations['color']),
                 'size' => array_keys($d2r_variations['size'])
             ],
+            'variations_ids' => $d2r_variations_ids,
             'allowed_variations' => $d2r_relations
         ];
 

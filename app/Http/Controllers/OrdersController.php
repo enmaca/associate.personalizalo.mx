@@ -109,9 +109,15 @@ class OrdersController extends Controller
         $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
 
         $main_row = $uxmal->component('ui.row', [
-            'attributes' => [
-                'class' => [
-                    'row gy-4' => true
+            'options' => [
+                'row.append-attributes' => [
+                    'data-uxmal-order-data' => json_encode([
+                        'customer_id' => $customer_data->hashId,
+                        'order_id' => $order_data->hashId
+                    ]),
+                    'class' => [
+                        'row gy-4' => true
+                    ]
                 ]
             ]
         ]);
@@ -143,7 +149,7 @@ class OrdersController extends Controller
         $modal = \App\Support\UxmalComponents\Products\ModalSelectProductWithDigitalArt::Object();
 
 
-        $main_row->addElement($modal['modal']);
+        $uxmal->addElement($modal['modal']);
 
         /*
                 dump(
@@ -156,7 +162,7 @@ class OrdersController extends Controller
                 */
 
         View::startPush('scss', '<link rel="stylesheet" href="' . asset('enmaca/laravel-uxmal/assets/swiper.css') . '" type="text/css"/>');
-        View::startPush('scss', '<link rel="stylesheet" href="' .Vite::asset('resources/scss/orders/create.scss', 'workshop') . '" type="text/css"/>');
+        View::startPush('scss', '<link rel="stylesheet" href="' . Vite::asset('resources/scss/orders/create.scss', 'workshop') . '" type="text/css"/>');
         View::startPush('scripts', '<script src="' . Vite::asset('resources/js/orders/create.js', 'workshop') . '" type="module"></script>');
         View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/swiper.js') . '" type="module"></script>');
 

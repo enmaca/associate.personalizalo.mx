@@ -37,6 +37,7 @@ class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
         $this->Row(true, $delivery_card);
 
         $delivery_card = FormCreateEdit\ProductCard::Object([
+            'values' => $this->attributes['values'],
             'options' => [
                 'card.header' => 'Productos',
                 'card.body' => null,

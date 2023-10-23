@@ -1,34 +1,50 @@
+@import "../../../public/enmaca/laravel-uxmal/assets/bootstrap.css";
+
+.digital-art-variant {
+  label {
+    border: 5px solid transparent;
+  }
+
+  input:checked + label {
+    border: 2px solid var(--bs-light, gray);
+    border-radius: 5px;
+  }
+}
+
 .print-variant {
   input:checked + label {
-    border-color: var(--bs-dark) !important;
+    border-color: var(--bs-light, lighten(gray, 70)) !important;
   }
 }
 
 .color-variant {
   label {
-   // display: inline-block;
-  //  cursor: pointer;
-  //  border: 1px solid transparent;
+    width: 35px;
+    height: 35px;
+    display: inline-block;
+    cursor: pointer;
+    border: 5px solid transparent;
   }
 
   input:checked + label {
-   // border: 1px solid var(--bs-dark);
+    border: 1px solid var(--bs-dark, gray);
   }
 
   input.disabled + label {
-  //  border-color: var(--bs-dark);
-  //  border-style: dashed;
-  //  opacity: 0.65;
+    border-color: var(--bs-dark, gray);
+    border-style: dashed;
+    opacity: 0.65;
   }
 }
 
 .size-variant {
   input:checked + label {
-    background-color: var(--bs-dark);
-    color: var(--bs-light);
+    background-color: var(--bs-dark, gray);
+    color: var(--bs-light, lighten(gray, 70))
   }
 
   input.disabled + label {
+    border-color: var(--bs-dark, gray);
     border-style: dashed;
     opacity: 0.65;
   }

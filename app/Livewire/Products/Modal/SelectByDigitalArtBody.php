@@ -21,6 +21,8 @@ class SelectByDigitalArtBody extends Component
     public function product_changed($product): void
     {
 
+        $__formId = '__' . bin2hex(random_bytes(4));
+
         $product_data = Product::With([
             'digital_category.arts',
             'mfg_costs'])->findByHashId($product); //
@@ -41,26 +43,35 @@ class SelectByDigitalArtBody extends Component
 
         $items = [];
         foreach ($product_data->digital_category->arts as $digital_art) {
+            $checked = count($items) == 0 ? 'checked' : '';
             $slot = <<<END
-    <div>
-        <div class="bg-dark-subtle rounded">
-            <img class="image-fluid mx-auto m-2" src="{$digital_art->thumbnail_path}" style="max-width: 100%; max-height: 340px" alt="Image 2">
-        </div>
-        <div class="pt-3">
-            <a href="#!"  onclick="console.log('{$digital_art->hashId}')" class="stretched-link">
-                <h6 class="fs-15 lh-base text-truncate mb-0"></h6>
-            </a>
-        </div>
-    </div>
+        <input class="d-none" name="da_category_id_{$product_data->digital_category->hashId}" type="radio" id="da_id_{$digital_art->hashId}Id" value="{$digital_art->hashId}" {$checked}/>
+        <label for="da_id_{$digital_art->hashId}Id">
+            <div class="bg-dark-subtle rounded">
+                <img class="image-fluid mx-auto m-2" src="{$digital_art->thumbnail_path}" style="max-width: 100%; max-height: 340px" alt="Image 2">
+            </div><!-- here -->
+        </label>
 END;
+            /**
+             * <div class="pt-3">
+             * <a href="#!"  onclick="console.log('{$digital_art->hashId}')" class="stretched-link">
+             * <h6 class="fs-15 lh-base text-truncate mb-0"></h6>
+             * </a>
+             * </div>
+             */
             $items[] = [
-                'slot' => $slot
+                'slot' => '<div class="digital-art-variant">' . $slot . '</div>'
             ];
         }
 
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $form = \Enmaca\LaravelUxmal\Uxmal::component('form', [
+            'options' => [
+                'form.id' => $__formId,
+                'form.action' => '/order/addproduct'
+            ]
+        ]);
 
-        $digital_art_swiper_row = $uxmal->component('ui.row');
+        $digital_art_swiper_row = $form->component('ui.row');
 
         $swiper_name = 'digitalArtSwiper' . $product_data->digital_category->hashId;
 
@@ -89,13 +100,11 @@ END;
 EOT;
             $__pvg_count = 0;
             foreach ($pvg_data['items'] as $pvg_item) {
+                $checked = $__pvg_count == 0 ? 'checked' : '';
                 $__pvg_count++;
-                $pvg_checked = '';
-                if ($__pvg_count == 1)
-                    $pvg_checked = 'checked';
                 $pvg_total = $pvg_item['price'] + $pvg_item['taxes'];
                 $__pvg_html .= <<<EOT
-        <input data-pvg-id="{$pvg_item['hashId']}" id="pvg_{$pvg_item['hashId']}Id" type="radio" class="btn-check d-none" name="{$pvg_data['hashId']}" value="{$pvg_item['hashId']}" autocomplete="off" {$pvg_checked}>
+        <input data-pvg-id="{$pvg_item['hashId']}" id="pvg_{$pvg_item['hashId']}Id" type="radio" class="btn-check d-none" name="pvg_id_{$pvg_data['hashId']}" value="{$pvg_item['hashId']}" autocomplete="off" {$checked}/>
         <label for="pvg_{$pvg_item['hashId']}Id" class="btn btn-outline-light w-100 d-flex align-items-center border rounded">
             <img data-pvgd-id="{$pvg_item['hashId']}" src="{$pvg_item['preview_path']}" alt="{$pvg_item['display_name']}" width="70">
             <div class="ms-2 small d-flex flex-column justify-content-center align-items-start">
@@ -106,7 +115,7 @@ EOT;
 EOT;
             }
             $__pvg_html .= '</div>';
-            $uxmal->component('ui.row', ['options' => [
+            $form->component('ui.row', ['options' => [
                 'row.slot' => $__pvg_html
             ]]);
 
@@ -116,45 +125,58 @@ EOT;
             $__mvg_data = '';
             foreach ($mvg_data['variations'] as $variation_type => $variation_data) {
                 $__mvg_data .= <<<EOT
-                <div class="col-12">
+                <div class="col-12 .material-variations" data-workshop-mvg-field-name="{$mvg_data['hashId']}">
                     <hr style="border-color: #bbb;background-color: #bbb;">
                 </div>
 EOT;
                 switch ($variation_type) {
                     case 'color':
-                        $__mvg_data .='<label class="mb-1 d-block">Color:</label>';
-                        $__mvg_data .='<div class="d-flex flex-wrap color-variant">';
-                        foreach ($variation_data as $color)
+                        $__mvg_data .= '<label class="mb-1 d-block">Color:</label>';
+                        $__mvg_data .= '<div class="d-flex flex-wrap color-variant">';
+                        $__loopCount = 0;
+                        foreach ($variation_data as $color){
+                            $checked = ($__loopCount==0) ? 'checked' : '';
+                            $__loopCount++;
                             $__mvg_data .= <<<EOT
-                            <input data-mvg-color="{$color}" class="d-none" id="{$color}Id" name="mvg_{$mvg_data['hashId']}_selected" type="radio" value="{$color}"\>
+                            <input data-mvg-color="{$color}" class="d-none" id="{$color}Id" name="mvg_color_{$mvg_data['hashId']}" type="radio" value="{$color}" {$checked}/>
                             <label for="{$color}Id" class="me-2 mb-2 rounded" style="padding: 1px;">
                                 <div class="pa-1 w-100 h-100" style="background-color: #{$color}; border-radius: 4px"></div>
                             </label>
 EOT;
+                        }
+
                         $__mvg_data .= '</div>';
                         break;
                     case 'size':
                         $__mvg_data .= '<label class="mb-1 d-block">Tamaño:</label>';
                         $__mvg_data .= '<div class="d-flex justify-content-between size-variant">';
-                        foreach ($variation_data as $size)
+                        $__loopCount = 0;
+                        foreach ($variation_data as $size){
+                            $checked = ($__loopCount==0) ? 'checked' : '';
+                            $__loopCount++;
                             $__mvg_data .= <<<EOT
-                            <input data-mvg-size="{$size}" class="d-none" id="{$size}Id" name="mvg_{$mvg_data['hashId']}_selected" type="radio" value="{$size}">
+                            <input data-mvg-size="{$size}" class="d-none" id="{$size}Id" name="mvg_size_{$mvg_data['hashId']}" type="radio" value="{$size}" {$checked}/>
                             <label for="{$size}Id" class="btn btn-sm btn-outline-dark flex-grow-1 mx-1">{$size}</label>
 EOT;
+                        }
 
                         $__mvg_data .= '</div>';
                         break;
                 }
             }
 
-            $uxmal->component('ui.row', ['options' => [
-                'row.slot' => $__mvg_data
+
+            $form->component('ui.row', ['options' => [
+                'row.slot' => $__mvg_data,
+                'row.append-attributes' => [
+                    'data-selected-product-form-id' => $__formId
+                ]
             ]]);
         }
 
-        $this->content = View::make($uxmal->view, [
-                'data' => $uxmal->toArray()
-            ])->render();
+        $this->content = View::make($form->view, [
+            'data' => $form->toArray()
+        ])->render();
 
 
         $this->dispatch('select-by-digital-art-body::showmodal', swiperName: $swiper_name);
