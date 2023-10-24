@@ -31,7 +31,38 @@ window.onChangeSelectedMfgDeviceByName = function (value) {
 window.onChangeSelectedMfgOverHeadByName = function (value) {
     console.log('onChangeSelectedMfgOverHeadByName:', value);
 }
+window.addMaterialToOrder = () => {
+    let divElement = document.querySelector('div[data-selected-material-form-id]');
+    if (divElement) {
+        let value = divElement.getAttribute('data-selected-material-form-id');
 
+        let formElement = document.querySelector('form[id=' + value + ']');
+
+        const formData = new FormData(formElement);
+
+        formData.append('order_id', window.order_id);
+        formData.append('customer_id', window.customer_id);
+
+        console.log('form.action => ', formElement.action);
+        console.log('form.data => ', [...formData]);
+
+        /* Use fetch to send the form data
+        fetch(formElement.action, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())  // assuming server responds with json
+            .then(data => {
+                console.log(data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+*/
+    } else {
+        console.log("Element not found");
+    }
+}
 window.addProductToOrder = () => {
     let divElement = document.querySelector('div[data-selected-product-form-id]');
     if (divElement) {
@@ -60,7 +91,6 @@ window.addProductToOrder = () => {
                 console.error('Error:', error);
             });
 */
-        console.log(value);
     } else {
         console.log("Element not found");
     }
@@ -71,7 +101,10 @@ window.updateMaterialSubtotal= () => {
     let uom_cost = Number(mtQtyEl.getAttribute('data-uom-cost'));
     let tax_data = Number(mtQtyEl.getAttribute('data-tax-factor'));
     let profit_margin = Number(document.getElementById('materialProfitMarginId').value);
-    let subtotal_previous_taxes = (uom_cost * mtQtyEl.value * (1 + (profit_margin/100))) * (1 + tax_data);
+    let subtotal_previous_taxes = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+    }).format((uom_cost * mtQtyEl.value * (1 + (profit_margin/100))) * (1 + tax_data));
     document.getElementById('materialSubtotalId').value = subtotal_previous_taxes;
 }
 
@@ -96,8 +129,7 @@ window.openModal = function (identifier) {
     const modalInstance = new Modal(element);
     modalInstance.show();
     setTimeout(function () {
-        let swiperEl = element.querySelector('[data-swiper]');
-        if (swiperEl) window.init_swiper_elem(swiperEl)
+        window.init_swiper();
     }, 500);
 }
 

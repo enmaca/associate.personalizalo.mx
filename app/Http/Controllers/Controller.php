@@ -63,12 +63,12 @@ class Controller extends BaseController
                 [
                     'icon' => 'box-arrow-in-down-left',
                     'name' => 'Materiales',
-                    'href' => route('materials_root')
+                    'href' => route('material_root')
                 ],
                 [
                     'icon' => 'bricks',
                     'name' => 'Grupo de Variación',
-                    'href' => route('materials_materialvariation')
+                    'href' => route('material_variation_group')
                 ],
             ],
             'SISTEMA' => [

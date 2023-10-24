@@ -11,7 +11,22 @@ class MaterialsController extends Controller
         return view('workshop.materials.root')->extends('workshop.master');
     }
 
-    public function materialvariation(){
+    public function mvg(){
         return view('workshop.materials.materialvariation')->extends('workshop.master');
+    }
+
+    public function search_tomselect(Request $request)
+    {
+        $search = json_decode($request->getContent(), true);
+
+        $context = $request->input('context');
+
+        switch ($context) {
+            case 'by_name_sku_desc':
+            default:
+                $searchObj = new \App\Support\UxmalComponents\Material\SelectByNameSkuDesc();
+                return $searchObj->search($search);
+        }
+
     }
 }

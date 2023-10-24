@@ -42,8 +42,9 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::controller(\App\Http\Controllers\MaterialsController::class)->group(function () {
-        Route::get('/materials', 'root')->name('materials_root');
-        Route::get('/materials/mvg', 'materialvariation')->name('materials_materialvariation');
+        Route::get('/material', 'root')->name('material_root');
+        Route::post('/material/search_tomselect', 'search_tomselect')->name('material_search_tomselect');
+        Route::get('/material/mvg', 'mvg')->name('material_variation_group');
     });
 
     Route::controller( \App\Http\Controllers\SystemController::class)->group(function(){

@@ -40,15 +40,20 @@ class AddMaterialToOrder extends Component
 
         $form = \Enmaca\LaravelUxmal\Uxmal::component('form', [
             'options' => [
-                'form.id' => 'addMaterialToOrder',
+                'form.id' => $__formId,
                 'form.action' => '/order/addproduct'
             ]
         ]);
 
-        $main_row = $form->component('ui.row');
+        $main_row = new \Enmaca\LaravelUxmal\Uxmal();
 
+        $main_row->component('ui.row', [
+            'options' => [
+                'row.slot' => '<h6>'.$material_data->name.'</h6>',
+                'row.append-attributes' => [ 'class' => 'm-3']
+            ]]);
 
-        $main_row->componentsInDiv(['options' => [ 'row.slot' => $material_data->name, 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[
+        $main_row->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[
             'path' => 'form.input',
             'attributes' => [
                 'options' => [
@@ -89,7 +94,7 @@ class AddMaterialToOrder extends Component
                 'options' => [
                     'input.type' => 'text',
                     'input.label' => 'Subtotal',
-                    'input.value' => $one_subtotal,
+                    'input.value' => '$'.number_format($one_subtotal,2),
                     'input.name' => 'materialSubtotal',
                     'input.required' => true,
                     'input.readonly' => true
@@ -97,8 +102,15 @@ class AddMaterialToOrder extends Component
             ]]
         ]);
 
+        $form->component('ui.row', ['options' => [
+            'row.slot' => $main_row,
+            'row.append-attributes' => [
+                'data-selected-material-form-id' => $__formId
+            ]
+        ]]);
+
         $this->content = View::make($form->view, [
-            'data' => $main_row->toArray()
+            'data' => $form->toArray()
         ])->render();
 
         $this->dispatch('add-material-to-order::showmodal');

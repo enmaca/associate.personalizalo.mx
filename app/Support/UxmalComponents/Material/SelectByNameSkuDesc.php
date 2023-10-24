@@ -31,7 +31,7 @@ class SelectByNameSkuDesc extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
             'options' => [
                 'tomselect.name' => 'materialSelected',
                 'tomselect.placeholder' => 'Buscar por nombre, sku, color, talla...',
-                'tomselect.load-url' => '/maerial/search_tomselect?context=by_name_sku_desc',
+                'tomselect.load-url' => route('material_search_tomselect', [ 'context' => 'by_name_sku_desc']),
                 'tomselect.options' => $items,
                 'tomselect.allow-empty-option' => true
             ] + $aggregate
@@ -46,13 +46,9 @@ class SelectByNameSkuDesc extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
     {
         $materials = Material::query()
             ->where('name', 'like', "%{$query}%")
-            ->orWhere('color', 'like', "%{$query}%")
-            ->orWhere('size', 'like', "%{$query}%")
             ->select([
                 'id',
-                'name',
-                'color',
-                'sizee'
+                'name'
             ])
             ->get();
 
@@ -61,7 +57,7 @@ class SelectByNameSkuDesc extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
         foreach ( $materials as $material ){
             $items[] = [
                 'value' => $material->hashId,
-                'label' => "{$material->name}  [{$material->color}::{$material->size}] "
+                'label' => $material->name
             ];
         }
 

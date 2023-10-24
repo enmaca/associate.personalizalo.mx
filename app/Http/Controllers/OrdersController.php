@@ -170,6 +170,7 @@ class OrdersController extends Controller
         View::startPush('scss', '<link rel="stylesheet" href="' . Vite::asset('resources/scss/orders/create.scss', 'workshop') . '" type="text/css"/>');
         View::startPush('scripts', '<script src="' . Vite::asset('resources/js/orders/create.js', 'workshop') . '" type="module"></script>');
         View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/swiper.js') . '" type="module"></script>');
+        View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/cleave.js') . '" type="module"></script>');
 
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
