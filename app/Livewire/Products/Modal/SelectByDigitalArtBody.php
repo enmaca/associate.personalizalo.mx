@@ -83,7 +83,15 @@ END;
                 'swiper.config.grid.rows' => 1,
                 'swiper.config.space-between' => 10,
                 'swiper.config.pagination' => 'progress',
-                'swiper.config.navigation' => true
+                'swiper.config.navigation' => true,
+                'swiper.config.effect' => 'cube',
+                'swiper.config.cubeEffect' => [
+                    'shadow' => true,
+                    'slideShadows' => true,
+                    'shadowOffset' => 20,
+                    'shadowScale' => 0.94,
+                ]
+
             ]
         ]);
 

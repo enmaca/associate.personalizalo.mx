@@ -66,6 +66,15 @@ window.addProductToOrder = () => {
     }
 }
 
+window.updateMaterialSubtotal= () => {
+    let mtQtyEl = document.getElementById('materialQuantityId')
+    let uom_cost = Number(mtQtyEl.getAttribute('data-uom-cost'));
+    let tax_data = Number(mtQtyEl.getAttribute('data-tax-factor'));
+    let profit_margin = Number(document.getElementById('materialProfitMarginId').value);
+    let subtotal_previous_taxes = (uom_cost * mtQtyEl.value * (1 + (profit_margin/100))) * (1 + tax_data);
+    document.getElementById('materialSubtotalId').value = subtotal_previous_taxes;
+}
+
 document.addEventListener('livewire:initialized', () => {
     Livewire.on('select-by-digital-art-body::showmodal', (event) => {
         openModal('selectProductWithDigitalArtId');

@@ -26,11 +26,17 @@ class AddMaterialToOrder extends Component
             'unit_of_measure',
             'taxes'])->findByHashId($material); //
 
-        /*
+/*
         dump($material_data->toArray());
         dump($material_data->unit_of_measure->toArray());
-        */
+        dd('ok');
+*/
 
+        $tax_factor = 0;
+        foreach($material_data->taxes as $tax){
+            $tax_factor += $tax->value;
+        }
+        $one_subtotal = $material_data->invt_uom_cost * (1 + $tax_factor);
 
         $form = \Enmaca\LaravelUxmal\Uxmal::component('form', [
             'options' => [
@@ -42,7 +48,7 @@ class AddMaterialToOrder extends Component
         $main_row = $form->component('ui.row');
 
 
-        $main_row->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[
+        $main_row->componentsInDiv(['options' => [ 'row.slot' => $material_data->name, 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[
             'path' => 'form.input',
             'attributes' => [
                 'options' => [
@@ -52,7 +58,12 @@ class AddMaterialToOrder extends Component
                     'input.value' => 1,
                     'input.max' => $material_data->invt_quantity,
                     'input.min' => 1,
-                    'input.required' => true
+                    'input.required' => true,
+                    'input.append-attributes' => [
+                        'data-uom-cost' => $material_data->invt_uom_cost,
+                        'data-tax-factor' => $tax_factor,
+                    ],
+                    'input.event-change-handler' => 'updateMaterialSubtotal()'
                 ]
             ]]
         ]);
@@ -66,17 +77,11 @@ class AddMaterialToOrder extends Component
                     'input.name' => 'materialProfitMargin',
                     'input.value' => 35,
                     'input.min' => 5,
-                    'input.required' => true
+                    'input.required' => true,
+                    'input.event-change-handler' => 'updateMaterialSubtotal()'
                 ]
             ]]
         ]);
-
-
-        $tax_factor = 0;
-        foreach($material_data->taxes as $tax){
-            $tax_factor += $tax->value;
-        }
-
 
         $main_row->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[
             'path' => 'form.input',
@@ -84,12 +89,10 @@ class AddMaterialToOrder extends Component
                 'options' => [
                     'input.type' => 'text',
                     'input.label' => 'Subtotal',
+                    'input.value' => $one_subtotal,
                     'input.name' => 'materialSubtotal',
                     'input.required' => true,
-                    'input.readonly' => true,
-                    'input.append-attributes' => [
-                        'data-workshop-tax-factor' => $tax_factor
-                    ]
+                    'input.readonly' => true
                 ]
             ]]
         ]);
