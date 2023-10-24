@@ -41,19 +41,8 @@ class Material extends BaseModel
         return $this->hasOne(UnitOfMeasure::class, 'id', 'catalog_uom_id');
     }
 
-    public function material_size_opt(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(MaterialSizeOpt::class, 'opt_size', 'name');
-    }
-
-    public function initialInventory(): bool
-    {
-        return $this->is_initial_inventory ?? false;
-    }
-
     public function taxes(): \Illuminate\Database\Eloquent\Relations\belongsToMany
     {
-        return $this->belongsToMany(Tax::class, 'taxes_details', 'reference_id', 'catalog_taxes_id')
-            ->wherePivot('reference_type', 'catalog_materials');
+        return $this->belongsToMany(Tax::class, 'taxes_details', 'reference_id', 'catalog_taxes_id')->wherePivot('reference_type', 'catalog_materials');
     }
 }
