@@ -16,11 +16,13 @@ class DynamicCard extends \Enmaca\LaravelUxmal\Abstract\Card
         $search_product_tomselect = \App\Support\UxmalComponents\Material\SelectByNameSkuDesc::Object(['options' => ['event-change-handler' => 'onChangeSelectedMaterialByNameSkuDesc']]);
         $this->BodyInput($search_product_tomselect);
 
-        $search_labor_cost_tomselect = \App\Support\UxmalComponents\LaborCost\SelectByName::Object();
+        $search_labor_cost_tomselect = \App\Support\UxmalComponents\LaborCost\SelectByName::Object(['options' => ['event-change-handler' => 'onChangeSelectedLaborCostByName']]);
         $this->BodyInput($search_labor_cost_tomselect);
 
         $search_mfg_over_head_tomselect = \App\Support\UxmalComponents\MfgOverHead\SelectByName::Object();
         $this->BodyInput($search_mfg_over_head_tomselect);
+
+        $this->BodyInput();
 
         $search_mfg_area_tomselect = \App\Support\UxmalComponents\MfgArea\SelectByName::Object();
         $this->BodyInput($search_mfg_area_tomselect);

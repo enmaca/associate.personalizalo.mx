@@ -3,11 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class OrderProductDynamic extends Model
+class OrderProductDynamic extends BaseModel
 {
     use HasFactory;
+
     protected $table = 'order_product_dynamic';
     protected $primaryKey = 'id';
+
+    public function items()
+    {
+        return $this->hasMany(OrderProductDynamicDetails::class, 'order_product_dynamic_id', 'id');
+    }
+
+    public function order(){
+        return $this->BelongsTo(Order::class, 'order_id', 'id');
+    }
 }

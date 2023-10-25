@@ -29,8 +29,9 @@ class SelectByNameSkuDesc extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
 
         $this->_content = $uxmal->component('form.select.tomselect', [
             'options' => [
+                'tomselect.label' => 'Material Directo',
                 'tomselect.name' => 'materialSelected',
-                'tomselect.placeholder' => 'Buscar por nombre, sku, color, talla...',
+                'tomselect.placeholder' => 'Seleccionar...',
                 'tomselect.load-url' => route('material_search_tomselect', [ 'context' => 'by_name_sku_desc']),
                 'tomselect.options' => $items,
                 'tomselect.allow-empty-option' => true

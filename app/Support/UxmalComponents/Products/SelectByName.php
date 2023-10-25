@@ -29,9 +29,9 @@ class SelectByName extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
 
         $this->_content = Uxmal::Component('form.select.tomselect', [
             'options' => [
+                'tomselect.label' => 'Producto',
                 'tomselect.name' => 'OrderProductAdd',
-                //'tomselect.label' => 'Agregar Producto',
-                'tomselect.placeholder' => 'Buscar producto...',
+                'tomselect.placeholder' => 'Seleccionar...',
                 'tomselect.load-url' => '/products/search_tomselect?context=default',
                 'tomselect.options' => $items,
                 'tomselect.allow-empty-option' => true,

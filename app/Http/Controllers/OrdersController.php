@@ -10,9 +10,12 @@ use App\Models\MfgOverhead;
 use App\Models\Order;
 use App\Models\OrderPayment;
 use App\Models\OrderProductDetail;
+use App\Models\OrderProductDynamic;
+use App\Models\OrderProductDynamicDetails;
 use App\Models\Product;
 use App\Models\Material;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use \Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Vite;
 use Vinkla\Hashids\Facades\Hashids;
@@ -152,8 +155,14 @@ class OrdersController extends Controller
         $modalSelectedProductWithDigitalArt = \App\Support\UxmalComponents\Products\ModalSelectProductWithDigitalArt::Object(['options' => ['saveBtn.onclick' => 'addProductToOrder()']]);
         $uxmal->addElement($modalSelectedProductWithDigitalArt['modal']);
 
-        $modalAddToOrder = \App\Support\UxmalComponents\Material\ModalAddToOrder::Object(['options' => ['saveBtn.onclick' => 'addMaterialToOrder()']]);
-        $uxmal->addElement($modalAddToOrder['modal']);
+        $modalMaterialAddToOrder = \App\Support\UxmalComponents\Material\ModalAddToOrder::Object(['options' => ['saveBtn.onclick' => 'addMaterialToOrder()']]);
+        $uxmal->addElement($modalMaterialAddToOrder['modal']);
+
+        $modalLaborCostAddToOrder = \App\Support\UxmalComponents\LaborCost\ModalAddToOrder::Object(['options' => ['saveBtn.onclick' => 'addLaborCostToOrder()']]);
+        $uxmal->addElement($modalLaborCostAddToOrder['modal']);
+
+        $modalMfgOverHeadAddToOrder = \App\Support\UxmalComponents\MfgOverHead\ModalAddToOrder::Object(['options' => ['saveBtn.onclick' => 'addMfgOverHeadToOrder()']]);
+        $uxmal->addElement($modalMfgOverHeadAddToOrder['modal']);
 
 
         /*
@@ -171,6 +180,7 @@ class OrdersController extends Controller
         View::startPush('scripts', '<script src="' . Vite::asset('resources/js/orders/create.js', 'workshop') . '" type="module"></script>');
         View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/swiper.js') . '" type="module"></script>');
         View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/cleave.js') . '" type="module"></script>');
+        View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/component_form.js'). '" type="module"></script>');
 
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
@@ -209,6 +219,64 @@ class OrdersController extends Controller
                 ])->extends('uxmal::layout.master');
                 break;
         }
+    }
+
+    /**
+     * @param Request $request
+     *      [laborCostId] => lab_XXXXXX
+     *      [laborCostQuantity] => 15
+     *      [laborCostSubtotal] => $18.13
+     *      [order_id] => ord_XXXXX
+     *      [customer_id] => cus_XXXXX
+     * @return void
+     */
+    public function post_labor_cost(Request $request){
+        $allInput = $request->all();
+
+        if( !empty($allInput['laborCostId']))
+            $catalog_labor_cost_id = LaborCost::keyFromHashId($allInput['laborCostId']);
+
+        if( !empty($allInput['order_id']))
+            $order_id = LaborCost::keyFromHashId($allInput['order_id']);
+
+        if( !empty($allInput['customer_id']))
+            $customer_id = LaborCost::keyFromHashId($allInput['customer_id']);
+
+        if( !empty($catalog_labor_cost_id) && !empty($order_id) && !empty($customer_id)){
+            $labor_cost_data = LaborCost::with('taxes')->findOrFail($catalog_labor_cost_id);
+            $labor_costs = $labor_cost_data->calculateCosts($allInput['laborCostQuantity']);
+            /**
+             * $labor_costs
+             * 'uom' => $costByMinute,
+             * 'cost' => $cost,
+             * 'taxes' => $taxes,
+             * 'profit_margin' => 0,
+             * 'subtotal' => ($cost + $taxes)
+             */
+            $OrderProductDynamicData = OrderProductDynamic::where('order_id', $order_id)->first();
+
+            if( empty( $OrderProductDynamicData )){
+                $OrderProductDynamicData = new OrderProductDynamic();
+                $OrderProductDynamicData->order_id = $order_id;
+                $OrderProductDynamicData->save();
+            }
+            $OrderProductDynamicDataDetail = new OrderProductDynamicDetails();
+
+            $OrderProductDynamicDataDetail->order_product_dynamic_id = $OrderProductDynamicData->id;
+            $OrderProductDynamicDataDetail->reference_type = 'catalog_labor_costs';
+            $OrderProductDynamicDataDetail->reference_id = $catalog_labor_cost_id;
+            $OrderProductDynamicDataDetail->quantity = $allInput['laborCostQuantity'];
+            $OrderProductDynamicDataDetail->cost = $labor_costs['cost'];
+            $OrderProductDynamicDataDetail->taxes = $labor_costs['taxes'];
+            $OrderProductDynamicDataDetail->profit_margin = $labor_costs['profit_margin'];
+            $OrderProductDynamicDataDetail->subtotal = $labor_costs['subtotal'];
+            $OrderProductDynamicDataDetail->created_by = Auth::id();
+
+            $OrderProductDynamicDataDetail->save();
+
+        }
+
+        return response()->json(['ok' => $OrderProductDynamicDataDetail->hashId]);
     }
 
     /**

@@ -4,6 +4,7 @@ window.customer_id = null;
 window.order_id = null;
 
 console.log('resources/js/order/create.js Loaded')
+
 window.onChangeSelectedProductToAdd = function (value) {
     console.log('onChangeSelectedProductToAdd:', value);
     uxmalSetCardLoading('productCard', true);
@@ -12,12 +13,20 @@ window.onChangeSelectedProductToAdd = function (value) {
 
 window.onChangeSelectedLaborCostByName = function (value) {
     console.log('onChangeSelectedLaborCostByName:', value);
+    uxmalSetCardLoading('dynamicCard', true);
+    Livewire.dispatch('add-labor-cost-to-order::laborcost.changed', {laborcost: value});
 }
 
 window.onChangeSelectedMaterialByNameSkuDesc = function (value) {
     console.log('onChangeSelectedMaterialByNameSkuDesc:', value);
     uxmalSetCardLoading('dynamicCard', true);
     Livewire.dispatch('add-material-to-order::material.changed', {material: value});
+}
+
+window.onChangeSelectedMfgOverHeadByName = function (value) {
+    console.log('onChangeSelectedMfgOverHeadByName:', value);
+    uxmalSetCardLoading('dynamicCard', true);
+    Livewire.dispatch('add-mfg-overhead-to-order::mfgoverhead.changed', {mfgoverhead: value});
 }
 
 window.onChangeSelectedMfgAreaByName = function (value) {
@@ -28,48 +37,33 @@ window.onChangeSelectedMfgDeviceByName = function (value) {
     console.log('onChangeSelectedMfgDeviceByName:', value);
 }
 
-window.onChangeSelectedMfgOverHeadByName = function (value) {
-    console.log('onChangeSelectedMfgOverHeadByName:', value);
-}
+
 window.addMaterialToOrder = () => {
-    let divElement = document.querySelector('div[data-selected-material-form-id]');
-    if (divElement) {
-        let value = divElement.getAttribute('data-selected-material-form-id');
-
-        let formElement = document.querySelector('form[id=' + value + ']');
-
-        const formData = new FormData(formElement);
-
-        formData.append('order_id', window.order_id);
-        formData.append('customer_id', window.customer_id);
-
-        console.log('form.action => ', formElement.action);
-        console.log('form.data => ', [...formData]);
-
-        /* Use fetch to send the form data
-        fetch(formElement.action, {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => response.json())  // assuming server responds with json
-            .then(data => {
-                console.log(data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-*/
-    } else {
-        console.log("Element not found");
-    }
+    window.submitModalAddToOrderForm('data-selected-material-form-id');
 }
 window.addProductToOrder = () => {
-    let divElement = document.querySelector('div[data-selected-product-form-id]');
+    window.submitModalAddToOrderForm('data-selected-product-form-id');
+}
+
+window.addMfgOverHeadToOrder = () => {
+    window.submitModalAddToOrderForm('data-selected-mfgoverhead-form-id');
+}
+
+window.addLaborCostToOrder = () => {
+    submitModalAddToOrderForm('data-selected-laborcost-form-id', 'onsuccessEventToDispatch', 'selectedLaborCostToAddToOrderId');
+}
+
+window.submitModalAddToOrderForm = (selector, eventOnSuccess, modalToClose) => {
+    let divElement = document.querySelector('div[' + selector + ']');
     if (divElement) {
-        let value = divElement.getAttribute('data-selected-product-form-id');
+        let value = divElement.getAttribute(selector);
 
         let formElement = document.querySelector('form[id=' + value + ']');
 
+        if (formElement.checkValidity() === false) {
+            formElement.classList.add('was-validated');
+            return;
+        }
         const formData = new FormData(formElement);
 
         formData.append('order_id', window.order_id);
@@ -78,34 +72,63 @@ window.addProductToOrder = () => {
         console.log('form.action => ', formElement.action);
         console.log('form.data => ', [...formData]);
 
-        /* Use fetch to send the form data
+        // Use fetch to send the form data
         fetch(formElement.action, {
             method: 'POST',
             body: formData
         })
             .then(response => response.json())  // assuming server responds with json
             .then(data => {
-                console.log(data);
+                console.log('data', data);
+                if( data.ok ) {
+                    console.log('dispatchingEvent', eventOnSuccess);
+                    closeModal(modalToClose);
+                    return;
+                }
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
-*/
     } else {
         console.log("Element not found");
     }
 }
 
-window.updateMaterialSubtotal= () => {
-    let mtQtyEl = document.getElementById('materialQuantityId')
+window.updateMaterialSubtotal = () => {
+    let mtQtyEl = document.getElementById('materialQuantityId');
     let uom_cost = Number(mtQtyEl.getAttribute('data-uom-cost'));
     let tax_data = Number(mtQtyEl.getAttribute('data-tax-factor'));
     let profit_margin = Number(document.getElementById('materialProfitMarginId').value);
     let subtotal_previous_taxes = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD'
-    }).format((uom_cost * mtQtyEl.value * (1 + (profit_margin/100))) * (1 + tax_data));
+    }).format((uom_cost * mtQtyEl.value * (1 + (profit_margin / 100))) * (1 + tax_data));
     document.getElementById('materialSubtotalId').value = subtotal_previous_taxes;
+}
+
+window.updateMfgCostSubtotal = () => {
+    let mfgQtyEl = Number(document.getElementById('mfgOverheadQuantityId'));
+    let tax_data = Number(mfgQtyEl.getAttribute('data-tax-factor'));
+    let uom = Number(mfgQtyEl.getAttribute('data-value'));
+    let subtotal_previous_taxes = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+    }).format((mfgQtyEl.value * uom) * (1 + tax_data));
+    document.getElementById('mfgOverheadSubtotalId').value = subtotal_previous_taxes;
+}
+
+window.updateLaborCostSubtotal = () => {
+    let laborCostQtyEl = document.getElementById('laborCostQuantityId');
+    let tax_data = Number(laborCostQtyEl.getAttribute('data-tax-factor'));
+    let uom = Number(laborCostQtyEl.getAttribute('data-value'));
+    let quantity = Number(laborCostQtyEl.value);
+    let subtotal = (quantity * uom);
+    let totaltaxes = (subtotal * tax_data);
+    let subtotal_previous_taxes = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+    }).format( subtotal + totaltaxes );
+    document.getElementById('laborCostSubtotalId').value = subtotal_previous_taxes;
 }
 
 document.addEventListener('livewire:initialized', () => {
@@ -113,8 +136,18 @@ document.addEventListener('livewire:initialized', () => {
         openModal('selectProductWithDigitalArtId');
         uxmalSetCardLoading('productCard', false);
     });
-    Livewire.on('add-material-to-order::showmodal', (event) => {
+    Livewire.on('add-to-order::show-material-modal', (event) => {
         openModal('selectedMaterialToAddToOrderId');
+        uxmalSetCardLoading('dynamicCard', false);
+    });
+
+    Livewire.on('add-to-order::show-mfgoverhead-modal', (event) => {
+        openModal('selectedMfgOverHeadToAddToOrderId');
+        uxmalSetCardLoading('dynamicCard', false);
+    });
+
+    Livewire.on('add-to-order::show-laborcost-modal', (event) => {
+        openModal('selectedLaborCostToAddToOrderId');
         uxmalSetCardLoading('dynamicCard', false);
     });
 });
@@ -129,7 +162,7 @@ window.openModal = function (identifier) {
     const modalInstance = new Modal(element);
     modalInstance.show();
     setTimeout(function () {
-        window.init_swiper();
+        window.init_swiper(element);
     }, 500);
 }
 
@@ -139,8 +172,9 @@ window.closeModal = function (identifier) {
         console.error('No modal found with the given identifier');
         return;
     }
-    const modalInstance = new Modal(element);
-    modalInstance.show();
+    const modalInstance = Modal.getInstance(element);
+    modalInstance.hide();
+
 }
 
 document.addEventListener("DOMContentLoaded", function () {

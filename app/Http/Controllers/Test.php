@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DigitalArt;
 use App\Models\Order;
 use App\Models\Customer;
+use App\Models\OrderProductDynamicDetails;
 use Illuminate\Http\Request;
 
 class Test extends Controller
@@ -447,32 +448,27 @@ class Test extends Controller
     public function test()
     {
         //'components.'
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $rows = OrderProductDynamicDetails::with(['related'])
+            ->whereHas('order_product_dynamic', function ($query){
+                $query->where('order_id', 249);})
+            ->select([
+                'id',
+                'order_product_dynamic_id',
+                'reference_type',
+                'reference_id',
+                'quantity',
+                'cost',
+                'taxes',
+                'profit_margin',
+                'subtotal',
+                'created_by'])->get();
 
-        $main_row = $uxmal->component('ui.row'); //  [ 'options' => [ 'row.type' => 'flex' ]]
-
-        $DAdata = DigitalArt::where('da_category_id', 2)->select('id', 'thumbnail_path')->get();
-        $items = [];
-        foreach ($DAdata as $digital_art)
-            $items[] = [
-                'slot' => '<img class="image-fluid border rounded mx-auto m-2" src="' . $digital_art->thumbnail_path . '" style="max-width: 100%; max-height: 360px" alt="Image 2" onclick="console.log(\''.$digital_art->hashId.'\')">'
-            ];
-
-
-        $main_row->component('ui.swiper', [
-            'options' => [
-                'swiper.name' => 'digitalArtSwiper',
-                'swiper.items' => $items,
-                'swiper.config.slides-per-view' => 5,
-                'swiper.config.grid.rows' => 1,
-                'swiper.config.space-between' => 10,
-                'swiper.config.pagination' => 'progress',
-                'swiper.config.navigation' => true
-            ]
-        ]);
-
+        print_r($rows->toArray());
+/*
         return view('uxmal::simple-default', [
             'uxmal_data' => $uxmal->toArray()
         ])->extends('uxmal::layout.simple');
+*/
     }
+
 }

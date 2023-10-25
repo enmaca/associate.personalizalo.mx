@@ -1,0 +1,48 @@
+Manufacturing overhead, also known as factory overhead or production overhead, includes all the indirect costs associated with producing a good. These costs cannot be traced directly to specific units of product. Here's a list of manufacturing overhead concepts:
+
+1. **Indirect Materials**:
+   - Materials used in the manufacturing process that are not directly traceable to the product. For example, lubricants, glues, cleaning supplies.
+
+2. **Indirect Labor**:
+   - Wages and salaries for employees not directly involved in the production process but who support those who are. Examples include maintenance workers, janitors, and some supervisors.
+
+3. **Utilities**:
+   - Costs of utilities like electricity, water, and gas for the operation of production facilities but not directly associated with a specific unit of product.
+
+4. **Depreciation**:
+   - The periodic allocation of the cost of tangible fixed assets like machinery and equipment used in the manufacturing process.
+
+5. **Property Taxes and Insurance**:
+   - Taxes on production facilities and insurance premiums for assets associated with the manufacturing process.
+
+6. **Rent or Lease Expense**:
+   - Rent or lease payments for facilities or equipment used in the production process.
+
+7. **Maintenance and Repairs**:
+   - Costs associated with maintaining and repairing equipment and facilities.
+
+8. **Factory Supplies**:
+   - Items used in the manufacturing process that don't become part of the final product and aren't large enough to be tracked individually.
+
+9. **Quality Control and Inspection**:
+   - Costs associated with quality assurance, testing, and inspection of products.
+
+10. **Manufacturing Support Staff**:
+   - Salaries and wages of staff who are essential to the manufacturing process but aren't directly involved in production, such as planners and schedulers.
+
+11. **Safety and Compliance**:
+   - Costs associated with ensuring the manufacturing process complies with regulations and is safe for workers.
+
+12. **Research and Development (R&D)**:
+   - While this might be seen as a separate function in some companies, in others, a portion of R&D costs related to improvements in the manufacturing process might be considered manufacturing overhead.
+
+13. **Training**:
+   - Costs associated with training employees in the manufacturing process.
+
+14. **Machine Setup and Downtime**:
+   - Costs associated with the time taken to set up machinery for specific jobs or costs during periods when machinery is not operational.
+
+15. **Warehousing and Storage**:
+   - Costs of storing raw materials or partially finished products before they are completed.
+
+These overhead costs are typically allocated to individual products based on a predetermined overhead rate, often calculated as a ratio of direct labor hours, machine hours, or other relevant metrics. The goal is to distribute the overhead costs fairly across different products so that each product's total cost (direct materials, direct labor, and overhead) is accurately represented.

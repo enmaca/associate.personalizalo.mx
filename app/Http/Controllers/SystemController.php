@@ -8,27 +8,51 @@ use Illuminate\Support\Facades\Auth;
 class SystemController extends Controller
 {
     public function customers(){
-        return view('workshop.system.customers')->extends('workshop.master');
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        return view('uxmal::master-default', [
+            'uxmal_data' => $uxmal->toArray()
+
+        ])->extends('uxmal::layout.master');
     }
 
     public function suppliers(){
-        return view('workshop.system.suppliers')->extends('workshop.master');
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        return view('uxmal::master-default', [
+            'uxmal_data' => $uxmal->toArray()
+
+        ])->extends('uxmal::layout.master');
     }
 
     public function taxes(){
-        return view('workshop.system.taxes')->extends('workshop.master');
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        return view('uxmal::master-default', [
+            'uxmal_data' => $uxmal->toArray()
+
+        ])->extends('uxmal::layout.master');
     }
 
     public function uom(){
-        return view('workshop.system.uom')->extends('workshop.master');
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        return view('uxmal::master-default', [
+            'uxmal_data' => $uxmal->toArray()
+
+        ])->extends('uxmal::layout.master');
     }
 
     public function users(){
-        return view('workshop.system.users')->extends('workshop.master');
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        return view('uxmal::master-default', [
+            'uxmal_data' => $uxmal->toArray()
+
+        ])->extends('uxmal::layout.master');
     }
 
     public function products(){
-        return view('workshop.system.products')->extends('workshop.master');
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        return view('uxmal::master-default', [
+            'uxmal_data' => $uxmal->toArray()
+
+        ])->extends('uxmal::layout.master');
     }
 
     public function logout(){

@@ -36,6 +36,10 @@ class Material extends BaseModel
         'deleted_at',
     ];
 
+    public function opdd(){
+        return $this->morphMany(OrderProductDynamicDetails::class, 'related');
+    }
+
     public function unit_of_measure(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(UnitOfMeasure::class, 'id', 'catalog_uom_id');

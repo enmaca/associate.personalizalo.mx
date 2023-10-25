@@ -24,9 +24,9 @@ class Order extends BaseModel
         $newOrder->save();
         return $newOrder;
     }
-    public function details(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function details(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->BelongsTo(OrderProductDetail::class, 'order_id', 'id');
+        return $this->HasMany(OrderProductDetail::class, 'order_id', 'id');
     }
 
     public function customer(): \Illuminate\Database\Eloquent\Relations\BelongsTo

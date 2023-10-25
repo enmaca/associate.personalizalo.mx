@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Livewire\Material\Modal;
+namespace App\Livewire\LaberCost\Modal;
 
-use App\Models\Material;
+use App\Models\LaborCost;
+use App\Models\MfgOverhead;
 use Illuminate\Support\Facades\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class AddMaterialToOrder extends Component
+class AddLaborCostToOrder extends Component
 {
     public $content;
 
@@ -16,31 +17,26 @@ class AddMaterialToOrder extends Component
         $this->content = 'Initial::Content';
     }
 
-    #[On('add-material-to-order::material.changed')]
-    public function material_changed($material): void
+    #[On('add-labor-cost-to-order::laborcost.changed')]
+    public function laborcost_changed($laborcost): void
     {
         $__formId = '__' . bin2hex(random_bytes(4));
 
-        $material_data = Material::With([
-            'unit_of_measure',
-            'taxes'])->findByHashId($material); //
-
-/*
-        dump($material_data->toArray());
-        dump($material_data->unit_of_measure->toArray());
-        dd('ok');
-*/
+        $laborcost_data = LaborCost::With(['taxes'])->findByHashId($laborcost);
 
         $tax_factor = 0;
-        foreach($material_data->taxes as $tax){
+        foreach($laborcost_data->taxes as $tax){
             $tax_factor += $tax->value;
         }
-        $one_subtotal = $material_data->invt_uom_cost * (1 + $tax_factor);
+
+        $cost_by_minute = $laborcost_data->cost_by_hour / 60;
+
+        $one_subtotal = ($cost_by_minute * $laborcost_data->min_fraction_cost_in_minutes) * (1 + $tax_factor);
 
         $form = \Enmaca\LaravelUxmal\Uxmal::component('form', [
             'options' => [
                 'form.id' => $__formId,
-                'form.action' => '/order/addproduct'
+                'form.action' => route('orders_post_labor_cost')
             ]
         ]);
 
@@ -48,41 +44,32 @@ class AddMaterialToOrder extends Component
 
         $main_row->component('ui.row', [
             'options' => [
-                'row.slot' => '<h6>'.$material_data->name.'</h6>',
+                'row.slot' => '<h6>'.$laborcost_data->name.'</h6>',
                 'row.append-attributes' => [ 'class' => 'm-3']
             ]]);
 
-        $main_row->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[
-            'path' => 'form.input',
-            'attributes' => [
+        $main_row->component('form.input', [
                 'options' => [
-                    'input.type' => 'number',
-                    'input.label' => 'Cantidad ( '.$material_data->invt_quantity.' en Existencia)',
-                    'input.name' => 'materialQuantity',
-                    'input.value' => 1,
-                    'input.max' => $material_data->invt_quantity,
-                    'input.min' => 1,
-                    'input.required' => true,
-                    'input.append-attributes' => [
-                        'data-uom-cost' => $material_data->invt_uom_cost,
-                        'data-tax-factor' => $tax_factor,
-                    ],
-                    'input.event-change-handler' => 'updateMaterialSubtotal()'
-                ]
-            ]]
-        ]);
+                    'input.type' => 'hidden',
+                    'hidden.name' => 'laborCostId',
+                    'hidden.value' => $laborcost_data->hashId
+                ]]);
 
         $main_row->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[
             'path' => 'form.input',
             'attributes' => [
                 'options' => [
                     'input.type' => 'number',
-                    'input.label' => 'Margen (Porcentaje)',
-                    'input.name' => 'materialProfitMargin',
-                    'input.value' => 35,
-                    'input.min' => 5,
+                    'input.label' => 'Cantidad (Minimo ['.$laborcost_data->min_fraction_cost_in_minutes.'] Minutos)',
+                    'input.name' => 'laborCostQuantity',
+                    'input.value' => $laborcost_data->min_fraction_cost_in_minutes,
+                    'input.min' => $laborcost_data->min_fraction_cost_in_minutes,
                     'input.required' => true,
-                    'input.event-change-handler' => 'updateMaterialSubtotal()'
+                    'input.append-attributes' => [
+                        'data-value' => $cost_by_minute,
+                        'data-tax-factor' => $tax_factor,
+                    ],
+                    'input.event-change-handler' => 'updateLaborCostSubtotal()'
                 ]
             ]]
         ]);
@@ -94,7 +81,7 @@ class AddMaterialToOrder extends Component
                     'input.type' => 'text',
                     'input.label' => 'Subtotal',
                     'input.value' => '$'.number_format($one_subtotal,2),
-                    'input.name' => 'materialSubtotal',
+                    'input.name' => 'laborCostSubtotal',
                     'input.required' => true,
                     'input.readonly' => true
                 ]
@@ -104,7 +91,7 @@ class AddMaterialToOrder extends Component
         $form->component('ui.row', ['options' => [
             'row.slot' => $main_row,
             'row.append-attributes' => [
-                'data-selected-material-form-id' => $__formId
+                'data-selected-laborcost-form-id' => $__formId
             ]
         ]]);
 
@@ -112,7 +99,7 @@ class AddMaterialToOrder extends Component
             'data' => $form->toArray()
         ])->render();
 
-        $this->dispatch('add-to-order::show-material-modal');
+        $this->dispatch('add-to-order::show-laborcost-modal');
     }
 
     public function render()

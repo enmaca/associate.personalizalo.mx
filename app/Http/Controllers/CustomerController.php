@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use http\Env\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -10,12 +12,16 @@ class CustomerController extends Controller
     /**
      * @return mixed
      */
-    public function root()
+    public function root(Request $request)
     {
-        return view('workshop.client.root')->extends('workshop.master');
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        return view('uxmal::master-default', [
+            'uxmal_data' => $uxmal->toArray()
+
+        ])->extends('uxmal::layout.master');
     }
 
-    public function search_tomselect(Request $request)
+    public function search_tomselect(Request $request): JsonResponse
     {
         $search = json_decode($request->getContent(), true);
 
@@ -25,12 +31,12 @@ class CustomerController extends Controller
             case 'by_name_mobile_email':
             default:
                 $searchObj = new \App\Support\UxmalComponents\Customer\SelectByNameMobileEmail();
-                return $searchObj->search($search);
+                return response()->json($searchObj->search($search));
         }
 
     }
 
-    public function get_id(Request $request, mixed $customer_id)
+    public function get_id(Request $request, mixed $customer_id): JsonResponse
     {
         $context = $request->input('context');
 

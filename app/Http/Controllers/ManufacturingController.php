@@ -2,35 +2,56 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\OrderProductDetail;
-use Illuminate\Http\Request;
-
 class ManufacturingController extends Controller
 {
 
     public function dashboard()
     {
-        return view('workshop.manufacturing.dashboard')->extends('workshop.master');
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        return view('uxmal::master-default', [
+            'uxmal_data' => $uxmal->toArray()
+
+        ])->extends('uxmal::layout.master');
     }
 
     public function areas(){
-        return view('workshop.manufacturing.areas')->extends('workshop.master');
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        return view('uxmal::master-default', [
+            'uxmal_data' => $uxmal->toArray()
+
+        ])->extends('uxmal::layout.master');
     }
 
     public function products(){
-        return view('workshop.manufacturing.products')->extends('workshop.master');
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        return view('uxmal::master-default', [
+            'uxmal_data' => $uxmal->toArray()
+
+        ])->extends('uxmal::layout.master');
     }
 
     public function laborcosts() {
-        return view('workshop.manufacturing.laborcosts')->extends('workshop.master');
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        return view('uxmal::master-default', [
+            'uxmal_data' => $uxmal->toArray()
+
+        ])->extends('uxmal::layout.master');
     }
 
     public function devices(){
-        return view('workshop.manufacturing.devices')->extends('workshop.master');
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        return view('uxmal::master-default', [
+            'uxmal_data' => $uxmal->toArray()
+
+        ])->extends('uxmal::layout.master');
     }
 
     public function printvariation(){
-        return view('workshop.manufacturing.printvariation')->extends('workshop.master');
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        return view('uxmal::master-default', [
+            'uxmal_data' => $uxmal->toArray()
+
+        ])->extends('uxmal::layout.master');
     }
 
 }

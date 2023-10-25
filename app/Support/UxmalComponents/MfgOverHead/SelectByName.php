@@ -9,8 +9,9 @@ class SelectByName extends \App\Support\UxmalComponents\BaseTomSelect
     protected $Model = MfgOverHead::class;
 
     protected $Options = [
+        'tomselect.label' => 'Costos Indirectos',
         'tomselect.name' => 'mfgOverHeadSelected',
-        'tomselect.placeholder' => 'Costos Indirectos...',
+        'tomselect.placeholder' => 'Seleccionar...',
         'tomselect.load-url' => '/mfg_overhead/search_tomselect?context=by_name',
         'tomselect.allow-empty-option' => true,
         'tomselect.event-change-handler' => 'onChangeSelectedMfgOverHeadByName'

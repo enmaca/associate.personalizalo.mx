@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Livewire\Material\Modal;
+namespace App\Livewire\MfgOverHead\Modal;
 
-use App\Models\Material;
+use App\Models\MfgOverhead;
 use Illuminate\Support\Facades\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class AddMaterialToOrder extends Component
+class AddMfgOverheadToOrder extends Component
 {
     public $content;
 
@@ -16,31 +16,23 @@ class AddMaterialToOrder extends Component
         $this->content = 'Initial::Content';
     }
 
-    #[On('add-material-to-order::material.changed')]
-    public function material_changed($material): void
+    #[On('add-mfg-overhead-to-order::mfgoverhead.changed')]
+    public function mfgoverhead_changed($mfgoverhead): void
     {
         $__formId = '__' . bin2hex(random_bytes(4));
 
-        $material_data = Material::With([
-            'unit_of_measure',
-            'taxes'])->findByHashId($material); //
-
-/*
-        dump($material_data->toArray());
-        dump($material_data->unit_of_measure->toArray());
-        dd('ok');
-*/
+        $mfgoverhead_data = MfgOverhead::With(['taxes'])->findByHashId($mfgoverhead);
 
         $tax_factor = 0;
-        foreach($material_data->taxes as $tax){
+        foreach($mfgoverhead_data->taxes as $tax){
             $tax_factor += $tax->value;
         }
-        $one_subtotal = $material_data->invt_uom_cost * (1 + $tax_factor);
+        $one_subtotal = $mfgoverhead_data->value * (1 + $tax_factor);
 
         $form = \Enmaca\LaravelUxmal\Uxmal::component('form', [
             'options' => [
                 'form.id' => $__formId,
-                'form.action' => '/order/addproduct'
+                'form.action' => '/order/add_mfgoverhead'
             ]
         ]);
 
@@ -48,7 +40,7 @@ class AddMaterialToOrder extends Component
 
         $main_row->component('ui.row', [
             'options' => [
-                'row.slot' => '<h6>'.$material_data->name.'</h6>',
+                'row.slot' => '<h6>'.$mfgoverhead_data->name.'</h6>',
                 'row.append-attributes' => [ 'class' => 'm-3']
             ]]);
 
@@ -57,32 +49,16 @@ class AddMaterialToOrder extends Component
             'attributes' => [
                 'options' => [
                     'input.type' => 'number',
-                    'input.label' => 'Cantidad ( '.$material_data->invt_quantity.' en Existencia)',
-                    'input.name' => 'materialQuantity',
+                    'input.label' => 'Cantidad',
+                    'input.name' => 'mfgOverheadQuantity',
                     'input.value' => 1,
-                    'input.max' => $material_data->invt_quantity,
                     'input.min' => 1,
                     'input.required' => true,
                     'input.append-attributes' => [
-                        'data-uom-cost' => $material_data->invt_uom_cost,
+                        'data-value' => $mfgoverhead_data->value,
                         'data-tax-factor' => $tax_factor,
                     ],
-                    'input.event-change-handler' => 'updateMaterialSubtotal()'
-                ]
-            ]]
-        ]);
-
-        $main_row->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[
-            'path' => 'form.input',
-            'attributes' => [
-                'options' => [
-                    'input.type' => 'number',
-                    'input.label' => 'Margen (Porcentaje)',
-                    'input.name' => 'materialProfitMargin',
-                    'input.value' => 35,
-                    'input.min' => 5,
-                    'input.required' => true,
-                    'input.event-change-handler' => 'updateMaterialSubtotal()'
+                    'input.event-change-handler' => 'updateMfgCostSubtotal()'
                 ]
             ]]
         ]);
@@ -94,7 +70,7 @@ class AddMaterialToOrder extends Component
                     'input.type' => 'text',
                     'input.label' => 'Subtotal',
                     'input.value' => '$'.number_format($one_subtotal,2),
-                    'input.name' => 'materialSubtotal',
+                    'input.name' => 'mfgOverheadSubtotal',
                     'input.required' => true,
                     'input.readonly' => true
                 ]
@@ -104,7 +80,7 @@ class AddMaterialToOrder extends Component
         $form->component('ui.row', ['options' => [
             'row.slot' => $main_row,
             'row.append-attributes' => [
-                'data-selected-material-form-id' => $__formId
+                'data-selected-mfgoverhead-form-id' => $__formId
             ]
         ]]);
 
@@ -112,7 +88,7 @@ class AddMaterialToOrder extends Component
             'data' => $form->toArray()
         ])->render();
 
-        $this->dispatch('add-to-order::show-material-modal');
+        $this->dispatch('add-to-order::show-mfgoverhead-modal');
     }
 
     public function render()
