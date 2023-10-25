@@ -445,12 +445,13 @@ class Test extends Controller
         ])->extends('uxmal::layout.simple');
     }
 
-    public function test()
+    public function DynamicBuildtest()
     {
-        //'components.'
+        $uxmal = \App\Support\UxmalComponents\Order\FormCreateEdit\ListJSDynamic::Object(['values' => ['order_id' => 249]]);
         $rows = OrderProductDynamicDetails::with(['related'])
-            ->whereHas('order_product_dynamic', function ($query){
-                $query->where('order_id', 249);})
+            ->whereHas('order_product_dynamic', function ($query) {
+                $query->where('order_id', 249);
+            })
             ->select([
                 'id',
                 'order_product_dynamic_id',
@@ -463,12 +464,75 @@ class Test extends Controller
                 'subtotal',
                 'created_by'])->get();
 
-        print_r($rows->toArray());
-/*
+        //print_r($rows->toArray());
+
         return view('uxmal::simple-default', [
             'uxmal_data' => $uxmal->toArray()
         ])->extends('uxmal::layout.simple');
-*/
+    }
+
+    public function test()
+    {
+        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal->component('ui.table', ['options' => [
+            'table.name' => 'orderProductDynamicDetails',
+            'table.header' => [
+                'hashId' => [
+                    'tbhContent' => 'checkbox-all',
+                    'type' => 'primaryKey',
+                    'handler' => \App\Support\UxmalComponents\OrderProductDynamicDetails\TbHandler\Id::class
+                ],
+                'related.name' => [
+                    'tbhContent' => 'Material/Concepto'
+                ],
+                'quantity' => [
+                    'tbhContent' => 'Cantidad',
+                ],
+                'cost' => [
+                    'tbhContent' => 'Costo'
+                ],
+                'taxes' => [
+                    'tbhContent' => 'Impuestos'
+                ],
+                'profit_margin' => [
+                    'tbhContent' => 'Margen',
+                    'handler' => \App\Support\UxmalComponents\OrderProductDynamicDetails\TbHandler\ProfitMargin::class
+                ],
+                'subtotal' => [
+                    'tbhContent' => 'Subtotal'
+                ],
+                'createdby.name' => [
+                    'tbhContent' => 'Creado'
+                ]
+            ],
+            'table.body.modal' => \App\Models\OrderProductDynamicDetails::class,
+            'table.footer' => [
+                'subtotal' => [
+                    'operation' => 'sum'
+                ]
+            ]
+        ]]);
+        $rows = OrderProductDynamicDetails::with(['related'])
+            ->whereHas('order_product_dynamic', function ($query) {
+                $query->where('order_id', 249);
+            })
+            ->select([
+                'id',
+                'order_product_dynamic_id',
+                'reference_type',
+                'reference_id',
+                'quantity',
+                'cost',
+                'taxes',
+                'profit_margin',
+                'subtotal',
+                'created_by'])->get();
+
+        //print_r($rows->toArray());
+
+        return view('uxmal::simple-default', [
+            'uxmal_data' => $uxmal->toArray()
+        ])->extends('uxmal::layout.simple');
     }
 
 }
