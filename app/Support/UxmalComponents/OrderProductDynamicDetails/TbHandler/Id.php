@@ -12,6 +12,9 @@ class Id extends \Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\TableColumn {
      */
     public function parseValue($value)
     {
+        if( empty( $value ))
+            return '';
+
         $checkboxStruct = new SupportCheckbox([
             'options' => [
                 'listjs.checkbox.id' => $value

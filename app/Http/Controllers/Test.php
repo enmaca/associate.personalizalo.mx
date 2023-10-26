@@ -474,16 +474,16 @@ class Test extends Controller
     public function test()
     {
         $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
-        $uxmal->component('ui.table', ['options' => [
+        $table = $uxmal->component('ui.table', ['options' => [
             'table.name' => 'orderProductDynamicDetails',
-            'table.header' => [
+            'table.columns' => [
                 'hashId' => [
                     'tbhContent' => 'checkbox-all',
                     'type' => 'primaryKey',
                     'handler' => \App\Support\UxmalComponents\OrderProductDynamicDetails\TbHandler\Id::class
                 ],
                 'related.name' => [
-                    'tbhContent' => 'Material/Concepto'
+                    'tbhContent' => 'Material/Concepto',
                 ],
                 'quantity' => [
                     'tbhContent' => 'Cantidad',
@@ -505,14 +505,28 @@ class Test extends Controller
                     'tbhContent' => 'Creado'
                 ]
             ],
-            'table.body.modal' => \App\Models\OrderProductDynamicDetails::class,
+            'table.data.model' => \App\Models\OrderProductDynamicDetails::class,
             'table.footer' => [
+                'related.name' => [
+                    'html' => '<span class="justify-end">Totales</span>'
+                ],
+                'cost' => [
+                    'operation' => 'sum'
+                ],
+                'taxes' => [
+                    'operation' => 'sum'
+                ],
+                'profit_margin' => [
+                    'operation' => 'average'
+                ],
                 'subtotal' => [
                     'operation' => 'sum'
                 ]
             ]
         ]]);
-        $rows = OrderProductDynamicDetails::with(['related'])
+
+        $table->DataQuery()
+            ->with(['related', 'createdby'])
             ->whereHas('order_product_dynamic', function ($query) {
                 $query->where('order_id', 249);
             })
@@ -527,8 +541,6 @@ class Test extends Controller
                 'profit_margin',
                 'subtotal',
                 'created_by'])->get();
-
-        //print_r($rows->toArray());
 
         return view('uxmal::simple-default', [
             'uxmal_data' => $uxmal->toArray()
