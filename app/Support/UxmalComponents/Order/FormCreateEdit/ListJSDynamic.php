@@ -36,6 +36,9 @@ class ListJSDynamic extends \Enmaca\LaravelUxmal\Abstract\ListJs
             'taxes' => [
                 'tbhContent' => 'Impuestos'
             ],
+            'subtotal' => [
+                'tbhContent' => 'Subtotal'
+            ],
             'profit_margin' => [
                 'tbhContent' => 'Margen'
             ],

@@ -464,11 +464,19 @@ class Test extends Controller
                 'created_by'])->get();
 
         print_r($rows->toArray());
-/*
+
         return view('uxmal::simple-default', [
             'uxmal_data' => $uxmal->toArray()
         ])->extends('uxmal::layout.simple');
-*/
+
+    }
+
+    public function ____test(){
+        $uxmal = \App\Support\UxmalComponents\Order\FormCreateEdit\ListJSDynamic::Object(['values' => ['order_id' => 249]]);
+
+         return view('uxmal::simple-default', [
+             'uxmal_data' => $uxmal->toArray()
+         ])->extends('uxmal::layout.simple');
     }
 
 }
