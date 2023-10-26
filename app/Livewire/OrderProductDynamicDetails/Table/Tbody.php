@@ -41,6 +41,7 @@ class Tbody extends Component
                 'subtotal',
                 'created_by'])->get();
 
+        $this->dispatch('order-product-dynamic-details.table.tbody::updated', tfoot: $table->toHtml('tfoot') );
         return $table->toHtml('tbody');
 
     }

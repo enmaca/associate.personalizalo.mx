@@ -7,6 +7,8 @@ use App\Models\Order;
 use App\Models\Customer;
 use App\Models\OrderProductDynamicDetails;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Vite;
 
 class Test extends Controller
 {
@@ -525,24 +527,7 @@ class Test extends Controller
                 ]
             ]
         ]]);
-/*
-        $table->DataQuery()
-            ->with(['related', 'createdby'])
-            ->whereHas('order_product_dynamic', function ($query) {
-                $query->where('order_id', 249);
-            })
-            ->select([
-                'id',
-                'order_product_dynamic_id',
-                'reference_type',
-                'reference_id',
-                'quantity',
-                'cost',
-                'taxes',
-                'profit_margin',
-                'subtotal',
-                'created_by'])->get();
-*/
+        View::startPush('scripts', '<script src="' . Vite::asset('resources/js/test/test.js', 'workshop') . '" type="module"></script>');
         return view('uxmal::simple-default', [
             'uxmal_data' => $uxmal->toArray()
         ])->extends('uxmal::layout.simple');

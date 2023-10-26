@@ -15,6 +15,7 @@ export default defineConfig({
                 'resources/js/orders/root.js',
                 'resources/js/orders/root_livewire.js',
                 'resources/js/orders/create.js',
+                'resources/js/test/test.js',
                 'resources/scss/orders/create.scss'
             ],
             refresh: true,
