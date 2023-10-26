@@ -505,7 +505,8 @@ class Test extends Controller
                     'tbhContent' => 'Creado'
                 ]
             ],
-            'table.data.model' => \App\Models\OrderProductDynamicDetails::class,
+            //'table.data.model' => \App\Models\OrderProductDynamicDetails::class,
+            'table.data.livewire' => 'order-product-dynamic-details.table.tbody',
             'table.footer' => [
                 'related.name' => [
                     'html' => '<span class="justify-end">Totales</span>'
@@ -524,7 +525,7 @@ class Test extends Controller
                 ]
             ]
         ]]);
-
+/*
         $table->DataQuery()
             ->with(['related', 'createdby'])
             ->whereHas('order_product_dynamic', function ($query) {
@@ -541,7 +542,7 @@ class Test extends Controller
                 'profit_margin',
                 'subtotal',
                 'created_by'])->get();
-
+*/
         return view('uxmal::simple-default', [
             'uxmal_data' => $uxmal->toArray()
         ])->extends('uxmal::layout.simple');
