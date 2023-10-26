@@ -33,6 +33,18 @@ class SystemController extends Controller
 
     public function uom(){
         $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+
+        $main_row = $uxmal->component('ui.row');
+        $listjs = \App\Support\UxmalComponents\System\Uom\ListJsUomHome::Object(['context' => 'uomhome']);
+
+        $main_row->component('ui.card', [
+            'options' => [
+                'card.header' => 'Listado de Unidades de Medida',
+                'card.body' => $listjs->toArray(),
+                'card.footer' => '',
+            ],
+        ]);
+
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
 

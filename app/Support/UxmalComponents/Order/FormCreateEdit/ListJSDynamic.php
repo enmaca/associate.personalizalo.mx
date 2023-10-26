@@ -6,23 +6,12 @@ class ListJSDynamic extends \Enmaca\LaravelUxmal\Abstract\ListJs
 {
     public function build(): void
     {
-        /*
-         * 'id',
-                'order_product_dynamic_id',
-                'reference_type',
-                'reference_id',
-                'quantity',
-                'cost',
-                'taxes',
-                'profit_margin',
-                'subtotal',
-                'created_by'
-         */
+
         $this->_content->setColumns([
-            'id' => [
+            'hashId' => [
                 'tbhContent' => 'checkbox-all',
                 'type' => 'primaryKey',
-                'handler' => \App\Support\UxmalComponents\Order\TbHandler\OrderIdCheckbox::class
+                'handler' =>  \App\Support\UxmalComponents\OrderProductDynamicDetails\TbHandler\Id::class
             ],
             'related.name' => [
                 'tbhContent' => 'Material/Concepto'
@@ -40,16 +29,20 @@ class ListJSDynamic extends \Enmaca\LaravelUxmal\Abstract\ListJs
                 'tbhContent' => 'Subtotal'
             ],
             'profit_margin' => [
-                'tbhContent' => 'Margen'
+                'tbhContent' => 'Margen',
+                'handler' => \App\Support\UxmalComponents\OrderProductDynamicDetails\TbHandler\ProfitMargin::class
             ],
-            'created_by' => [
+            'subtotal' => [
+                'tbhContent' => 'Subtotal'
+            ],
+            'createdby.name' => [
                 'tbhContent' => 'Creado'
             ]
         ]);
 
 
         $this->_content->Model(\App\Models\OrderProductDynamicDetails::class)
-        ->with(['related'])
+        ->with(['related', 'createdby'])
         ->whereHas('order_product_dynamic', function ($query){
             $query->where('order_id', $this->attributes['values']['order_id']);})
         ->select([
