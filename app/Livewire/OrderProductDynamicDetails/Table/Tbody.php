@@ -2,19 +2,31 @@
 
 namespace App\Livewire\OrderProductDynamicDetails\Table;
 
+use App\Models\Order;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Tbody extends Component
 {
-    private $table_name;
-    private $table_columns;
-    private $table_footer;
+    public $table_name;
+    public $table_columns;
+    public $table_footer;
 
-    public function mount($table_name, $table_columns, $table_footer){
+    public $appended;
+
+    public function mount($table_name, $table_columns, $table_footer, $appended){
         $this->table_name = $table_name;
         $this->table_columns = $table_columns;
         $this->table_footer = $table_footer;
+        $this->appended = $appended;
     }
+
+    #[On('order-product-dynamic-details.table.tbody::reload')]
+    public function reload(){
+
+    }
+
+
     public function render()
     {
         $table = \Enmaca\LaravelUxmal\Uxmal::Component('ui.table', ['options' => [
@@ -24,10 +36,12 @@ class Tbody extends Component
             'table.footer' => $this->table_footer
         ]]);
 
+        $order_id = Order::keyFromHashId($this->appended['values']['order_id']);
+
         $table->DataQuery()
             ->with(['related', 'createdby'])
-            ->whereHas('order_product_dynamic', function ($query) {
-                $query->where('order_id', 249);
+            ->whereHas('order_product_dynamic', function ($query) use ($order_id) {
+                $query->where('order_id', $order_id);
             })
             ->select([
                 'id',

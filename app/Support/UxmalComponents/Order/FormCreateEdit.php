@@ -16,7 +16,7 @@ class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
             'options' => [
                 'card.header' => 'Datos Generales/Cliente',
                 'card.body' => null,
-                'card.footer' => 'Agregar Boton de Editar',
+                'card.footer' => null,
                 'card.style' => 'primary',
                 'card.name' => 'clientCard'
             ]
@@ -25,10 +25,11 @@ class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
         $this->Row(true, $main_card);
 
         $delivery_card = FormCreateEdit\DeliveryCard::Object([
+            'values' => $this->attributes['values'],
             'options' => [
                 'card.header' => 'Dirección de Entrega/Estatus de Entrega',
                 'card.body' => null,
-                'card.footer' => '',
+                'card.footer' => null,
                 'card.style' => 'success',
                 'card.name' => 'deliveryCard'
             ]
@@ -50,10 +51,11 @@ class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
         $this->Row(true, $productCard);
 
         $dynamicCard = FormCreateEdit\DynamicCard::Object([
+            'values' => $this->attributes['values'],
             'options' => [
                 'card.header' => 'Costos Directos',
                 'card.body' => null,
-                'card.footer' => '',
+                'card.footer' => null,
                 'card.style' => 'warning',
                 'card.name' => 'dynamicCard'
             ]
@@ -62,6 +64,7 @@ class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
         $this->Row(true, $dynamicCard);
 
         $paymentCard = FormCreateEdit\PaymentCard::Object([
+            'values' => $this->attributes['values'],
             'options' => [
                 'card.header' => 'Información de Pago',
                 'card.body' => null,

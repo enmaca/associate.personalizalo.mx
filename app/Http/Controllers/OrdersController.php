@@ -42,7 +42,7 @@ class OrdersController extends Controller
         /**
          * Set the top button to a listjs object from $modalStruct
          */
-        $order_listjs->setTopButtons($client_modal['button']);
+        //$order_listjs->setTopButtons($client_modal['button']);
 
         /**
          * Create the main Card of Page with ListJS in the Body
@@ -63,6 +63,7 @@ class OrdersController extends Controller
         /**
          * PushOnce to scripts
          */
+        View::startPush('scripts', '<script src="' . Vite::asset('resources/js/workshop.js', 'workshop') . '" type="module"></script>');
         View::startPush('scripts', '<script src="' . Vite::asset('resources/js/orders/root.js', 'workshop') . '" type="module"></script>');
         View::startPush('livewire:initialized', Vite::content('resources/js/orders/root_livewire.js', 'workshop'));
 
@@ -137,7 +138,7 @@ class OrdersController extends Controller
                 'customer_last_name' => $customer_data->last_name,
                 'customer_mobile' => $customer_data->mobile,
                 'customer_email' => $customer_data->email,
-                'order_id' => $order_data->hashed_id,
+                'order_id' => $order_data->hashId,
                 'order_code' => $order_data->code
             ]]);
 
@@ -177,6 +178,7 @@ class OrdersController extends Controller
 
         View::startPush('scss', '<link rel="stylesheet" href="' . asset('enmaca/laravel-uxmal/assets/swiper.css') . '" type="text/css"/>');
         View::startPush('scss', '<link rel="stylesheet" href="' . Vite::asset('resources/scss/orders/create.scss', 'workshop') . '" type="text/css"/>');
+        View::startPush('scripts', '<script src="' . Vite::asset('resources/js/workshop.js', 'workshop') . '" type="module"></script>');
         View::startPush('scripts', '<script src="' . Vite::asset('resources/js/orders/create.js', 'workshop') . '" type="module"></script>');
         View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/swiper.js') . '" type="module"></script>');
         View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/cleave.js') . '" type="module"></script>');
@@ -278,6 +280,70 @@ class OrdersController extends Controller
 
         return response()->json(['ok' => $OrderProductDynamicDataDetail->hashId]);
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Deligoez\LaravelModelHashId\Exceptions\UnknownHashIdConfigParameterException
+     *
+     * "_token" => "hB1ZwcBKBk90zRJXzawKb7xite6Bo5fYOiAXIcas"
+     * "mfgOverheadQuantity" => "1"
+     * "mfgOverheadSubtotal" => "$1.16"
+     * "order_id" => "ord_4WmvDE83DQ98x"
+     * "customer_id" => "cus_WJ2v5Z2xQDO9Y"
+     * ]
+     */
+    public function post_mfg_overhead(Request $request){
+        $allInput = $request->all();
+
+        dd($allInput);
+
+        if( !empty($allInput['laborCostId']))
+            $catalog_labor_cost_id = LaborCost::keyFromHashId($allInput['laborCostId']);
+
+        if( !empty($allInput['order_id']))
+            $order_id = LaborCost::keyFromHashId($allInput['order_id']);
+
+        if( !empty($allInput['customer_id']))
+            $customer_id = LaborCost::keyFromHashId($allInput['customer_id']);
+
+        if( !empty($catalog_labor_cost_id) && !empty($order_id) && !empty($customer_id)){
+            $labor_cost_data = LaborCost::with('taxes')->findOrFail($catalog_labor_cost_id);
+            $labor_costs = $labor_cost_data->calculateCosts($allInput['laborCostQuantity']);
+            /**
+             * $labor_costs
+             * 'uom' => $costByMinute,
+             * 'cost' => $cost,
+             * 'taxes' => $taxes,
+             * 'profit_margin' => 0,
+             * 'subtotal' => ($cost + $taxes)
+             */
+            $OrderProductDynamicData = OrderProductDynamic::where('order_id', $order_id)->first();
+
+            if( empty( $OrderProductDynamicData )){
+                $OrderProductDynamicData = new OrderProductDynamic();
+                $OrderProductDynamicData->order_id = $order_id;
+                $OrderProductDynamicData->save();
+            }
+            $OrderProductDynamicDataDetail = new OrderProductDynamicDetails();
+
+            $OrderProductDynamicDataDetail->order_product_dynamic_id = $OrderProductDynamicData->id;
+            $OrderProductDynamicDataDetail->reference_type = 'catalog_labor_costs';
+            $OrderProductDynamicDataDetail->reference_id = $catalog_labor_cost_id;
+            $OrderProductDynamicDataDetail->quantity = $allInput['laborCostQuantity'];
+            $OrderProductDynamicDataDetail->cost = $labor_costs['cost'];
+            $OrderProductDynamicDataDetail->taxes = $labor_costs['taxes'];
+            $OrderProductDynamicDataDetail->profit_margin = $labor_costs['profit_margin'];
+            $OrderProductDynamicDataDetail->subtotal = $labor_costs['subtotal'];
+            $OrderProductDynamicDataDetail->created_by = Auth::id();
+
+            $OrderProductDynamicDataDetail->save();
+
+        }
+
+        return response()->json(['ok' => $OrderProductDynamicDataDetail->hashId]);
+    }
+
 
     /**
      * @param Request $request

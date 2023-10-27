@@ -32,7 +32,7 @@ class AddMfgOverheadToOrder extends Component
         $form = \Enmaca\LaravelUxmal\Uxmal::component('form', [
             'options' => [
                 'form.id' => $__formId,
-                'form.action' => '/order/add_mfgoverhead'
+                'form.action' => route('orders_post_mfg_overhead')
             ]
         ]);
 
@@ -42,6 +42,13 @@ class AddMfgOverheadToOrder extends Component
             'options' => [
                 'row.slot' => '<h6>'.$mfgoverhead_data->name.'</h6>',
                 'row.append-attributes' => [ 'class' => 'm-3']
+            ]]);
+
+        $main_row->component('form.input', [
+            'options' => [
+                'input.type' => 'hidden',
+                'hidden.name' => 'mfgOverheadId',
+                'hidden.value' => $mfgoverhead_data->hashId
             ]]);
 
         $main_row->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[

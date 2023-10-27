@@ -21,7 +21,7 @@
 <body>
 
 @yield('content')
-@vite('resources/js/app.js')
+@vite('resources/js/workshop.js')
 @livewireScripts
 </body>
 

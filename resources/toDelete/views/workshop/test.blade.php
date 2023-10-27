@@ -7,7 +7,7 @@
 @endsection
 
 @pushonce('scripts')
-    <script type="module" src="{{ Vite::useBuildDirectory('workshop')->asset('resources/js/app.js') }}"></script>
+    <script type="module" src="{{ Vite::useBuildDirectory('workshop')->asset('resources/js/workshop.js') }}"></script>
 @endpushonce
 
 @section('javascript')

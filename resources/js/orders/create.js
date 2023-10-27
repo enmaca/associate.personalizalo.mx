@@ -1,5 +1,3 @@
-import {Modal} from "../../../public/enmaca/laravel-uxmal/libs/bootstrap/js/bootstrap.esm.min.js";
-
 window.customer_id = null;
 window.order_id = null;
 
@@ -46,11 +44,11 @@ window.addProductToOrder = () => {
 }
 
 window.addMfgOverHeadToOrder = () => {
-    window.submitModalAddToOrderForm('data-selected-mfgoverhead-form-id');
+    window.submitModalAddToOrderForm('data-selected-mfgoverhead-form-id', 'livewire::order-product-dynamic-details.table.tbody::reload', 'selectedMfgOverHeadToAddToOrderId');
 }
 
 window.addLaborCostToOrder = () => {
-    submitModalAddToOrderForm('data-selected-laborcost-form-id', 'onsuccessEventToDispatch', 'selectedLaborCostToAddToOrderId');
+    submitModalAddToOrderForm('data-selected-laborcost-form-id', 'livewire::order-product-dynamic-details.table.tbody::reload', 'selectedLaborCostToAddToOrderId');
 }
 
 window.submitModalAddToOrderForm = (selector, eventOnSuccess, modalToClose) => {
@@ -80,8 +78,9 @@ window.submitModalAddToOrderForm = (selector, eventOnSuccess, modalToClose) => {
             .then(response => response.json())  // assuming server responds with json
             .then(data => {
                 console.log('data', data);
-                if( data.ok ) {
+                if (data.ok) {
                     console.log('dispatchingEvent', eventOnSuccess);
+                    window.workshopDispatchEvent(eventOnSuccess);
                     closeModal(modalToClose);
                     return;
                 }
@@ -124,58 +123,40 @@ window.updateLaborCostSubtotal = () => {
     let quantity = Number(laborCostQtyEl.value);
     let subtotal = (quantity * uom);
     let totaltaxes = (subtotal * tax_data);
-    let subtotal_previous_taxes = new Intl.NumberFormat('en-US', {
+    document.getElementById('laborCostSubtotalId').value = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD'
-    }).format( subtotal + totaltaxes );
-    document.getElementById('laborCostSubtotalId').value = subtotal_previous_taxes;
+    }).format(subtotal + totaltaxes);
 }
 
-document.addEventListener('livewire:initialized', () => {
-    Livewire.on('select-by-digital-art-body::showmodal', (event) => {
-        openModal('selectProductWithDigitalArtId');
-        uxmalSetCardLoading('productCard', false);
-    });
-    Livewire.on('add-to-order::show-material-modal', (event) => {
-        openModal('selectedMaterialToAddToOrderId');
-        uxmalSetCardLoading('dynamicCard', false);
-    });
 
-    Livewire.on('add-to-order::show-mfgoverhead-modal', (event) => {
-        openModal('selectedMfgOverHeadToAddToOrderId');
-        uxmalSetCardLoading('dynamicCard', false);
-    });
-
-    Livewire.on('add-to-order::show-laborcost-modal', (event) => {
-        openModal('selectedLaborCostToAddToOrderId');
-        uxmalSetCardLoading('dynamicCard', false);
-    });
+Livewire.on('select-by-digital-art-body::showmodal', (event) => {
+    openModal('selectProductWithDigitalArtId');
+    uxmalSetCardLoading('productCard', false);
+});
+Livewire.on('add-to-order::show-material-modal', (event) => {
+    openModal('selectedMaterialToAddToOrderId');
+    uxmalSetCardLoading('dynamicCard', false);
 });
 
+Livewire.on('add-to-order::show-mfgoverhead-modal', (event) => {
+    openModal('selectedMfgOverHeadToAddToOrderId');
+    uxmalSetCardLoading('dynamicCard', false);
+});
 
-window.openModal = function (identifier) {
-    const element = document.getElementById(identifier);
-    if (!element) {
-        console.error('No modal found with the given identifier');
-        return;
+Livewire.on('add-to-order::show-laborcost-modal', (event) => {
+    openModal('selectedLaborCostToAddToOrderId');
+    uxmalSetCardLoading('dynamicCard', false);
+});
+
+Livewire.on('order-product-dynamic-details.table.tbody::updated', (data) => {
+    console.log('order-product-dynamic-details.table.tbody::updated', data);
+    const tableEl = document.querySelector("table[id='orderProductDynamicDetailsId']");
+    const oldTfoot = tableEl.querySelector('tfoot');
+    if (oldTfoot) {
+        oldTfoot.innerHTML = data.tfoot;
     }
-    const modalInstance = new Modal(element);
-    modalInstance.show();
-    setTimeout(function () {
-        window.init_swiper(element);
-    }, 500);
-}
-
-window.closeModal = function (identifier) {
-    const element = document.getElementById(identifier);
-    if (!element) {
-        console.error('No modal found with the given identifier');
-        return;
-    }
-    const modalInstance = Modal.getInstance(element);
-    modalInstance.hide();
-
-}
+});
 
 document.addEventListener("DOMContentLoaded", function () {
     let divElement = document.querySelector('div[data-uxmal-order-data]');

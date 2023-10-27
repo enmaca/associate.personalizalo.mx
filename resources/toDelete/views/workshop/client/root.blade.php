@@ -22,7 +22,7 @@
 @endsection
 @section('script')
     <!-- apexcharts -->
-    <script src="{{ URL::asset('build/js/app.js') }}"></script>
+    <script src="{{ URL::asset('build/js/workshop.js') }}"></script>
 @endsection
 
 include(/Users/enriquemartinez/Documents/Proyectos/Personales/PHP/associate.personalizalo.mx/vendor/composer/../../app/Http/Controllers/Orders.php): Failed to open stream: No such file or directory

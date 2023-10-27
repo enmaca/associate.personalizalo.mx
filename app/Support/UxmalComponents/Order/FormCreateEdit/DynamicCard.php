@@ -29,6 +29,60 @@ class DynamicCard extends \Enmaca\LaravelUxmal\Abstract\Card
 
         $search_mfg_devices_tomselect = \App\Support\UxmalComponents\MfgDevices\SelectByName::Object();
         $this->BodyInput($search_mfg_devices_tomselect);
+
+        $footer = $this->Footer();
+        $table = $footer->component('ui.table', ['options' => [
+            'table.name' => 'orderProductDynamicDetails',
+            'table.columns' => [
+                'hashId' => [
+                    'tbhContent' => 'hidden',
+                    'type' => 'primaryKey'
+                ],
+                'related.name' => [
+                    'tbhContent' => 'Material/Concepto',
+                ],
+                'quantity' => [
+                    'tbhContent' => 'Cantidad',
+                ],
+                'cost' => [
+                    'tbhContent' => 'Costo'
+                ],
+                'taxes' => [
+                    'tbhContent' => 'Impuestos'
+                ],
+                'profit_margin' => [
+                    'tbhContent' => 'Margen',
+                    'handler' => \App\Support\UxmalComponents\OrderProductDynamicDetails\TbHandler\ProfitMargin::class
+                ],
+                'subtotal' => [
+                    'tbhContent' => 'Subtotal'
+                ],
+                'createdby.name' => [
+                    'tbhContent' => 'Creado'
+                ]
+            ],
+            'table.data.livewire' => 'order-product-dynamic-details.table.tbody',
+            'table.data.livewire.append-data' => [
+                'values' => $this->attributes['values']
+            ],
+            'table.footer' => [
+                'related.name' => [
+                    'html' => '<span class="justify-end">Totales</span>'
+                ],
+                'cost' => [
+                    'operation' => 'sum'
+                ],
+                'taxes' => [
+                    'operation' => 'sum'
+                ],
+                'profit_margin' => [
+                    'operation' => 'average'
+                ],
+                'subtotal' => [
+                    'operation' => 'sum'
+                ]
+            ]
+        ]]);
     }
 
 }

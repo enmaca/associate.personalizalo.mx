@@ -38,7 +38,7 @@
 
 @include('workshop.customizer')
 <!-- JAVASCRIPT -->
-@vite('resources/js/app.js')
+@vite('resources/js/workshop.js')
 @stack('scripts')
 <script>
     document.addEventListener("DOMContentLoaded", function() {

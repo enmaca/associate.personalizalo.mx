@@ -1,5 +1,6 @@
 console.log('resources/js/order/root.js Loaded')
 window.createOrder = () => {
+    openModal('customerSearchByMobileId');
     console.log('createOrder Executed');
 }
 

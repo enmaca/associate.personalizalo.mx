@@ -31,7 +31,10 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/orders','create')->name('orders_create');
         Route::get('/orders/{hashed_id}','edit')->name('orders_edit');
         Route::post('/orders/laborcost','post_labor_cost')->name('orders_post_labor_cost');
+        Route::post('/orders/add_mfgoverhead','post_mfg_overhead')->name('orders_post_mfg_overhead');
     });
+
+    http://127.0.0.1:8000/order/
 
     Route::controller(\App\Http\Controllers\ManufacturingController::class)->group(function () {
         Route::get('/manufacturing', 'dashboard')->name('manufacturing_root');
