@@ -14,6 +14,7 @@ use App\Models\OrderProductDynamic;
 use App\Models\OrderProductDynamicDetails;
 use App\Models\Product;
 use App\Models\Material;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use \Illuminate\Support\Facades\View;
@@ -103,13 +104,6 @@ class OrdersController extends Controller
         if (empty($order_data))
             $order_data = Order::CreateToCustomer($customer_data->id);
 
-
-        $products_options = Product::select('name', 'id');
-        $material_options = Material::pluck('name', 'id');
-        $laborcost_options = LaborCost::pluck('name', 'id');
-        $mfgoverhead_options = MfgOverhead::pluck('name', 'id');
-        $mfgareas_options = MfgArea::pluck('name', 'id');
-
         $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
 
         $main_row = $uxmal->component('ui.row', [
@@ -142,9 +136,19 @@ class OrdersController extends Controller
                 'order_code' => $order_data->code
             ]]);
 
+        $deliveryDate = Carbon::parse();
+        $DateButton = \Enmaca\LaravelUxmal\Components\Form\Button::Render([
+            'button.type' => 'with-label',
+            'button.style' => is_null($order_data->delivery_date) ? 'danger' : ((Carbon::parse($order_data->delivery_date)->isToday() || Carbon::parse($order_data->delivery_date)->isTomorrow()) ? 'warning' : 'success'),
+            'button.name' => 'orderDeliveryDate',
+            'button.label' => $order_data->delivery_date ?? 'Agregar Fecha de Entrega',
+            'button.remix-icon' => 'calendar-event-line'
+        ]);
+
         $main_row->component('ui.card', [
             'options' => [
                 'card.header' => 'Pedido ' . $order_data->code,
+                'card.header.right' => $DateButton,
                 'card.body' => $form->toArray(),
                 'card.footer' => '&nbsp;'
             ]
@@ -153,18 +157,11 @@ class OrdersController extends Controller
         /**
          * Add Modals
          */
-        $modalSelectedProductWithDigitalArt = \App\Support\UxmalComponents\Products\ModalSelectProductWithDigitalArt::Object(['options' => ['saveBtn.onclick' => 'addProductToOrder()']]);
-        $uxmal->addElement($modalSelectedProductWithDigitalArt['modal']);
-
-        $modalMaterialAddToOrder = \App\Support\UxmalComponents\Material\ModalAddToOrder::Object(['options' => ['saveBtn.onclick' => 'addMaterialToOrder()']]);
-        $uxmal->addElement($modalMaterialAddToOrder['modal']);
-
-        $modalLaborCostAddToOrder = \App\Support\UxmalComponents\LaborCost\ModalAddToOrder::Object(['options' => ['saveBtn.onclick' => 'addLaborCostToOrder()']]);
-        $uxmal->addElement($modalLaborCostAddToOrder['modal']);
-
-        $modalMfgOverHeadAddToOrder = \App\Support\UxmalComponents\MfgOverHead\ModalAddToOrder::Object(['options' => ['saveBtn.onclick' => 'addMfgOverHeadToOrder()']]);
-        $uxmal->addElement($modalMfgOverHeadAddToOrder['modal']);
-
+        $uxmal->addElement(\App\Support\UxmalComponents\Products\ModalSelectProductWithDigitalArt::Modal(['options' => ['saveBtn.onclick' => 'addProductToOrder()']]));
+        $uxmal->addElement(\App\Support\UxmalComponents\Material\ModalAddToOrder::Modal(['options' => ['saveBtn.onclick' => 'addMaterialToOrder()']]));
+        $uxmal->addElement(\App\Support\UxmalComponents\LaborCost\ModalAddToOrder::Modal(['options' => ['saveBtn.onclick' => 'addLaborCostToOrder()']]));
+        $uxmal->addElement(\App\Support\UxmalComponents\MfgOverHead\ModalAddToOrder::Modal(['options' => ['saveBtn.onclick' => 'addMfgOverHeadToOrder()']]));
+        $uxmal->addElement(\App\Support\UxmalComponents\Order\FormCreateEdit\ModalDeliveryDate::Modal());
 
         /*
                 dump(
@@ -182,7 +179,7 @@ class OrdersController extends Controller
         View::startPush('scripts', '<script src="' . Vite::asset('resources/js/orders/create.js', 'workshop') . '" type="module"></script>');
         View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/swiper.js') . '" type="module"></script>');
         View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/cleave.js') . '" type="module"></script>');
-        View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/component_form.js'). '" type="module"></script>');
+        View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/component_form.js') . '" type="module"></script>');
 
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
@@ -232,19 +229,20 @@ class OrdersController extends Controller
      *      [customer_id] => cus_XXXXX
      * @return void
      */
-    public function post_labor_cost(Request $request){
+    public function post_labor_cost(Request $request)
+    {
         $allInput = $request->all();
 
-        if( !empty($allInput['laborCostId']))
+        if (!empty($allInput['laborCostId']))
             $catalog_labor_cost_id = LaborCost::keyFromHashId($allInput['laborCostId']);
 
-        if( !empty($allInput['order_id']))
-            $order_id = LaborCost::keyFromHashId($allInput['order_id']);
+        if (!empty($allInput['order_id']))
+            $order_id = Order::keyFromHashId($allInput['order_id']);
 
-        if( !empty($allInput['customer_id']))
-            $customer_id = LaborCost::keyFromHashId($allInput['customer_id']);
+        if (!empty($allInput['customer_id']))
+            $customer_id = Customer::keyFromHashId($allInput['customer_id']);
 
-        if( !empty($catalog_labor_cost_id) && !empty($order_id) && !empty($customer_id)){
+        if (!empty($catalog_labor_cost_id) && !empty($order_id) && !empty($customer_id)) {
             $labor_cost_data = LaborCost::with('taxes')->findOrFail($catalog_labor_cost_id);
             $labor_costs = $labor_cost_data->calculateCosts($allInput['laborCostQuantity']);
             /**
@@ -257,7 +255,7 @@ class OrdersController extends Controller
              */
             $OrderProductDynamicData = OrderProductDynamic::where('order_id', $order_id)->first();
 
-            if( empty( $OrderProductDynamicData )){
+            if (empty($OrderProductDynamicData)) {
                 $OrderProductDynamicData = new OrderProductDynamic();
                 $OrderProductDynamicData->order_id = $order_id;
                 $OrderProductDynamicData->save();
@@ -275,10 +273,29 @@ class OrdersController extends Controller
             $OrderProductDynamicDataDetail->created_by = Auth::id();
 
             $OrderProductDynamicDataDetail->save();
-
+            return response()->json(['ok' => $OrderProductDynamicDataDetail->hashId]);
         }
+        return response()->json(['fail' => 'Error']);
+    }
 
-        return response()->json(['ok' => $OrderProductDynamicDataDetail->hashId]);
+    /**
+     * @param Request $request
+     * @param string $labor_cost_id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Deligoez\LaravelModelHashId\Exceptions\UnknownHashIdConfigParameterException
+     *
+     * http://127.0.0.1:8000/orders/dynamic_detail/ord_4WmvDA86E98xo
+     */
+    public function delete_dynamic_detail_row(Request $request, string $labor_cost_id){
+        $order_product_dynamic_id = OrderProductDynamicDetails::keyFromHashId($labor_cost_id);
+        $order_product_dynamic_row = OrderProductDynamicDetails::find($order_product_dynamic_id);
+        if($order_product_dynamic_row ){
+            if( $order_product_dynamic_row->delete() )
+                return response()->json(['ok' => 'El registro se elimino correctamente']);
+            else
+                return response()->json(['fail' => 'El registro no se pude eliminar']);
+        }
+        return response()->json(['warning' => 'El registro no se encontro']);
     }
 
     /**
@@ -293,34 +310,26 @@ class OrdersController extends Controller
      * "customer_id" => "cus_WJ2v5Z2xQDO9Y"
      * ]
      */
-    public function post_mfg_overhead(Request $request){
+    public function post_mfg_overhead(Request $request)
+    {
         $allInput = $request->all();
 
-        dd($allInput);
+        if (!empty($allInput['mfgOverheadId']))
+            $mfg_overhead_cost_id = MfgOverhead::keyFromHashId($allInput['mfgOverheadId']);
 
-        if( !empty($allInput['laborCostId']))
-            $catalog_labor_cost_id = LaborCost::keyFromHashId($allInput['laborCostId']);
+        if (!empty($allInput['order_id']))
+            $order_id = Order::keyFromHashId($allInput['order_id']);
 
-        if( !empty($allInput['order_id']))
-            $order_id = LaborCost::keyFromHashId($allInput['order_id']);
+        if (!empty($allInput['customer_id']))
+            $customer_id = Customer::keyFromHashId($allInput['customer_id']);
 
-        if( !empty($allInput['customer_id']))
-            $customer_id = LaborCost::keyFromHashId($allInput['customer_id']);
+        if (!empty($mfg_overhead_cost_id) && !empty($order_id) && !empty($customer_id)) {
+            $mfg_overhead_data = MfgOverhead::with('taxes')->findOrFail($mfg_overhead_cost_id);
+            $mfg_overhead_costs = $mfg_overhead_data->calculateCosts($allInput['mfgOverheadQuantity']);
 
-        if( !empty($catalog_labor_cost_id) && !empty($order_id) && !empty($customer_id)){
-            $labor_cost_data = LaborCost::with('taxes')->findOrFail($catalog_labor_cost_id);
-            $labor_costs = $labor_cost_data->calculateCosts($allInput['laborCostQuantity']);
-            /**
-             * $labor_costs
-             * 'uom' => $costByMinute,
-             * 'cost' => $cost,
-             * 'taxes' => $taxes,
-             * 'profit_margin' => 0,
-             * 'subtotal' => ($cost + $taxes)
-             */
             $OrderProductDynamicData = OrderProductDynamic::where('order_id', $order_id)->first();
 
-            if( empty( $OrderProductDynamicData )){
+            if (empty($OrderProductDynamicData)) {
                 $OrderProductDynamicData = new OrderProductDynamic();
                 $OrderProductDynamicData->order_id = $order_id;
                 $OrderProductDynamicData->save();
@@ -328,20 +337,76 @@ class OrdersController extends Controller
             $OrderProductDynamicDataDetail = new OrderProductDynamicDetails();
 
             $OrderProductDynamicDataDetail->order_product_dynamic_id = $OrderProductDynamicData->id;
-            $OrderProductDynamicDataDetail->reference_type = 'catalog_labor_costs';
-            $OrderProductDynamicDataDetail->reference_id = $catalog_labor_cost_id;
-            $OrderProductDynamicDataDetail->quantity = $allInput['laborCostQuantity'];
-            $OrderProductDynamicDataDetail->cost = $labor_costs['cost'];
-            $OrderProductDynamicDataDetail->taxes = $labor_costs['taxes'];
-            $OrderProductDynamicDataDetail->profit_margin = $labor_costs['profit_margin'];
-            $OrderProductDynamicDataDetail->subtotal = $labor_costs['subtotal'];
+            $OrderProductDynamicDataDetail->reference_type = 'mfg_overhead';
+            $OrderProductDynamicDataDetail->reference_id = $mfg_overhead_cost_id;
+            $OrderProductDynamicDataDetail->quantity = $allInput['mfgOverheadQuantity'];
+            $OrderProductDynamicDataDetail->cost = $mfg_overhead_costs['cost'];
+            $OrderProductDynamicDataDetail->taxes = $mfg_overhead_costs['taxes'];
+            $OrderProductDynamicDataDetail->profit_margin = $mfg_overhead_costs['profit_margin'];
+            $OrderProductDynamicDataDetail->subtotal = $mfg_overhead_costs['subtotal'];
             $OrderProductDynamicDataDetail->created_by = Auth::id();
 
             $OrderProductDynamicDataDetail->save();
 
+            return response()->json(['ok' => $OrderProductDynamicDataDetail->hashId]);
         }
+        return response()->json(['fail' => 'Error']);
+    }
 
-        return response()->json(['ok' => $OrderProductDynamicDataDetail->hashId]);
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Deligoez\LaravelModelHashId\Exceptions\UnknownHashIdConfigParameterException"_token" => "1flibMbJXOJMDvzSMkun2rFjEjBSrndlz3RkmggP"
+     *
+     * POST Payload
+     *      "materialId" => "mat_KnY2dZk6MEoWx"
+     *      "materialQuantity" => "1"
+     *      "materialProfitMargin" => "35"
+     *      "materialSubtotal" => "$33.99"
+     *      "order_id" => "ord_679zRAz0JErYv"
+     *      "customer_id" => "cus_B95oKZdvQJMPv"
+     */
+    public function post_material(Request $request)
+    {
+        $allInput = $request->all();
+
+        if (!empty($allInput['materialId']))
+            $material_id = Material::keyFromHashId($allInput['materialId']);
+
+        if (!empty($allInput['order_id']))
+            $order_id = Order::keyFromHashId($allInput['order_id']);
+
+        if (!empty($allInput['customer_id']))
+            $customer_id = Customer::keyFromHashId($allInput['customer_id']);
+
+        if (!empty($material_id) && !empty($order_id) && !empty($customer_id)) {
+            $material_data = Material::with('taxes')->findOrFail($material_id);
+            $material_costs = $material_data->calculateCosts($allInput['materialQuantity'], $allInput['materialProfitMargin']);
+
+            $OrderProductDynamicData = OrderProductDynamic::where('order_id', $order_id)->first();
+
+            if (empty($OrderProductDynamicData)) {
+                $OrderProductDynamicData = new OrderProductDynamic();
+                $OrderProductDynamicData->order_id = $order_id;
+                $OrderProductDynamicData->save();
+            }
+            $OrderProductDynamicDataDetail = new OrderProductDynamicDetails();
+
+            $OrderProductDynamicDataDetail->order_product_dynamic_id = $OrderProductDynamicData->id;
+            $OrderProductDynamicDataDetail->reference_type = 'catalog_materials';
+            $OrderProductDynamicDataDetail->reference_id = $material_id;
+            $OrderProductDynamicDataDetail->quantity = $allInput['materialQuantity'];
+            $OrderProductDynamicDataDetail->cost = $material_costs['cost'];
+            $OrderProductDynamicDataDetail->taxes = $material_costs['taxes'];
+            $OrderProductDynamicDataDetail->profit_margin = $allInput['materialProfitMargin'] / 100;
+            $OrderProductDynamicDataDetail->profit_margin_subtotal = $material_costs['profit_margin'];
+            $OrderProductDynamicDataDetail->subtotal = $material_costs['subtotal'];
+            $OrderProductDynamicDataDetail->created_by = Auth::id();
+
+            $OrderProductDynamicDataDetail->save();
+            return response()->json(['ok' => $OrderProductDynamicDataDetail->hashId]);
+        }
+        return response()->json(['fail' => 'Error']);
     }
 
 

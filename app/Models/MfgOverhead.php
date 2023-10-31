@@ -14,6 +14,21 @@ class MfgOverhead extends BaseModel
     public function opdd(){
         return $this->morphMany(OrderProductDynamicDetails::class, 'related');
     }
+    
+
+    public function calculateCosts($quantity){
+        $totalTax = $this->taxes->sum('value');
+        $cost = $quantity * $this->value;
+        $taxes =  $totalTax * $cost;
+        return [
+            'uom' => $cost,
+            'cost' => $cost,
+            'taxes' => $taxes,
+            'profit_margin' => 0,
+            'subtotal' => ($cost + $taxes)
+        ];
+
+    }
     public function taxes(): \Illuminate\Database\Eloquent\Relations\belongsToMany
     {
         return $this->belongsToMany(Tax::class, 'taxes_details', 'reference_id', 'catalog_taxes_id')

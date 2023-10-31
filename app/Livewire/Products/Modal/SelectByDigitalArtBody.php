@@ -67,7 +67,7 @@ END;
         $form = \Enmaca\LaravelUxmal\Uxmal::component('form', [
             'options' => [
                 'form.id' => $__formId,
-                'form.action' => '/order/addproduct'
+                'form.action' => route('orders_post_product')
             ]
         ]);
 
@@ -83,7 +83,8 @@ END;
                 'swiper.config.grid.rows' => 1,
                 'swiper.config.space-between' => 10,
                 'swiper.config.pagination' => 'progress',
-                'swiper.config.navigation' => true,
+                'swiper.config.navigation' => true
+                /*,
                 'swiper.config.effect' => 'cube',
                 'swiper.config.cubeEffect' => [
                     'shadow' => true,
@@ -91,7 +92,7 @@ END;
                     'shadowOffset' => 20,
                     'shadowScale' => 0.94,
                 ]
-
+*/
             ]
         ]);
 

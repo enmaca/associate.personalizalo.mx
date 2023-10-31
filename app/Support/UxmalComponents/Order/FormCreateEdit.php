@@ -2,9 +2,6 @@
 
 namespace App\Support\UxmalComponents\Order;
 
-use Enmaca\LaravelUxmal\Uxmal;
-use Illuminate\Support\Str;
-
 class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
 {
     public function build()
@@ -24,7 +21,7 @@ class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
 
         $this->Row(true, $main_card);
 
-        $delivery_card = FormCreateEdit\DeliveryCard::Object([
+        $mfg_card = FormCreateEdit\MfgCard::Object([
             'values' => $this->attributes['values'],
             'options' => [
                 'card.header' => 'Dirección de Entrega/Estatus de Entrega',
@@ -35,14 +32,14 @@ class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
             ]
         ]);
 
-        $this->Row(true, $delivery_card);
+        $this->Row(true, $mfg_card);
 
         $productCard = FormCreateEdit\ProductCard::Object([
             'values' => $this->attributes['values'],
             'options' => [
                 'card.header' => 'Productos',
                 'card.body' => null,
-                'card.footer' => '',
+                'card.footer' => null,
                 'card.style' => 'info',
                 'card.name' => 'productCard'
             ]

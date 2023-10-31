@@ -40,7 +40,7 @@ class AddMaterialToOrder extends Component
         $form = \Enmaca\LaravelUxmal\Uxmal::component('form', [
             'options' => [
                 'form.id' => $__formId,
-                'form.action' => '/order/addproduct'
+                'form.action' => route('orders_post_material')
             ]
         ]);
 
@@ -50,6 +50,13 @@ class AddMaterialToOrder extends Component
             'options' => [
                 'row.slot' => '<h6>'.$material_data->name.'</h6>',
                 'row.append-attributes' => [ 'class' => 'm-3']
+            ]]);
+
+        $main_row->component('form.input', [
+            'options' => [
+                'input.type' => 'hidden',
+                'hidden.name' => 'materialId',
+                'hidden.value' => $material_data->hashId
             ]]);
 
         $main_row->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[

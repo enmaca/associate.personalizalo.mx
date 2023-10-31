@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
         Relation::enforceMorphMap([
             'catalog_materials' => \App\Models\Material::class,
             'catalog_labor_costs' => \App\Models\LaborCost::class,
-            'catalog_mfg_overhead' => \App\Models\MfgOverhead::class,
+            'mfg_overhead' => \App\Models\MfgOverhead::class,
         ]);
 
         Blade::directive('hashid', function ($expression) {

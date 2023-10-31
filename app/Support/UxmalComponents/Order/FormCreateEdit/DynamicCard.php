@@ -13,73 +13,80 @@ class DynamicCard extends \Enmaca\LaravelUxmal\Abstract\Card
 
         $this->setBodyFieldRowClass('col-xxl-6 mb-3');
 
-        $search_product_tomselect = \App\Support\UxmalComponents\Material\SelectByNameSkuDesc::Object(['options' => ['event-change-handler' => 'onChangeSelectedMaterialByNameSkuDesc']]);
-        $this->BodyInput($search_product_tomselect);
+        $this->BodyInput(\App\Support\UxmalComponents\Material\SelectByNameSkuDesc::Object(['options' => ['event-change-handler' => 'onChangeSelectedMaterialByNameSkuDesc']]));
 
-        $search_labor_cost_tomselect = \App\Support\UxmalComponents\LaborCost\SelectByName::Object(['options' => ['event-change-handler' => 'onChangeSelectedLaborCostByName']]);
-        $this->BodyInput($search_labor_cost_tomselect);
+        $this->BodyInput(\App\Support\UxmalComponents\LaborCost\SelectByName::Object(['options' => ['event-change-handler' => 'onChangeSelectedLaborCostByName']]));
 
-        $search_mfg_over_head_tomselect = \App\Support\UxmalComponents\MfgOverHead\SelectByName::Object();
-        $this->BodyInput($search_mfg_over_head_tomselect);
-
-        $this->BodyInput();
-
-        $search_mfg_area_tomselect = \App\Support\UxmalComponents\MfgArea\SelectByName::Object();
-        $this->BodyInput($search_mfg_area_tomselect);
-
-        $search_mfg_devices_tomselect = \App\Support\UxmalComponents\MfgDevices\SelectByName::Object();
-        $this->BodyInput($search_mfg_devices_tomselect);
+        $this->BodyInput(\App\Support\UxmalComponents\MfgOverHead\SelectByName::Object(['options' => ['event-change-handler' => 'onChangeSelectedMfgOverHeadByName']]));
 
         $footer = $this->Footer();
-        $table = $footer->component('ui.table', ['options' => [
-            'table.name' => 'orderProductDynamicDetails',
-            'table.columns' => [
-                'hashId' => [
-                    'tbhContent' => 'hidden',
-                    'type' => 'primaryKey'
-                ],
-                'related.name' => [
-                    'tbhContent' => 'Material/Concepto',
-                ],
-                'quantity' => [
-                    'tbhContent' => 'Cantidad',
-                ],
-                'cost' => [
-                    'tbhContent' => 'Costo'
-                ],
-                'taxes' => [
-                    'tbhContent' => 'Impuestos'
-                ],
-                'profit_margin' => [
-                    'tbhContent' => 'Margen',
-                    'handler' => \App\Support\UxmalComponents\OrderProductDynamicDetails\TbHandler\ProfitMargin::class
-                ],
-                'subtotal' => [
-                    'tbhContent' => 'Subtotal'
-                ],
-                'createdby.name' => [
-                    'tbhContent' => 'Creado'
-                ]
-            ],
-            'table.data.livewire' => 'order-product-dynamic-details.table.tbody',
-            'table.data.livewire.append-data' => [
-                'values' => $this->attributes['values']
-            ],
-            'table.footer' => [
-                'related.name' => [
-                    'html' => '<span class="justify-end">Totales</span>'
-                ],
-                'cost' => [
-                    'operation' => 'sum'
-                ],
-                'taxes' => [
-                    'operation' => 'sum'
-                ],
-                'profit_margin' => [
-                    'operation' => 'average'
-                ],
-                'subtotal' => [
-                    'operation' => 'sum'
+
+        $table = $footer->componentsInDiv(['options' => ['row.append-attributes' => ['class' => 'table-responsive']]], [[
+            'path' => 'ui.table',
+            'attributes' => [
+                'options' => [
+                    'table.name' => 'orderProductDynamicDetails',
+                    'table.columns' => [
+                        'hashId' => [
+                            'tbhContent' => 'hidden',
+                            'type' => 'primaryKey'
+                        ],
+                        'related.name' => [
+                            'tbhContent' => 'Material/Concepto',
+                        ],
+                        'quantity' => [
+                            'tbhContent' => 'Cantidad',
+                        ],
+                        'cost' => [
+                            'tbhContent' => 'Costo'
+                        ],
+                        'taxes' => [
+                            'tbhContent' => 'Impuestos'
+                        ],
+                        'profit_margin' => [
+                            'tbhContent' => 'Margen',
+                            'handler' => \App\Support\UxmalComponents\OrderProductDynamicDetails\TbHandler\ProfitMargin::class
+                        ],
+                        'subtotal' => [
+                            'tbhContent' => 'Subtotal'
+                        ],
+                        'createdby.name' => [
+                            'tbhContent' => 'Creado'
+                        ],
+                        'actions' => [
+                            'tbhContent' => null,
+                            'buttons' => [
+                                [
+                                    'button.type' => 'icon',
+                                    'button.style' => 'danger',
+                                    'button.onclick' => 'removeOPDD(this)',
+                                    'button.name' => 'delete',
+                                    'button.remix-icon' => 'delete-bin-5-line'
+                                ],
+                            ]
+                        ]
+                    ],
+                    'table.data.livewire' => 'order-product-dynamic-details.table.tbody',
+                    'table.data.livewire.append-data' => [
+                        'values' => $this->attributes['values']
+                    ],
+                    'table.footer' => [
+                        'related.name' => [
+                            'html' => '<span class="justify-end">Totales</span>'
+                        ],
+                        'cost' => [
+                            'operation' => 'sum'
+                        ],
+                        'taxes' => [
+                            'operation' => 'sum'
+                        ],
+                        'profit_margin' => [
+                            'operation' => 'average'
+                        ],
+                        'subtotal' => [
+                            'operation' => 'sum'
+                        ]
+                    ]
                 ]
             ]
         ]]);

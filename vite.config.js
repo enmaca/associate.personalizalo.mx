@@ -11,7 +11,7 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/css/app.css',
-                'resources/js/app.js',
+                'resources/js/workshop.js',
                 'resources/js/orders/root.js',
                 'resources/js/orders/root_livewire.js',
                 'resources/js/orders/create.js',

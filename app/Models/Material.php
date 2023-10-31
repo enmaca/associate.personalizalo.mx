@@ -40,6 +40,21 @@ class Material extends BaseModel
         return $this->morphMany(OrderProductDynamicDetails::class, 'related');
     }
 
+    public function calculateCosts($quantity, $profit_margin){
+        $totalTax = $this->taxes->sum('value');
+        $cost = $quantity * $this->invt_uom_cost;
+        $profit_margin = $profit_margin / 100;
+        $profit_margin_total = $cost * $profit_margin;
+        $taxes =  $totalTax * $cost;
+        return [
+            'uom' => $cost,
+            'cost' => $cost,
+            'taxes' => $taxes,
+            'profit_margin' => $profit_margin_total,
+            'subtotal' => ($cost + $taxes + $profit_margin_total)
+        ];
+
+    }
     public function unit_of_measure(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(UnitOfMeasure::class, 'id', 'catalog_uom_id');

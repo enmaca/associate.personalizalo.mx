@@ -476,58 +476,8 @@ class Test extends Controller
     public function test()
     {
         $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
-        $table = $uxmal->component('ui.table', ['options' => [
-            'table.name' => 'orderProductDynamicDetails',
-            'table.columns' => [
-                'hashId' => [
-                    'tbhContent' => 'checkbox-all',
-                    'type' => 'primaryKey',
-                    'handler' => \App\Support\UxmalComponents\OrderProductDynamicDetails\TbHandler\Id::class
-                ],
-                'related.name' => [
-                    'tbhContent' => 'Material/Concepto',
-                ],
-                'quantity' => [
-                    'tbhContent' => 'Cantidad',
-                ],
-                'cost' => [
-                    'tbhContent' => 'Costo'
-                ],
-                'taxes' => [
-                    'tbhContent' => 'Impuestos'
-                ],
-                'profit_margin' => [
-                    'tbhContent' => 'Margen',
-                    'handler' => \App\Support\UxmalComponents\OrderProductDynamicDetails\TbHandler\ProfitMargin::class
-                ],
-                'subtotal' => [
-                    'tbhContent' => 'Subtotal'
-                ],
-                'createdby.name' => [
-                    'tbhContent' => 'Creado'
-                ]
-            ],
-            //'table.data.model' => \App\Models\OrderProductDynamicDetails::class,
-            'table.data.livewire' => 'order-product-dynamic-details.table.tbody',
-            'table.footer' => [
-                'related.name' => [
-                    'html' => '<span class="justify-end">Totales</span>'
-                ],
-                'cost' => [
-                    'operation' => 'sum'
-                ],
-                'taxes' => [
-                    'operation' => 'sum'
-                ],
-                'profit_margin' => [
-                    'operation' => 'average'
-                ],
-                'subtotal' => [
-                    'operation' => 'sum'
-                ]
-            ]
-        ]]);
-        View::startPush('scripts', '<script src="' . Vite::asset('resources/js/test/test.js', 'workshop') . '" type="module"></script>');
+        $uxmal->addElement(\App\Support\UxmalComponents\Order\FormCreateEdit\ModalDeliveryDate::Modal());
+
         return view('uxmal::simple-default', [
             'uxmal_data' => $uxmal->toArray()
         ])->extends('uxmal::layout.simple');

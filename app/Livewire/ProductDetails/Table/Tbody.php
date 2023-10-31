@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\OrderProductDynamicDetails\Table;
+namespace App\Livewire\ProductDetails\Table;
 
 use App\Models\Order;
 use Livewire\Attributes\On;
@@ -21,7 +21,7 @@ class Tbody extends Component
         $this->appended = $appended;
     }
 
-    #[On('order-product-dynamic-details.table.tbody::reload')]
+    #[On('order-product-details.table.tbody::reload')]
     public function reload(){
 
     }
@@ -32,7 +32,7 @@ class Tbody extends Component
         $table = \Enmaca\LaravelUxmal\Uxmal::Component('ui.table', ['options' => [
             'table.name' => $this->table_name,
             'table.columns' => $this->table_columns,
-            'table.data.model' => \App\Models\OrderProductDynamicDetails::class,
+            'table.data.model' => \App\Models\OrderProductDetail::class,
             'table.footer' => $this->table_footer
         ]]);
 
@@ -40,7 +40,7 @@ class Tbody extends Component
 
         $table->DataQuery()
             ->with(['related', 'createdby'])
-            ->whereHas('order_product_dynamic', function ($query) use ($order_id) {
+            ->whereHas('order', function ($query) use ($order_id) {
                 $query->where('order_id', $order_id);
             })
             ->select([
@@ -55,11 +55,10 @@ class Tbody extends Component
                 'subtotal',
                 'created_by'])->get();
 
-       //dump($table->toHtml('tbody'));
-       //dd($table);
+        //dump($table->toHtml('tbody'));
+        //dd($table);
 
-        $this->dispatch('order-product-dynamic-details.table.tbody::updated', tfoot: $table->toHtml('tfoot') );
+        $this->dispatch('order-product-dynamic-details.table.tbody::updated', tfoot: $table->toHtml('tfoot'));
         return $table->toHtml('tbody');
-
     }
 }

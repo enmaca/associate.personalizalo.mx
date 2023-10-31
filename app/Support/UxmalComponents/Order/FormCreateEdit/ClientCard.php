@@ -10,6 +10,10 @@ class ClientCard extends \Enmaca\LaravelUxmal\Abstract\Card
 
     public function build(){
 
+        $this->attributes['options']['customer.card.readonly'] ??= true;
+
+
+        
         $this->BodyRow();
 
         $this->BodyInput([
@@ -52,7 +56,24 @@ class ClientCard extends \Enmaca\LaravelUxmal\Abstract\Card
             'input.readonly' => true
         ]);
 
+       $this->BodyInput([
+            'input.type' => 'text',
+            'input.label' => 'Fecha de Entrega',
+            'input.name' => 'deliveryDate',
+            'input.value' => $this->attributes['values'][str::snake('deliveryDate')] ?? '',
+            'input.readonly' => $this->attributes['options']['customer.card.readonly'],
+            'input.required' => true
+        ]);
 
+        $this->BodyInput([
+            'input.type' => 'text',
+            'input.label' => 'Indicaciones de Entrega',
+            'input.name' => 'deliveryInstructions',
+            'input.placeholder' => 'Instrucciones de entrega',
+            'input.value' => $this->attributes['values'][str::snake('deliveryInstructions')] ?? '',
+            'input.readonly' => $this->attributes['options']['customer.card.readonly'],
+            'input.required' => true
+        ]);
     }
 
 }

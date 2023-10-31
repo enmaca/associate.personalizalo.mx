@@ -26,6 +26,9 @@ class SelectByName extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
         foreach ($customers as $customer)
             $items[$customer->hashId] = "{$customer->title} ({$customer->sku})";
 
+        $aggregate = [];
+        if (isset($this->attributes['options']['event-change-handler']))
+            $aggregate['tomselect.event-change-handler'] = $this->attributes['options']['event-change-handler'];
 
         $this->_content = Uxmal::Component('form.select.tomselect', [
             'options' => [
@@ -34,9 +37,8 @@ class SelectByName extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
                 'tomselect.placeholder' => 'Seleccionar...',
                 'tomselect.load-url' => '/products/search_tomselect?context=default',
                 'tomselect.options' => $items,
-                'tomselect.allow-empty-option' => true,
-                'tomselect.event-change-handler' => 'onChangeSelectedProductToAdd'
-            ]
+                'tomselect.allow-empty-option' => true
+            ] + $aggregate
         ]);
     }
 
