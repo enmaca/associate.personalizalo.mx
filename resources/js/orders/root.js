@@ -1,4 +1,8 @@
 import {Modal} from "bootstrap";
+import {UxmalSelect} from "../../../public/enmaca/laravel-uxmal/js/uxmal.js";
+
+const uxmalSelects = new UxmalSelect();
+
 console.log('resources/js/order/root.js Loaded')
 window.openModal = function (identifier) {
     const element = document.getElementById(identifier);
@@ -54,37 +58,42 @@ document.getElementById('customerMobileId').addEventListener('change', (event) =
 
 window.onChangeSelectedByNameMobileEmail = function onChangeSelectedByNameMobileEmail(value) {
     console.log('onChangeSelectedByNameMobileEmail:', value);
-    if (!value) {
-        //document.querySelector('input[name=customerId]').value = 'new';
-        setValueDE('input[name=customerMobile]', '', true);
-        setValueDE('input[name=customerName]', '', true);
-        setValueDE('input[name=customerLastName]', '', true);
-        setValueDE('input[name=customerEmail]', '', true);
-    } else {
-        const url = '/customer/' + value + '?context=by_name_mobile_email';
-        fetch(url)
-            .then(response => {
-                // Check if the request was successful
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();  // Parse the JSON data from the response
-            })
-            .then(data => {
-                // Assuming the data contains a property 'newValue' which you want to set as the input value
-                console.log('response data => ', data);
-                //document.querySelector('input[name=customerId]').value = value;
-                setValueDE('input[name=customerMobile]', data.mobile, false);
-                setValueDE('input[name=customerName]', data.name, false);
-                setValueDE('input[name=customerLastName]', data.last_name, false);
-                setValueDE('input[name=customerEmail]', data.email, false);
-            })
-            .catch(error => {
-                console.error('There was a problem with the fetch operation:', error.message);
-            });
-    }
+
 }
 
-
+document.addEventListener("DOMContentLoaded", function () {
+    uxmalSelects.init(document);
+    uxmalSelects.on('customerIdId', 'change', (value) => {
+        if (!value) {
+            //document.querySelector('input[name=customerId]').value = 'new';
+            setValueDE('input[name=customerMobile]', '', true);
+            setValueDE('input[name=customerName]', '', true);
+            setValueDE('input[name=customerLastName]', '', true);
+            setValueDE('input[name=customerEmail]', '', true);
+        } else {
+            const url = '/customer/' + value + '?context=by_name_mobile_email';
+            fetch(url)
+                .then(response => {
+                    // Check if the request was successful
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();  // Parse the JSON data from the response
+                })
+                .then(data => {
+                    // Assuming the data contains a property 'newValue' which you want to set as the input value
+                    console.log('response data => ', data);
+                    //document.querySelector('input[name=customerId]').value = value;
+                    setValueDE('input[name=customerMobile]', data.mobile, false);
+                    setValueDE('input[name=customerName]', data.name, false);
+                    setValueDE('input[name=customerLastName]', data.last_name, false);
+                    setValueDE('input[name=customerEmail]', data.email, false);
+                })
+                .catch(error => {
+                    console.error('There was a problem with the fetch operation:', error.message);
+                });
+        }
+    });
+});
 
 
