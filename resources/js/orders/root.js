@@ -1,4 +1,29 @@
+import {Modal} from "bootstrap";
 console.log('resources/js/order/root.js Loaded')
+window.openModal = function (identifier) {
+    const element = document.getElementById(identifier);
+    if (!element) {
+        console.error('No modal found with the given identifier');
+        return;
+    }
+    const modalInstance = new Modal(element);
+    modalInstance.show();
+    setTimeout(function () {
+        window.init_swiper(element);
+    }, 500);
+}
+
+window.closeModal = function (identifier) {
+    const element = document.getElementById(identifier);
+    if (!element) {
+        console.error('No modal found with the given identifier');
+        return;
+    }
+    const modalInstance = Modal.getInstance(element);
+    modalInstance.hide();
+
+}
+
 window.createOrder = () => {
     openModal('customerSearchByMobileId');
     console.log('createOrder Executed');

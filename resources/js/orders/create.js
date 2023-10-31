@@ -256,6 +256,8 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     // Product
     uxmalSelects.on('OrderProductAddId', 'change', (value) => {
+        console.log(value)
+
         uxmalCards.setLoading('productCard', true);
         Livewire.dispatch('select-by-digital-art-body::product.changed', {product: value});
     });
@@ -274,16 +276,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         uxmalCards.setLoading('dynamicCard', false);
     });
-
-
-
-
-
-
-    /**
-     * Product Card
-     */
-
 
 
     let divElement = document.querySelector('div[data-uxmal-order-data]');

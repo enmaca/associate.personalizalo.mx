@@ -20,12 +20,14 @@ class SelectByDigitalArtBody extends Component
     #[On('select-by-digital-art-body::product.changed')]
     public function product_changed($product): void
     {
-
-        $__formId = '__' . bin2hex(random_bytes(4));
-
         $product_data = Product::With([
             'digital_category.arts',
-            'mfg_costs'])->findByHashId($product); //
+            'mfg_costs'])->findByHashId($product);
+
+        if( empty($product_data))
+            return;
+
+        $__formId = '__' . bin2hex(random_bytes(4));
 
         if (!empty($product_data->mfg_costs))
             foreach ($product_data->mfg_costs as $mfg_cost) {
