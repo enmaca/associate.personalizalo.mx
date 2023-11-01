@@ -15,4 +15,8 @@ class PrintVariationsGroup extends BaseModel
     {
         return $this->hasMany(PrintVariationsGroupDetails::class, 'pvg_id');
     }
+
+    public function mfg_cost(){
+        return $this->morphMany(ManufacturingCost::class, 'related');
+    }
 }

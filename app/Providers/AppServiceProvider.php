@@ -27,6 +27,8 @@ class AppServiceProvider extends ServiceProvider
             'catalog_materials' => \App\Models\Material::class,
             'catalog_labor_costs' => \App\Models\LaborCost::class,
             'mfg_overhead' => \App\Models\MfgOverhead::class,
+            'material_variations_group' => \App\Models\MaterialVariationsGroup::class,
+            'print_variations_group' => \App\Models\PrintVariationsGroup::class
         ]);
 
         Blade::directive('hashid', function ($expression) {

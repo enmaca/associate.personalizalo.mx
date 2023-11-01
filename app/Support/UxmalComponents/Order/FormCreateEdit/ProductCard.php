@@ -37,6 +37,7 @@ class ProductCard extends \Enmaca\LaravelUxmal\Abstract\Card
                         ],
                         'mfg_data' => [
                             'tbhContent' => 'Datos de Manufactura',
+                            'type' => 'mixed',
                             'handler' => \App\Support\UxmalComponents\OrderProductDetails\TbHandler\MfgStatus::class
                         ],
                         'quantity' => [
@@ -60,13 +61,14 @@ class ProductCard extends \Enmaca\LaravelUxmal\Abstract\Card
                                 [
                                     'button.type' => 'icon',
                                     'button.style' => 'danger',
-                                    'button.name' => 'delete',
+                                    'button.name' => 'deleteOPD',
+                                    'button.onclick' => 'removeOPD(this)',
                                     'button.remix-icon' => 'delete-bin-5-line'
                                 ],
                             ]
                         ]
                     ],
-                    'table.data.livewire' => 'order-product-dynamic-details.table.tbody',
+                    'table.data.livewire' => 'order-product-details.table.tbody',
                     'table.data.livewire.append-data' => [
                         'values' => $this->attributes['values']
                     ],

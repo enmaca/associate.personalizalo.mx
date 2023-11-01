@@ -73,8 +73,7 @@ class AddMaterialToOrder extends Component
                     'input.append-attributes' => [
                         'data-uom-cost' => $material_data->invt_uom_cost,
                         'data-tax-factor' => $tax_factor,
-                    ],
-                    'input.event-change-handler' => 'updateMaterialSubtotal()'
+                    ]
                 ]
             ]]
         ]);

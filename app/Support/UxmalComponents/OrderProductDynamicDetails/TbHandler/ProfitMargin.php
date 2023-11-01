@@ -2,7 +2,7 @@
 
 namespace App\Support\UxmalComponents\OrderProductDynamicDetails\TbHandler;
 use App\Enums\OrderStatusEnum;
-class ProfitMargin extends \Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\TableColumn {
+class ProfitMargin extends \Enmaca\LaravelUxmal\Support\Components\Ui\Table\Column {
 
     public function parseValue(mixed $value): mixed
     {

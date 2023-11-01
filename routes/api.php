@@ -17,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::controller(\App\Http\Controllers\OrdersApiController::class)->group(function () {
+    Route::post('/orders/product','api_post_order_add_product')->name('orders_post_product');
+});
+

@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\AddressBook;
 use App\Models\Customer;
+use App\Models\DigitalArt;
+use App\Models\DigitalArtCategory;
 use App\Models\LaborCost;
+use App\Models\MaterialVariationsGroup;
 use App\Models\MfgArea;
 use App\Models\MfgOverhead;
 use App\Models\Order;
@@ -12,14 +15,17 @@ use App\Models\OrderPayment;
 use App\Models\OrderProductDetail;
 use App\Models\OrderProductDynamic;
 use App\Models\OrderProductDynamicDetails;
+use App\Models\PrintVariationsGroup;
+use App\Models\PrintVariationsGroupDetails;
 use App\Models\Product;
 use App\Models\Material;
+use App\Support\Services\OrderService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use \Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Vite;
-use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Str;
 
 class OrdersController extends Controller
 {
@@ -157,10 +163,10 @@ class OrdersController extends Controller
         /**
          * Add Modals
          */
-        $uxmal->addElement(\App\Support\UxmalComponents\Products\ModalSelectProductWithDigitalArt::Modal(['options' => ['saveBtn.onclick' => 'addProductToOrder()']]));
-        $uxmal->addElement(\App\Support\UxmalComponents\Material\ModalAddToOrder::Modal(['options' => ['saveBtn.onclick' => 'addMaterialToOrder()']]));
-        $uxmal->addElement(\App\Support\UxmalComponents\LaborCost\ModalAddToOrder::Modal(['options' => ['saveBtn.onclick' => 'addLaborCostToOrder()']]));
-        $uxmal->addElement(\App\Support\UxmalComponents\MfgOverHead\ModalAddToOrder::Modal(['options' => ['saveBtn.onclick' => 'addMfgOverHeadToOrder()']]));
+        $uxmal->addElement(\App\Support\UxmalComponents\Products\ModalSelectProductWithDigitalArt::Modal());
+        $uxmal->addElement(\App\Support\UxmalComponents\Material\ModalAddToOrder::Modal());
+        $uxmal->addElement(\App\Support\UxmalComponents\LaborCost\ModalAddToOrder::Modal());
+        $uxmal->addElement(\App\Support\UxmalComponents\MfgOverHead\ModalAddToOrder::Modal());
         $uxmal->addElement(\App\Support\UxmalComponents\Order\FormCreateEdit\ModalDeliveryDate::Modal());
 
         /*
@@ -280,17 +286,39 @@ class OrdersController extends Controller
 
     /**
      * @param Request $request
-     * @param string $labor_cost_id
+     * @param string $opdd_id
      * @return \Illuminate\Http\JsonResponse
      * @throws \Deligoez\LaravelModelHashId\Exceptions\UnknownHashIdConfigParameterException
      *
      * http://127.0.0.1:8000/orders/dynamic_detail/ord_4WmvDA86E98xo
      */
-    public function delete_dynamic_detail_row(Request $request, string $labor_cost_id){
-        $order_product_dynamic_id = OrderProductDynamicDetails::keyFromHashId($labor_cost_id);
+    public function delete_dynamic_detail_row(Request $request, string $opdd_id)
+    {
+        $order_product_dynamic_id = OrderProductDynamicDetails::keyFromHashId($opdd_id);
         $order_product_dynamic_row = OrderProductDynamicDetails::find($order_product_dynamic_id);
-        if($order_product_dynamic_row ){
-            if( $order_product_dynamic_row->delete() )
+        if ($order_product_dynamic_row) {
+            if ($order_product_dynamic_row->delete())
+                return response()->json(['ok' => 'El registro se elimino correctamente']);
+            else
+                return response()->json(['fail' => 'El registro no se pude eliminar']);
+        }
+        return response()->json(['warning' => 'El registro no se encontro']);
+    }
+
+    /**
+     * @param Request $request
+     * @param string $opd_id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Deligoez\LaravelModelHashId\Exceptions\UnknownHashIdConfigParameterException
+     *
+     * http://127.0.0.1:8000/orders/dynamic_detail/ord_4WmvDA86E98xo
+     */
+    public function delete_product_detail_row(Request $request, string $opd_id)
+    {
+        $order_product_detail_id = OrderProductDetail::keyFromHashId($opd_id);
+        $order_product_row = OrderProductDetail::find($order_product_detail_id);
+        if ($order_product_row) {
+            if ($order_product_row->delete())
                 return response()->json(['ok' => 'El registro se elimino correctamente']);
             else
                 return response()->json(['fail' => 'El registro no se pude eliminar']);
@@ -407,6 +435,79 @@ class OrdersController extends Controller
             return response()->json(['ok' => $OrderProductDynamicDataDetail->hashId]);
         }
         return response()->json(['fail' => 'Error']);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * POST Payload
+     *      "_token" => "Ss6Muw7QVC0mk7NqASK5ZXFvsgcx0I8ZZ7fJvajv"
+     *      "da_category_id_dig_eDwyqQVjQG7xj" => "dig_WJ2v5Z2wJADO9"
+     *      "pvg_id_pri_4WmvDA86E98xo" => "pri_rkWV6Z98EvPX3"
+     *      "mvg_color_mat_B95oKZdvQJMPv" => "643633"
+     *      "mvg_size_mat_B95oKZdvQJMPv" => "M"
+     *      "order_id" => "ord_eV7yYZn5OEWvX"
+     *      "customer_id" => "cus_WJ2v5Z2xQDO9Y"
+     */
+    public function post_product(Request $request)
+    {
+        $allInput = $request->all();
+        $digital_art_category_id = null;
+        $print_variation_group_id = null;
+        $mvg_id = null;
+        $mvg_selected_color = null;
+        $mvg_selected_size = null;
+        $print_variation_group_detail_id = null;
+        $catalog_product_id = null;
+        $digital_art_id = null;
+        $order_id = null;
+        $customer_id = null;
+        $quantity = null;
+        foreach ($allInput as $field_key => $field_value) {
+            if (Str::startsWith($field_key, 'da_category_id_')) {
+                $digital_art_category_id = DigitalArtCategory::keyFromHashId(str_replace('da_category_id_', '', $field_key));
+                $digital_art_id = DigitalArt::keyFromHashId($field_value);
+            } else if (Str::startsWith($field_key, 'pvg_id_')) {
+                $print_variation_group_id = PrintVariationsGroup::keyFromHashId(str_replace('pvg_id_', '', $field_key));
+                $print_variation_group_detail_id = PrintVariationsGroupDetails::keyFromHashId($field_value);
+            } else if (Str::startsWith($field_key, 'mvg_color_')) {
+                $mvg_id = MaterialVariationsGroup::keyFromHashId(str_replace('mvg_color_', '', $field_key));
+                $mvg_selected_color = $field_value;
+            } else if (Str::startsWith($field_key, 'mvg_size_')) {
+                $mvg_id = MaterialVariationsGroup::keyFromHashId(str_replace('mvg_size_', '', $field_key));
+                $mvg_selected_size = $field_value;
+            } else if ($field_key === 'order_id') {
+                $order_id = Order::keyFromHashId($field_value);
+            } else if ($field_key === 'customer_id') {
+                $customer_id = Customer::keyFromHashId($field_value);
+            } else if ($field_key === 'catalog_product_id') {
+                $catalog_product_id = Product::keyFromHashId($field_value);
+            } else if ($field_key === 'quantity') {
+                $quantity = $field_value;
+            }
+        }
+
+
+        try {
+            $result = OrderService::addProductWithDigitalArt([
+                'mvg_id' => $mvg_id,
+                'mvg_selected_color' => $mvg_selected_color,
+                'mvg_selected_size' => $mvg_selected_size,
+                'print_variation_group_id' => $print_variation_group_id,
+                'print_variation_group_detail_id' => $print_variation_group_detail_id,
+                'digital_art_category_id' => $digital_art_category_id,
+                'digital_art_id' => $digital_art_id,
+                'order_id' => $order_id,
+                'customer_id' => $customer_id,
+                'catalog_product_id' => $catalog_product_id,
+                'quantity' => $quantity
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['fail' => $e->getMessage()]);
+        }
+
+        return response()->json(['ok' => $result]);
     }
 
 

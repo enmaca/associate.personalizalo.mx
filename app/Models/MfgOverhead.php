@@ -14,7 +14,10 @@ class MfgOverhead extends BaseModel
     public function opdd(){
         return $this->morphMany(OrderProductDynamicDetails::class, 'related');
     }
-    
+
+    public function mfg_cost(){
+        return $this->morphMany(ManufacturingCost::class, 'related');
+    }
 
     public function calculateCosts($quantity){
         $totalTax = $this->taxes->sum('value');

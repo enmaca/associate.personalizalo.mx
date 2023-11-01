@@ -64,8 +64,7 @@ class AddMfgOverheadToOrder extends Component
                     'input.append-attributes' => [
                         'data-value' => $mfgoverhead_data->value,
                         'data-tax-factor' => $tax_factor,
-                    ],
-                    'input.event-change-handler' => 'updateMfgCostSubtotal()'
+                    ]
                 ]
             ]]
         ]);

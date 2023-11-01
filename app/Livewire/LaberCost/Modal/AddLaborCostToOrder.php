@@ -68,8 +68,7 @@ class AddLaborCostToOrder extends Component
                     'input.append-attributes' => [
                         'data-value' => $cost_by_minute,
                         'data-tax-factor' => $tax_factor,
-                    ],
-                    'input.event-change-handler' => 'updateLaborCostSubtotal()'
+                    ]
                 ]
             ]]
         ]);
@@ -83,7 +82,11 @@ class AddLaborCostToOrder extends Component
                     'input.value' => '$'.number_format($one_subtotal,2),
                     'input.name' => 'laborCostSubtotal',
                     'input.required' => true,
-                    'input.readonly' => true
+                    'input.readonly' => true,
+                    'input.append-attributes' => [
+                        'data-value' => $cost_by_minute,
+                        'data-tax-factor' => $tax_factor,
+                    ]
                 ]
             ]]
         ]);

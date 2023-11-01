@@ -473,13 +473,105 @@ class Test extends Controller
         ])->extends('uxmal::layout.simple');
     }
 
-    public function test()
+    public function test2()
     {
         $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
         $uxmal->addElement(\App\Support\UxmalComponents\Order\FormCreateEdit\ModalDeliveryDate::Modal());
 
         return view('uxmal::simple-default', [
             'uxmal_data' => $uxmal->toArray()
+        ])->extends('uxmal::layout.simple');
+    }
+
+
+    public function test()
+    {
+        $table = \Enmaca\LaravelUxmal\Uxmal::Component('ui.table', ['options' => [
+            'table.name' => 'orderProductDetails',
+            'table.columns' => [
+                'hashId' => [
+                    'tbhContent' => 'hidden',
+                    'type' => 'primaryKey'
+                ],
+                'product.name' => [
+                    'tbhContent' => 'Nombre',
+                ],
+                'mfg_data' => [
+                    'tbhContent' => 'Datos de Manufactura',
+                    'type' => 'mixed',
+                    'handler' => \App\Support\UxmalComponents\OrderProductDetails\TbHandler\MfgStatus::class
+                ],
+                'quantity' => [
+                    'tbhContent' => 'Cantidad',
+                ],
+                'price' => [
+                    'tbhContent' => 'Costo'
+                ],
+                'taxes' => [
+                    'tbhContent' => 'Impuestos'
+                ],
+                'subtotal' => [
+                    'tbhContent' => 'Subtotal'
+                ],
+                'createdby.name' => [
+                    'tbhContent' => 'Creado'
+                ],
+                'actions' => [
+                    'tbhContent' => null,
+                    'buttons' => [
+                        [
+                            'button.type' => 'icon',
+                            'button.style' => 'danger',
+                            'button.name' => 'delete',
+                            'button.remix-icon' => 'delete-bin-5-line'
+                        ],
+                    ]
+                ]
+            ],
+            'table.data.model' => \App\Models\OrderProductDetail::class,
+            'table.footer' => [
+                'mfg_data' => [
+                    'html' => '<span class="justify-end">Totales</span>'
+                ],
+                'price' => [
+                    'operation' => 'sum'
+                ],
+                'taxes' => [
+                    'operation' => 'sum'
+                ],
+                'subtotal' => [
+                    'operation' => 'sum'
+                ]
+            ]
+        ]]);
+
+        $order_id = 3;
+
+        $table->DataQuery()
+            ->with([
+                'product' => function ($query) { $query->select(['id', 'name']); },
+                'createdby' => function ($query) { $query->select(['id', 'name']); },
+                'with_digital_art' => function ($query) { $query->with([
+                    'material' => function ($query) { $query->select(['id', 'name']); },
+                    'digital_art' => function ($query) { $query->select(['id', 'preview_path']); },
+                    'print_variation' => function ($query) { $query->select(['id', 'display_name', 'preview_path']); },
+                ]); }])
+            ->whereHas('order', function ($query) use ($order_id) {
+                $query->where('order_id', $order_id);
+            })
+            ->select([
+                'id',
+                'catalog_product_id',
+                'order_id',
+                'quantity',
+                'price',
+                'taxes',
+                'subtotal',
+                'created_by'])->get();
+
+
+        return view('uxmal::simple-default', [
+            'uxmal_data' => $table->toArray()
         ])->extends('uxmal::layout.simple');
     }
 

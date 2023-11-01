@@ -40,6 +40,10 @@ class Material extends BaseModel
         return $this->morphMany(OrderProductDynamicDetails::class, 'related');
     }
 
+    public function mfg_cost(){
+        return $this->morphMany(ManufacturingCost::class, 'related');
+    }
+
     public function calculateCosts($quantity, $profit_margin){
         $totalTax = $this->taxes->sum('value');
         $cost = $quantity * $this->invt_uom_cost;

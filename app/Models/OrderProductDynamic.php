@@ -11,7 +11,7 @@ class OrderProductDynamic extends BaseModel
     protected $table = 'order_product_dynamic';
     protected $primaryKey = 'id';
 
-    public function items()
+    public function items(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(OrderProductDynamicDetails::class, 'order_product_dynamic_id', 'id');
     }

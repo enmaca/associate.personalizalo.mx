@@ -73,6 +73,13 @@ END;
             ]
         ]);
 
+        $form->component('form.input', [
+            'options' => [
+                'input.type' => 'hidden',
+                'hidden.name' => 'catalog_product_id',
+                'hidden.value' => $product_data->hashId
+            ]]);
+
         $digital_art_swiper_row = $form->component('ui.row');
 
         $swiper_name = 'digitalArtSwiper' . $product_data->digital_category->hashId;
@@ -184,6 +191,20 @@ EOT;
                 ]
             ]]);
         }
+
+        $form->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3 mt-3'] ]], [[
+            'path' => 'form.input',
+            'attributes' => [
+                'options' => [
+                    'input.type' => 'number',
+                    'input.label' => 'Cantidad',
+                    'input.name' => 'quantity',
+                    'input.value' => 1,
+                    'input.min' => 1,
+                    'input.required' => true
+                ]
+            ]]
+        ]);
 
         $this->content = View::make($form->view, [
             'data' => $form->toArray()

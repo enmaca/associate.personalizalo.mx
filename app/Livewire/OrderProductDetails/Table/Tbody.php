@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\ProductDetails\Table;
+namespace App\Livewire\OrderProductDetails\Table;
 
 use App\Models\Order;
 use Livewire\Attributes\On;
@@ -39,26 +39,28 @@ class Tbody extends Component
         $order_id = Order::keyFromHashId($this->appended['values']['order_id']);
 
         $table->DataQuery()
-            ->with(['related', 'createdby'])
+            ->with([
+                'product' => function ($query) { $query->select(['id', 'name']); },
+                'createdby' => function ($query) { $query->select(['id', 'name']); },
+                'with_digital_art' => function ($query) { $query->with([
+                    'material' => function ($query) { $query->select(['id', 'name']); },
+                    'digital_art' => function ($query) { $query->select(['id', 'preview_path']); },
+                    'print_variation' => function ($query) { $query->select(['id', 'display_name', 'preview_path']); },
+                ]); }])
             ->whereHas('order', function ($query) use ($order_id) {
                 $query->where('order_id', $order_id);
             })
             ->select([
                 'id',
-                'order_product_dynamic_id',
-                'reference_type',
-                'reference_id',
+                'catalog_product_id',
+                'order_id',
                 'quantity',
-                'cost',
+                'price',
                 'taxes',
-                'profit_margin',
                 'subtotal',
                 'created_by'])->get();
 
-        //dump($table->toHtml('tbody'));
-        //dd($table);
-
-        $this->dispatch('order-product-dynamic-details.table.tbody::updated', tfoot: $table->toHtml('tfoot'));
+        $this->dispatch('order-product-details.table.tbody::updated', tfoot: $table->toHtml('tfoot'));
         return $table->toHtml('tbody');
     }
 }

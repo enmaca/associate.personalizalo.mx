@@ -60,7 +60,7 @@ class DynamicCard extends \Enmaca\LaravelUxmal\Abstract\Card
                                     'button.type' => 'icon',
                                     'button.style' => 'danger',
                                     'button.onclick' => 'removeOPDD(this)',
-                                    'button.name' => 'delete',
+                                    'button.name' => 'deleteOPPD',
                                     'button.remix-icon' => 'delete-bin-5-line'
                                 ],
                             ]

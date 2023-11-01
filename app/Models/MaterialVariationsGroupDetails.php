@@ -15,4 +15,9 @@ class MaterialVariationsGroupDetails extends BaseModel
     {
         return $this->belongsTo(MaterialVariationsGroup::class, 'mvg_id');
     }
+
+    public function material(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->BelongsTo(Material::class, 'catalog_material_id', 'id');
+    }
 }
