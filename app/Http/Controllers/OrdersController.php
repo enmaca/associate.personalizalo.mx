@@ -85,6 +85,7 @@ class OrdersController extends Controller
     /**
      * @param Request $request
      * @return mixed
+     * @throws \Exception
      */
     public function create(Request $request)
     {
@@ -142,19 +143,21 @@ class OrdersController extends Controller
                 'order_code' => $order_data->code
             ]]);
 
-        $deliveryDate = Carbon::parse();
-        $DateButton = \Enmaca\LaravelUxmal\Components\Form\Button::Render([
-            'button.type' => 'with-label',
-            'button.style' => is_null($order_data->delivery_date) ? 'danger' : ((Carbon::parse($order_data->delivery_date)->isToday() || Carbon::parse($order_data->delivery_date)->isTomorrow()) ? 'warning' : 'success'),
-            'button.name' => 'orderDeliveryDate',
-            'button.label' => $order_data->delivery_date ?? 'Agregar Fecha de Entrega',
-            'button.remix-icon' => 'calendar-event-line'
+        // order.button.delivery-date
+
+        $DateButton = \Enmaca\LaravelUxmal\Uxmal::Component('livewire', [
+            'options' => [
+                'livewire.path' => 'order.button.delivery-date',
+                'livewire.append-data' => [
+                    'order_id' => $order_data->hashId
+                ]
+            ]
         ]);
 
         $main_row->component('ui.card', [
             'options' => [
                 'card.header' => 'Pedido ' . $order_data->code,
-                'card.header.right' => $DateButton,
+                'card.header.right' => $DateButton->toHtml(),
                 'card.body' => $form->toArray(),
                 'card.footer' => '&nbsp;'
             ]
@@ -510,6 +513,23 @@ class OrdersController extends Controller
         return response()->json(['ok' => $result]);
     }
 
+
+    public function put_order(Request $request, string $hash_id = null)
+    {
+        $validatedData = $request->validate([
+            'delivery_date' => 'date'
+        ]);
+
+
+        $order_record = Order::findOrFail(Order::keyFromHashId($hash_id));
+        $order_record->fill($validatedData);
+
+        $result = $order_record->save();
+        if ($result)
+            return response()->json(['ok' => $result]);
+        else
+            return response()->json(['fail' => 'sepa la verga que paso']);
+    }
 
     /**
      * @param Request $request

@@ -1,3 +1,5 @@
+import { UxmalCSRF } from "../../public/enmaca/laravel-uxmal/js/uxmal.js";
+
 window.workshopDispatchEvent = (scriptContent) => {
     if (scriptContent.startsWith('livewire::')) {
         // Extract the event name after 'livewire::event'
@@ -14,3 +16,43 @@ window.workshopDispatchEvent = (scriptContent) => {
         document.dispatchEvent(event);
     }
 }
+
+/**
+ *
+ * @param order_id
+ * @param data
+ * @param onsuccess_callback
+ * @param onerror_callback
+ * @param onwarning_callback
+ */
+export const updateOrder = (order_id, data, onsuccess_callback = (ok_data) => {
+    console.log(ok_data)
+}, onerror_callback = (error_data) => {
+    console.error(error_data);
+}, onwarning_callback = (warn_data) => {
+    console.warn(warn_data);
+}) => {
+    fetch('/orders/' + order_id , {
+        method: 'PUT', // or 'PUT' if you're updating
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': UxmalCSRF()
+        },
+        body: JSON.stringify(data), // Convert data object to JSON string
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json(); // Parse JSON response into JavaScript object
+    }).then(data => {
+        if (data.ok) {
+            onsuccess_callback(data.ok);
+        } else if (data.error) {
+            onerror_callback(data.error);
+        } else if (data.warning) {
+            onwarning_callback(data.warning);
+        }
+    }).catch(error => {
+        onerror_callback(error);
+    });
+};

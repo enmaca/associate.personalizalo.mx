@@ -8,6 +8,16 @@ class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
     {
         $this->attributes['values'] ??= [];
 
+        $deliveryDateHidden = \Enmaca\LaravelUxmal\Components\Form\Input\Flatpickr::Options([
+            'input.type' => 'flatpickr',
+            'flatpickr.label' => null,
+            'flatpickr.name' => 'deliveryDate',
+            'flatpickr.append-attributes' => [ 'style' => 'display: none'],
+            'flatpickr.date-format' => "d M, Y",
+            'flatpickr.positionElement' => '#orderDeliveryDateButtonId'
+        ]);
+        $this->_content->addElement($deliveryDateHidden);
+
         $main_card = FormCreateEdit\ClientCard::Object([
             'values' => $this->attributes['values'],
             'options' => [
@@ -20,6 +30,8 @@ class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
         ]);
 
         $this->Row(true, $main_card);
+
+
 
         $mfg_card = FormCreateEdit\MfgCard::Object([
             'values' => $this->attributes['values'],

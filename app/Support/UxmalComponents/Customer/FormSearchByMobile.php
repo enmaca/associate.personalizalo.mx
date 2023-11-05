@@ -13,8 +13,8 @@ class FormSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Form
         $this->Row();
 
         $this->Input([
-            'type' => 'text',
-            'label' => 'Celular',
+            'input.type' => 'text',
+            'input.label' => 'Celular',
             'input.name' => 'customerMobile',
             'input.placeholder' => '(+52) XXXXXXXXXX',
             'input.value' => $this->attributes['values'][str::snake('customerMobile')] ?? '',

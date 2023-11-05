@@ -4,14 +4,18 @@ import {
     UxmalCard,
     UxmalSwiper,
     UxmalModal,
-    UxmalForm
+    UxmalForm,
+    UxmalInput
 } from "../../../public/enmaca/laravel-uxmal/js/uxmal.js";
+
+import {updateOrder} from "../workshop.js";
 
 const uxmalCards = new UxmalCard();
 const uxmalModals = new UxmalModal();
 const uxmalSelects = new UxmalSelect();
 const uxmalSwiper = new UxmalSwiper();
 const uxmalForm = new UxmalForm();
+const uxmalInput = new UxmalInput();
 
 window.customer_id = null;
 window.order_id = null;
@@ -75,12 +79,25 @@ window.removeOPDD = (row) => {
         });
 }
 
+Livewire.hook('component.init', ({ component, cleanup }) => {
+    console.log('component =>', component);
+    console.log('cleanup =>', cleanup);
+    switch(component.name){
+        case 'order.button.delivery-date':
+            component.el.querySelector('#orderDeliveryDateButtonId').onclick = () => {
+                uxmalInput.get('deliveryDateId').flatpickrEl.open();
+            };
+            break;
+    }
+})
+
 document.addEventListener("DOMContentLoaded", function () {
 
     uxmalCards.init(document);
     uxmalModals.init(document);
     uxmalSelects.init(document);
     uxmalForm.init(document);
+    uxmalInput.init(document);
 
     /******************************
      * OrderProductDynamicDetails *
@@ -283,7 +300,15 @@ document.addEventListener("DOMContentLoaded", function () {
     /**
      * Button DeliveryDate
      */
-    document.getElementById('orderDeliveryDateId').addEventListener('click', (event) => {
-        console.log('orderDeliveryDateId: clicked!');
+
+    uxmalInput.on('deliveryDateId', 'change', (selectedDates, dateStr) => {
+        const buttonEl = document.querySelector('#orderDeliveryDateButtonId');
+        const data = {
+            delivery_date: selectedDates[0].toISOString().slice(0, 19).replace('T', ' ')
+        };
+        updateOrder(window.order_id, data, (ok_data) => {
+            Livewire.dispatch('order.button.delivery-date::reload');
+        });
     });
+
 });

@@ -1,8 +1,15 @@
-Livewire.on('order-product-dynamic-details.table.tbody::updated', (data) => {
-    console.log('order-product-dynamic-details.table.tbody::updated', data);
-    const tableEl = document.querySelector("table[id='orderProductDynamicDetailsId']");
-    const oldTfoot = tableEl.querySelector('tfoot');
-    if (oldTfoot) {
-        oldTfoot.innerHTML = data.tfoot;
-    }
+import {
+    UxmalInput
+} from "../../../public/enmaca/laravel-uxmal/js/uxmal.js";
+
+const uxmalInput = new UxmalInput();
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    uxmalInput.init();
+    const buttonEL = ;
+    console.log(buttonEL);
+    if( buttonEL )
+
 });
+
