@@ -3,12 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class MexDistricts extends Model
+class MexDistricts extends BaseModel
 {
     use HasFactory;
-    protected $table = 'v_mex_districts';
+    protected $table = 'mex_districts';
     protected $primaryKey = 'id';
 
     public function municipalities(): \Illuminate\Database\Eloquent\Relations\BelongsTo

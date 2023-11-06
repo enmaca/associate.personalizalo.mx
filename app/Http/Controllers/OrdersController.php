@@ -156,6 +156,7 @@ class OrdersController extends Controller
 
         $main_row->component('ui.card', [
             'options' => [
+                'card.name' => 'orderCard',
                 'card.header' => 'Pedido ' . $order_data->code,
                 'card.header.right' => $DateButton->toHtml(),
                 'card.body' => $form->toArray(),

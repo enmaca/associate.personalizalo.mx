@@ -27,7 +27,7 @@ console.log('resources/js/order/create.js Loaded')
  * global scope por que se manda llamar de onclick attribute
  */
 window.removeOPD = (row) => {
-    uxmalCards.setLoading('productCard', true);
+    uxmalCards.setLoading('orderCard', true);
     const id2Remove = row.getAttribute('data-row-id');
     fetch('/orders/product_detail/' + id2Remove, {
         method: 'DELETE',
@@ -55,7 +55,7 @@ window.removeOPD = (row) => {
  * global scope por que se manda llamar de onclick attribute
  */
 window.removeOPDD = (row) => {
-    uxmalCards.setLoading('dynamicCard', true);
+    uxmalCards.setLoading('orderCard', true);
     const id2Remove = row.getAttribute('data-row-id');
     fetch('/orders/dynamic_detail/' + id2Remove, {
         method: 'DELETE',
@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
     uxmalSelects.on('materialSelectedId', 'change', (value) => {
         if (value == null || value === 0 || value === '')
             return;
-        uxmalCards.setLoading('dynamicCard', true);
+        uxmalCards.setLoading('orderCard', true);
         Livewire.dispatch('add-material-to-order::material.changed', {material: value});
     });
 
@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     //// Attach On shown.bs.modal Del Modal de Seleccion de Material
     uxmalModals.on('selectedMaterialToAddToOrderId', 'shown.bs.modal', function () {
-        uxmalCards.setLoading('dynamicCard', false);
+        uxmalCards.setLoading('orderCard', false);
         material_form_id = uxmalForm.init(this);
         // Attach On Child Materials Input Change.
         uxmalForm.onChild(material_form_id, ['#materialProfitMarginId', '#materialQuantityId'], 'change', (event) => {
@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Attach On Child Materials SaveBtn Click.
     uxmalModals.onChild('selectedLaborCostToAddToOrderId', '.save-button', 'click', (event) => {
         console.log('selectedLaborCostToAddToOrderSaveBtn::event::click', event);
-        uxmalCards.setLoading('dynamicCard', true);
+        uxmalCards.setLoading('orderCard', true);
         uxmalForm.submit(material_form_id, {
             order_id: window.order_id,
             customer_id: window.customer_id
@@ -159,11 +159,11 @@ document.addEventListener("DOMContentLoaded", function () {
     uxmalSelects.on('mfgOverHeadSelectedId', 'change', (value) => {
         if (value == null || value === 0 || value === '')
             return;
-        uxmalCards.setLoading('dynamicCard', true);
+        uxmalCards.setLoading('orderCard', true);
         Livewire.dispatch('add-mfg-overhead-to-order::mfgoverhead.changed', {mfgoverhead: value});
     });
     uxmalModals.on('selectedMfgOverHeadToAddToOrderId', 'shown.bs.modal', function () {
-        uxmalCards.setLoading('dynamicCard', false);
+        uxmalCards.setLoading('orderCard', false);
         mfg_over_head_form_id = uxmalForm.init(this);
         uxmalForm.onChild(mfg_over_head_form_id, '#mfgOverheadQuantityId', 'change', (event) => {
             let mfgQtyEl = event.target;
@@ -177,7 +177,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     uxmalModals.onChild('selectedMfgOverHeadToAddToOrderId', '.save-button', 'click', (event) => {
         console.log('selectedMfgOverHeadToAddToOrderSaveBtn::event::click', event);
-        uxmalCards.setLoading('dynamicCard', true);
+        uxmalCards.setLoading('orderCard', true);
         uxmalForm.submit(mfg_over_head_form_id, {
             order_id: window.order_id,
             customer_id: window.customer_id
@@ -195,11 +195,11 @@ document.addEventListener("DOMContentLoaded", function () {
     uxmalSelects.on('laborCostSelectedId', 'change', (value) => {
         if (value == null || value == 0 || value == '')
             return;
-        uxmalCards.setLoading('dynamicCard', true);
+        uxmalCards.setLoading('orderCard', true);
         Livewire.dispatch('add-labor-cost-to-order::laborcost.changed', {laborcost: value});
     });
     uxmalModals.on('selectedLaborCostToAddToOrderId', 'shown.bs.modal', function () {
-        uxmalCards.setLoading('dynamicCard', false);
+        uxmalCards.setLoading('orderCard', false);
         mfg_labor_cost_form_id = uxmalForm.init(this);
         uxmalForm.onChild(mfg_labor_cost_form_id, '#laborCostQuantityId', 'change', (event) => {
             const laborCostQtyEl = event.target;
@@ -217,7 +217,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById('selectedLaborCostToAddToOrderSaveBtn').addEventListener('click', (event) => {
         console.log('selectedMfgOverHeadToAddToOrderSaveBtn::event::click', event);
-        uxmalCards.setLoading('dynamicCard', true);
+        uxmalCards.setLoading('orderCard', true);
         uxmalForm.submit(mfg_labor_cost_form_id, {
             order_id: window.order_id,
             customer_id: window.customer_id
@@ -235,7 +235,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (tFoot) {
             tFoot.innerHTML = data.tfoot;
         }
-        uxmalCards.setLoading('dynamicCard', false);
+        uxmalCards.setLoading('orderCard', false);
     });
 
 
@@ -248,7 +248,7 @@ document.addEventListener("DOMContentLoaded", function () {
     uxmalSelects.on('OrderProductAddId', 'change', (value) => {
         if (value == null || value === 0 || value === '')
             return;
-        uxmalCards.setLoading('productCard', true);
+        uxmalCards.setLoading('orderCard', true);
         Livewire.dispatch('select-by-digital-art-body::product.changed', {product: value});
     });
 
@@ -259,13 +259,13 @@ document.addEventListener("DOMContentLoaded", function () {
     uxmalModals.on('selectProductWithDigitalArtId', 'shown.bs.modal', function () {
         uxmalSwiper.init(this);
         product_with_da_form = uxmalForm.init(this);
-        uxmalCards.setLoading('productCard', false);
+        uxmalCards.setLoading('orderCard', false);
     });
 
     document.getElementById('selectProductWithDigitalArtSaveBtn').addEventListener('click', (event) => {
         //submitModalAddToOrderForm('data-selected-product-form-id');
         console.log('selectProductWithDigitalArtSaveBtn::event::click', event);
-        uxmalCards.setLoading('productCard', true);
+        uxmalCards.setLoading('orderCard', true);
         uxmalForm.submit(product_with_da_form, {
             order_id: window.order_id,
             customer_id: window.customer_id
@@ -283,7 +283,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (tFoot) {
             tFoot.innerHTML = data.tfoot;
         }
-        uxmalCards.setLoading('productCard', false);
+        uxmalCards.setLoading('orderCard', false);
     });
 
 
@@ -300,14 +300,15 @@ document.addEventListener("DOMContentLoaded", function () {
     /**
      * Button DeliveryDate
      */
-
     uxmalInput.on('deliveryDateId', 'change', (selectedDates, dateStr) => {
+        uxmalCards.setLoading('orderCard', true);
         const buttonEl = document.querySelector('#orderDeliveryDateButtonId');
         const data = {
             delivery_date: selectedDates[0].toISOString().slice(0, 19).replace('T', ' ')
         };
-        updateOrder(window.order_id, data, (ok_data) => {
+        updateOrder(window.order_id, data, (data) => {
             Livewire.dispatch('order.button.delivery-date::reload');
+            uxmalCards.setLoading('orderCard', false);
         });
     });
 

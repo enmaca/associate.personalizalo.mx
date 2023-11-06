@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class MexState extends Model
+class MexState extends BaseModel
 {
     use HasFactory;
-    protected $table = 'v_mex_states';
+    protected $table = 'mex_states';
     protected $primaryKey = 'id';
 }

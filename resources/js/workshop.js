@@ -25,12 +25,12 @@ window.workshopDispatchEvent = (scriptContent) => {
  * @param onerror_callback
  * @param onwarning_callback
  */
-export const updateOrder = (order_id, data, onsuccess_callback = (ok_data) => {
-    console.log(ok_data)
-}, onerror_callback = (error_data) => {
-    console.error(error_data);
-}, onwarning_callback = (warn_data) => {
-    console.warn(warn_data);
+export const updateOrder = (order_id, data, onsuccess_callback = (data) => {
+    console.log(data)
+}, onerror_callback = (data) => {
+    console.error(data);
+}, onwarning_callback = (data) => {
+    console.warn(data);
 }) => {
     fetch('/orders/' + order_id , {
         method: 'PUT', // or 'PUT' if you're updating

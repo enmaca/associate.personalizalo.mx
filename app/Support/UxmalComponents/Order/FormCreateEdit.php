@@ -21,7 +21,7 @@ class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
         $main_card = FormCreateEdit\ClientCard::Object([
             'values' => $this->attributes['values'],
             'options' => [
-                'card.header' => 'Datos Generales/Cliente',
+                'card.header' => 'Datos Cliente/Entrega',
                 'card.body' => null,
                 'card.footer' => null,
                 'card.style' => 'primary',

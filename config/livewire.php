@@ -141,7 +141,7 @@ return [
     |
     */
 
-    'inject_morph_markers' => true,
+    'inject_morph_markers' => false,
 
     /*
     |---------------------------------------------------------------------------
