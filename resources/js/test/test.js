@@ -5,15 +5,34 @@ import {
 
 const uxmalInput = new UxmalInput();
 const uxmalSelect = new UxmalSelect();
+
+
 document.addEventListener("DOMContentLoaded", function () {
     uxmalInput.init();
     uxmalSelect.init();
     uxmalSelect.get('mexDistrictId').tomselect2.controlInput = null;
+
+    const recipientDataDivEl = document.querySelector('[data-workshop-recipient-data]');
+
+    const updRecipientDataState = () => {
+        const userDataSelectors = ['recipientNameId', 'recipientLastNameId', 'recipientMobileId' ];
+        if( uxmalInput.get('recipientDataSameAsCustomerId').element.checked ){
+            recipientDataDivEl.classList.remove('d-none');
+            uxmalInput.for(userDataSelectors, (item) => {
+                item.setAttribute('required', '');
+            });
+        } else {
+            recipientDataDivEl.classList.add('d-none');
+            uxmalInput.for(userDataSelectors, (item) => {
+                item.removeAttribute('required');
+            });
+        }
+    };
     //uxmalSelect.get('mexMunicipalitiesId').tomselect2.lock();
     //uxmalSelect.get('mexStateId').tomselect2.lock();
 
     uxmalInput.on('recipientDataSameAsCustomerId', 'change', (event) => {
-        console.log(event.target.checked);
+        updRecipientDataState();
     });
 
     uxmalInput.on('zipCodeId', 'change', (event) => {
@@ -34,5 +53,12 @@ document.addEventListener("DOMContentLoaded", function () {
         mexStateIdEl.load('zipcode::' + event.target.value);
 
     });
+
+
+    /**
+     * Initial State Dom
+     */
+    updRecipientDataState();
+
 });
 
