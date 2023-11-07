@@ -9,14 +9,6 @@ class DefaultForm extends Form
 {
     public function build(): void
     {
-        $this->Input([
-            'input.type' => 'checkbox',
-            'checkbox.label' => 'Datos del Destinatario igual que el cliente?',
-            'checkbox.name' => 'recipientDataSameAsCustomer',
-            'checkbox.value' => 1,
-            'checkbox.checked' => isset($this->attributes['values'][str::snake('recipientDataSameAsCustomer')]) && $this->attributes['values'][str::snake('recipientDataSameAsCustomer')] == 1
-        ], 'col-12');
-
 
         $this->Row(true, [
             'row.name' => 'recipientData',

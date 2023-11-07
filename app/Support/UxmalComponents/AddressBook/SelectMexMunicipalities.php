@@ -57,7 +57,13 @@ class SelectMexMunicipalities extends \Enmaca\LaravelUxmal\Abstract\SelectTomSel
         foreach ($districts as $district)
             $_items[$district->municipalities->hashId] = $district->municipalities->name.(!empty($district->municipalities->city_name) ? ' ('.$district->municipalities->city_name.')' : '');
 
-        $items = [];
+        $items = [
+            [
+                'value' => '',
+                'label' => 'Selecciona la ciudad...'
+            ]
+        ];
+
         foreach( $_items as $value => $label)
             $items[] = [
                 'value' => $value,

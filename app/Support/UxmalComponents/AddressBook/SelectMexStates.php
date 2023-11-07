@@ -56,7 +56,13 @@ class SelectMexStates extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
         foreach ($districts as $district)
             $_items[$district->municipalities->state->hashId] = $district->municipalities->state->name;
 
-        $items = [];
+        $items = [
+            [
+                'value' => '',
+                'label' => 'Selecciona el estado...'
+            ]
+        ];
+
         foreach( $_items as $value => $label)
             $items[] = [
                 'value' => $value,
