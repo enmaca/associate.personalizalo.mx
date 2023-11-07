@@ -44,17 +44,28 @@ document.addEventListener("DOMContentLoaded", function () {
         mexDistrictIdEl.clear(true);
         mexDistrictIdEl.clearOptions();
         mexDistrictIdEl.load('zipcode::' + event.target.value);
+        mexDistrictIdEl.on('load', function () {
+            const keys = Object.keys(this.options);
+            this.setValue(keys.length === 2 ? keys[1] : '');
+        });
 
         const mexMunicipalitiesIdEl = uxmalSelect.get('mexMunicipalitiesId').tomselect2;
         mexMunicipalitiesIdEl.clear(true);
         mexMunicipalitiesIdEl.clearOptions();
         mexMunicipalitiesIdEl.load('zipcode::' + event.target.value);
+        mexMunicipalitiesIdEl.on('load', function () {
+            const keys = Object.keys(this.options);
+            this.setValue(keys.length === 2 ? keys[1] : '');
+        });
 
         const mexStateIdEl = uxmalSelect.get('mexStateId').tomselect2;
         mexStateIdEl.clear(true);
         mexStateIdEl.clearOptions();
         mexStateIdEl.load('zipcode::' + event.target.value);
-
+        mexStateIdEl.on('load', function () {
+            const keys = Object.keys(this.options);
+            this.setValue(keys.length === 2 ? keys[1] : '');
+        });
     });
 
 

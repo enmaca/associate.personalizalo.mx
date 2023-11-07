@@ -51,12 +51,7 @@ class SelectMexDistricts extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
             ])
             ->get();
 
-        $items = [];
-
-        $items[] = [
-            'value' => '',
-            'label' => 'Selecciona la colonia...'
-        ];
+        $items = [['value' => '', 'label' => 'Selecciona la colonia...']];
 
         foreach ($districts as $district) {
             $items[] = [
@@ -87,7 +82,7 @@ class SelectMexDistricts extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
             ])
             ->get();
 
-        $items = [];
+        $items = [['value' => '', 'label' => 'Selecciona la colonia...']];
 
         foreach ($districts as $district) {
             $items[] = [

@@ -18,13 +18,12 @@ class SelectMexStates extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
 
         //$states = MexState::take(25)->get();
 
-        $items = [];
-
         /*
         foreach( $states as $state )
             $items[$state->hashId] = $state->name;
 */
 
+        $items = [];
         $this->_content = $uxmal->component('form.select.tomselect', [
             'options' => [
                 'tomselect.label' => 'Estado (MX)',
@@ -56,7 +55,7 @@ class SelectMexStates extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
         foreach ($districts as $district)
             $_items[$district->municipalities->state->hashId] = $district->municipalities->state->name;
 
-        $items = [];
+        $items = [[ 'value' => '', 'label' => 'Selecciona el estado...' ]];
         foreach( $_items as $value => $label)
             $items[] = [
                 'value' => $value,
@@ -85,7 +84,7 @@ class SelectMexStates extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
             ])
             ->get();
 
-        $items = [];
+        $items = [[ 'value' => '', 'label' => 'Selecciona el estado...' ]];
 
         foreach ($states as $state) {
             $items[] = [
