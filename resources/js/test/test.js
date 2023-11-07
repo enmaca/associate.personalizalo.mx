@@ -1,15 +1,18 @@
 import {
     UxmalSelect,
     UxmalInput,
+    UxmalForm,
 } from "../../../public/enmaca/laravel-uxmal/js/uxmal.js";
 
 const uxmalInput = new UxmalInput();
 const uxmalSelect = new UxmalSelect();
-
+const uxmalForm = new UxmalForm();
 
 document.addEventListener("DOMContentLoaded", function () {
     uxmalInput.init();
     uxmalSelect.init();
+    uxmalForm.init();
+
     uxmalSelect.get('mexDistrictId').tomselect2.controlInput = null;
 
     const recipientDataDivEl = document.querySelector('[data-workshop-recipient-data]');
@@ -59,6 +62,8 @@ document.addEventListener("DOMContentLoaded", function () {
      * Initial State Dom
      */
     updRecipientDataState();
-
+    uxmalForm.on('deliveryData', 'change', function(event){
+       console.log(event.target);
+    });
 });
 
