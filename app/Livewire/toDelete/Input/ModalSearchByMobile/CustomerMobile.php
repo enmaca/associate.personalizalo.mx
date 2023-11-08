@@ -33,7 +33,7 @@ class CustomerMobile extends Component
 
     public function render()
     {
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         $input = $uxmal->component('form.input', [
             'options' => [
                 'type' => 'text',

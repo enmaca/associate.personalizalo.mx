@@ -21,7 +21,7 @@ class ModalDeliveryDate extends \Enmaca\LaravelUxmal\Abstract\Modal
             'input.required' => true
         ]);
 
-        $modal = \Enmaca\LaravelUxmal\Uxmal::component('ui.modal', [
+        $modal = \Enmaca\LaravelUxmal\UxmalComponent::Make('ui.modal', [
             'options' => [
                     'modal.name' => 'selectOrderDeliveryDate',
                     'modal.title' => 'Fecha de Entrega',

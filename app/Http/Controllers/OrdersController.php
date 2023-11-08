@@ -133,6 +133,10 @@ class OrdersController extends Controller
         View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/cleave.js') . '" type="module"></script>');
         View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/component_form.js') . '" type="module"></script>');
 
+        dump($edit_screen);
+        dump($edit_screen->toArray());
+//dd('ok');
+
         return view('uxmal::master-default', [
             'uxmal_data' => $edit_screen->toArray()
 

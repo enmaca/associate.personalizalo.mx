@@ -3,8 +3,9 @@
 namespace App\Support\UxmalComponents\AddressBook;
 
 use App\Models\MexDistricts;
+use Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock;
 
-class SelectMexDistricts extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
+class SelectMexDistricts extends SelectTomSelectBlock
 {
 
     /**
@@ -13,7 +14,7 @@ class SelectMexDistricts extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
      */
     public function build(): void
     {
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
 
         $districts = [];
 

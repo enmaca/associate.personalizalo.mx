@@ -4,7 +4,7 @@ namespace App\Support\UxmalComponents\Material;
 
 use App\Models\Material;
 
-class SelectByNameSkuDesc extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
+class SelectByNameSkuDesc extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock
 {
 
     /**
@@ -13,7 +13,7 @@ class SelectByNameSkuDesc extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
      */
     public function build(): void
     {
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
 
         $materials = Material::orderBy('created_at', 'desc')->take(25)->get();
 

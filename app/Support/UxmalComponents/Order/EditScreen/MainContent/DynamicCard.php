@@ -4,7 +4,7 @@ namespace App\Support\UxmalComponents\Order\EditScreen\MainContent;
 
 use Illuminate\Support\Str;
 
-class DynamicCard extends \Enmaca\LaravelUxmal\Abstract\Card
+class DynamicCard extends \Enmaca\LaravelUxmal\Abstract\CardBlock
 {
 
     public function build()

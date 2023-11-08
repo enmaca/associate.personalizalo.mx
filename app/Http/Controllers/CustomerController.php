@@ -14,7 +14,7 @@ class CustomerController extends Controller
      */
     public function root(Request $request)
     {
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
 

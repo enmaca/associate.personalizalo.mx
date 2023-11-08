@@ -4,7 +4,7 @@ namespace App\Support\UxmalComponents\Customer;
 
 use App\Models\Customer;
 
-class SelectByNameMobileEmail extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
+class SelectByNameMobileEmail extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock
 {
 
     /**
@@ -13,7 +13,7 @@ class SelectByNameMobileEmail extends \Enmaca\LaravelUxmal\Abstract\SelectTomSel
      */
     public function build(): void
     {
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
 
         $customers = Customer::orderBy('created_at', 'desc')->take(25)->get();
 

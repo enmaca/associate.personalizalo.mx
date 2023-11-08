@@ -37,14 +37,14 @@ class AddMaterialToOrder extends Component
         }
         $one_subtotal = $material_data->invt_uom_cost * (1 + $tax_factor);
 
-        $form = \Enmaca\LaravelUxmal\Uxmal::component('form', [
+        $form = \Enmaca\LaravelUxmal\UxmalComponent::Make('form', [
             'options' => [
                 'form.id' => $__formId,
                 'form.action' => route('orders_post_material')
             ]
         ]);
 
-        $main_row = new \Enmaca\LaravelUxmal\Uxmal();
+        $main_row = new \Enmaca\LaravelUxmal\UxmalComponent();
 
         $main_row->component('ui.row', [
             'options' => [
@@ -123,7 +123,7 @@ class AddMaterialToOrder extends Component
 
     public function render()
     {
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         $uxmal->component('ui.row', [
             'options' => [
                 'row.append-attributes' => [

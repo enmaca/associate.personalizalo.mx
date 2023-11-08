@@ -3,8 +3,8 @@
 namespace App\Support\UxmalComponents\Products;
 
 use App\Models\Product;
-use Enmaca\LaravelUxmal\Uxmal;
-class SelectByName extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
+use Enmaca\LaravelUxmal\UxmalComponent;
+class SelectByName extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock
 {
 
     /**
@@ -30,7 +30,7 @@ class SelectByName extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
         if (isset($this->attributes['options']['event-change-handler']))
             $aggregate['tomselect.event-change-handler'] = $this->attributes['options']['event-change-handler'];
 
-        $this->_content = Uxmal::Component('form.select.tomselect', [
+        $this->_content = UxmalComponent::Make('form.select.tomselect', [
             'options' => [
                 'tomselect.label' => 'Producto',
                 'tomselect.name' => 'OrderProductAdd',

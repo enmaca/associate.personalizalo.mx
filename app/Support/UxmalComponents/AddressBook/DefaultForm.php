@@ -2,10 +2,11 @@
 
 namespace App\Support\UxmalComponents\AddressBook;
 
-use Enmaca\LaravelUxmal\Abstract\Form;
+use Enmaca\LaravelUxmal\Abstract\FormBlock;
+use Enmaca\LaravelUxmal\Components\Ui\Row;
 use Illuminate\Support\Str;
 
-class DefaultForm extends Form
+class DefaultForm extends FormBlock
 {
     public function build(): void
     {
@@ -69,11 +70,8 @@ class DefaultForm extends Form
             'input.value' => isset($this->attributes['values'][str::snake('zipCode')]) ? $this->attributes['values'][str::snake('zipCode')] : ''
         ]);
 
-        $this->addElement(SelectMexDistricts::Object());
-
-        $this->addElement(SelectMexMunicipalities::Object());
-
-        $this->addElement(SelectMexStates::Object());
-
+        $this->ContentAddRowInput(element : SelectMexDistricts::Object());
+        $this->ContentAddRowInput(element : SelectMexMunicipalities::Object());
+        $this->ContentAddRowInput(element : SelectMexStates::Object());
     }
 }

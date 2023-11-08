@@ -29,7 +29,7 @@ class Tbody extends Component
 
     public function render()
     {
-        $table = \Enmaca\LaravelUxmal\Uxmal::Component('ui.table', ['options' => [
+        $table = \Enmaca\LaravelUxmal\UxmalComponent::Make('ui.table', ['options' => [
             'table.name' => $this->table_name,
             'table.columns' => $this->table_columns,
             'table.data.model' => \App\Models\OrderProductDetail::class,

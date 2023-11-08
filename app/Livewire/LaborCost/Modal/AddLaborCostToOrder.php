@@ -1,9 +1,13 @@
 <?php
 
-namespace App\Livewire\LaberCost\Modal;
+namespace App\Livewire\LaborCost\Modal;
 
 use App\Models\LaborCost;
 use App\Models\MfgOverhead;
+use Enmaca\LaravelUxmal\Components\Form\Input;
+use Enmaca\LaravelUxmal\UxmalComponent;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -17,6 +21,9 @@ class AddLaborCostToOrder extends Component
         $this->content = 'Initial::Content';
     }
 
+    /**
+     * @throws \Exception
+     */
     #[On('add-labor-cost-to-order::laborcost.changed')]
     public function laborcost_changed($laborcost): void
     {
@@ -33,14 +40,14 @@ class AddLaborCostToOrder extends Component
 
         $one_subtotal = ($cost_by_minute * $laborcost_data->min_fraction_cost_in_minutes) * (1 + $tax_factor);
 
-        $form = \Enmaca\LaravelUxmal\Uxmal::component('form', [
+        $form = UxmalComponent::Make('form', [
             'options' => [
                 'form.id' => $__formId,
                 'form.action' => route('orders_post_labor_cost')
             ]
         ]);
 
-        $main_row = new \Enmaca\LaravelUxmal\Uxmal();
+        $main_row = new UxmalComponent();
 
         $main_row->component('ui.row', [
             'options' => [
@@ -55,10 +62,7 @@ class AddLaborCostToOrder extends Component
                     'hidden.value' => $laborcost_data->hashId
                 ]]);
 
-        $main_row->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[
-            'path' => 'form.input',
-            'attributes' => [
-                'options' => [
+        $main_row->addElementInRow(element: Input::Options([
                     'input.type' => 'number',
                     'input.label' => 'Cantidad (Minimo ['.$laborcost_data->min_fraction_cost_in_minutes.'] Minutos)',
                     'input.name' => 'laborCostQuantity',
@@ -69,9 +73,7 @@ class AddLaborCostToOrder extends Component
                         'data-value' => $cost_by_minute,
                         'data-tax-factor' => $tax_factor,
                     ]
-                ]
-            ]]
-        ]);
+        ]), row_options: ['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]]);
 
         $main_row->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[
             'path' => 'form.input',
@@ -105,9 +107,9 @@ class AddLaborCostToOrder extends Component
         $this->dispatch('add-to-order::show-laborcost-modal');
     }
 
-    public function render()
+    public function render(): Factory|Application|\Illuminate\Contracts\View\View|\Illuminate\Contracts\Foundation\Application
     {
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new UxmalComponent();
         $uxmal->component('ui.row', [
             'options' => [
                 'row.append-attributes' => [

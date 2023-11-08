@@ -4,12 +4,12 @@ namespace App\Support\UxmalComponents\Customer;
 
 use App\Support\UxmalComponents\Customer\SelectByNameMobileEmail;
 
-class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
+class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\ModalBlock
 {
 
     public function build()
     {
-        $form = \Enmaca\LaravelUxmal\Uxmal::component('form', [
+        $form = \Enmaca\LaravelUxmal\UxmalComponent::Make('form', [
             'options' => [
                 'form.id' => 'NewOrderFrom',
                 'form.action' => '/orders',
@@ -90,7 +90,7 @@ class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
             ]]
         ]);
 
-        $modal = \Enmaca\LaravelUxmal\Uxmal::component('ui.modal', [
+        $modal = \Enmaca\LaravelUxmal\UxmalComponent::Make('ui.modal', [
             'options' => [
                 'modal.name' => 'customerSearchByMobile',
                 'modal.title' => 'Buscar/Crear Cliente',

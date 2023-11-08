@@ -2,20 +2,27 @@
 
 namespace App\Support\UxmalComponents\Products;
 
-class ModalSelectProductWithDigitalArt extends \Enmaca\LaravelUxmal\Abstract\Modal
+use Enmaca\LaravelUxmal\Abstract\ModalBlock;
+use Enmaca\LaravelUxmal\UxmalComponent;
+use Exception;
+
+class ModalSelectProductWithDigitalArt extends ModalBlock
 {
 
-    public function build()
+    /**
+     * @throws Exception
+     */
+    public function build(): void
     {
         $aggregate = [];
-        if( isset($this->attributes['options']['saveBtn.onclick']) )
-            $aggregate['modal.saveBtn.onclick'] = $this->attributes['options']['saveBtn.onclick'];
+        if( $this->GetOption('saveBtn.onclick') )
+            $aggregate['modal.saveBtn.onclick'] = $this->GetOption('saveBtn.onclick');
 
-        $modal = \Enmaca\LaravelUxmal\Uxmal::component('ui.modal', [
+        $modal = UxmalComponent::Make('ui.modal', [
             'options' => [
                 'modal.name' => 'selectProductWithDigitalArt',
                 'modal.title' => 'Agregar Producto (Arte Digital)',
-                'modal.body' => \Enmaca\LaravelUxmal\Uxmal::component('livewire', [
+                'modal.body' => UxmalComponent::Make('livewire', [
                     'path' => 'products.modal.select-by-digital-art-body'
                 ]),
                 'modal.saveBtn.label' => 'Agregar al Pedido',
@@ -23,17 +30,13 @@ class ModalSelectProductWithDigitalArt extends \Enmaca\LaravelUxmal\Abstract\Mod
             ] + $aggregate
         ]);
 
-        switch ($this->GetContext()) {
-            default:
-                $this->_callBtn = $modal->getShowButton([
-                    'options' => [
-                        'button.name' => 'showModalSelectProductWithDigitalArt',
-                        'button.label' => 'Mostrar'
-                    ]], 'object');
-                break;
-        }
-
+        $this->_callBtn = match ($this->GetContext()) {
+            default => $modal->getShowButton([
+                'options' => [
+                    'button.name' => 'showModalSelectProductWithDigitalArt',
+                    'button.label' => 'Mostrar'
+                ]], 'object'),
+        };
         $this->_content = $modal;
-
     }
 }

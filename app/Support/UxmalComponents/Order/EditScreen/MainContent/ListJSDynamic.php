@@ -57,7 +57,7 @@ class ListJSDynamic extends \Enmaca\LaravelUxmal\Abstract\ListJs
             'subtotal',
             'created_by']);
 
-        $buttons_row = new \Enmaca\LaravelUxmal\Uxmal();
+        $buttons_row = new \Enmaca\LaravelUxmal\UxmalComponent();
 
         switch ($this->attributes['context']) {
             case 'orderhome':

@@ -7,7 +7,7 @@ class ManufacturingController extends Controller
 
     public function dashboard()
     {
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
 
@@ -15,7 +15,7 @@ class ManufacturingController extends Controller
     }
 
     public function areas(){
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
 
@@ -23,7 +23,7 @@ class ManufacturingController extends Controller
     }
 
     public function products(){
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
 
@@ -31,7 +31,7 @@ class ManufacturingController extends Controller
     }
 
     public function laborcosts() {
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
 
@@ -39,7 +39,7 @@ class ManufacturingController extends Controller
     }
 
     public function devices(){
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
 
@@ -47,7 +47,7 @@ class ManufacturingController extends Controller
     }
 
     public function printvariation(){
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
 

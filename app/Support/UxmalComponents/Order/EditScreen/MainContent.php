@@ -2,11 +2,16 @@
 
 namespace App\Support\UxmalComponents\Order\EditScreen;
 
-class MainContent extends \Enmaca\LaravelUxmal\Abstract\Content
+use Enmaca\LaravelUxmal\Abstract\ContentBlock;
+use Enmaca\LaravelUxmal\Components\Form\Input\Flatpickr as FlatpickrComponent;
+use Enmaca\LaravelUxmal\Components\Ui\Card as CardComponent;
+use Enmaca\LaravelUxmal\UxmalComponent;
+
+class MainContent extends ContentBlock
 {
     public function build(): void
     {
-        $main_div = $this->Row(options: [
+        $main_div = $this->ContentAddRow(row_options: [
             'row.append-attributes' => [
                 'data-uxmal-order-data' => json_encode([
                     'customer_id' => $this->GetValue('customer_id'),
@@ -19,7 +24,7 @@ class MainContent extends \Enmaca\LaravelUxmal\Abstract\Content
         ]);
         $this->attributes['values'] ??= [];
 
-        $DateButton = \Enmaca\LaravelUxmal\Uxmal::Component('livewire', [
+        $DateButton = UxmalComponent::Make('livewire', [
             'options' => [
                 'livewire.path' => 'order.button.delivery-date',
                 'livewire.append-data' => [
@@ -28,7 +33,7 @@ class MainContent extends \Enmaca\LaravelUxmal\Abstract\Content
             ]
         ])->toHtml();
 
-        $main_card = $main_div->addElement(\Enmaca\LaravelUxmal\Components\Ui\Card::Options([
+        $main_card = $main_div->addElement(CardComponent::Options([
             'card.name' => 'orderCard',
             'card.header' => 'Pedido ' . $this->GetValue('order_code'),
             'card.header.right' => $DateButton,
@@ -37,7 +42,7 @@ class MainContent extends \Enmaca\LaravelUxmal\Abstract\Content
         ]));
 
 
-        $main_card->Body()->addElement(\Enmaca\LaravelUxmal\Components\Form\Input\Flatpickr::Options([
+        $main_card->Body()->addElement(FlatpickrComponent::Options([
             'input.type' => 'flatpickr',
             'flatpickr.label' => null,
             'flatpickr.name' => 'deliveryDate',
@@ -88,7 +93,6 @@ class MainContent extends \Enmaca\LaravelUxmal\Abstract\Content
             'card.style' => 'dark',
             'card.name' => 'paymentCard'
         ]));
-
     }
 }
 

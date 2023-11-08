@@ -9,7 +9,7 @@ class MaterialsController extends Controller
 {
     //
     public function root(){
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
 
@@ -17,7 +17,7 @@ class MaterialsController extends Controller
     }
 
     public function mvg(){
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
 

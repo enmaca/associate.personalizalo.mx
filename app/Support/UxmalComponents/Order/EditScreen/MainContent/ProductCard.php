@@ -4,7 +4,7 @@ namespace App\Support\UxmalComponents\Order\EditScreen\MainContent;
 
 use Illuminate\Support\Str;
 
-class ProductCard extends \Enmaca\LaravelUxmal\Abstract\Card
+class ProductCard extends \Enmaca\LaravelUxmal\Abstract\CardBlock
 {
 
     public function build(): void

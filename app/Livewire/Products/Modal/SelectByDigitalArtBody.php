@@ -66,7 +66,7 @@ END;
             ];
         }
 
-        $form = \Enmaca\LaravelUxmal\Uxmal::component('form', [
+        $form = \Enmaca\LaravelUxmal\UxmalComponent::Make('form', [
             'options' => [
                 'form.id' => $__formId,
                 'form.action' => route('orders_post_product')
@@ -219,7 +219,7 @@ EOT;
     {
 
 
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         $uxmal->component('ui.row', [
             'options' => [
                 'row.append-attributes' => [

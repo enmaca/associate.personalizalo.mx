@@ -13,7 +13,7 @@
                 </div><!-- end card header -->
                 <div class="card-body">
                     @php
-                        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+                        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
                         $row = $uxmal->component('ui.row');
 
                         $row->component('form.button', [

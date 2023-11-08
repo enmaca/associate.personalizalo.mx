@@ -2,7 +2,7 @@
 
 namespace App\Support\UxmalComponents\Order;
 
-class ListjsOrderHome extends \Enmaca\LaravelUxmal\Abstract\Table
+class ListjsOrderHome extends \Enmaca\LaravelUxmal\Abstract\TableBlock
 {
     public function build(): void
     {
@@ -62,7 +62,7 @@ class ListjsOrderHome extends \Enmaca\LaravelUxmal\Abstract\Table
                 'payment_status',
                 'payment_ammount']);
 
-        $buttons_row = new \Enmaca\LaravelUxmal\Uxmal();
+        $buttons_row = new \Enmaca\LaravelUxmal\UxmalComponent();
 
         switch ($this->attributes['context']) {
             case 'orderhome':

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 class SystemController extends Controller
 {
     public function customers(){
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
 
@@ -16,7 +16,7 @@ class SystemController extends Controller
     }
 
     public function suppliers(){
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
 
@@ -24,7 +24,7 @@ class SystemController extends Controller
     }
 
     public function taxes(){
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
 
@@ -32,7 +32,7 @@ class SystemController extends Controller
     }
 
     public function uom(){
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
 
         $main_row = $uxmal->component('ui.row');
         $listjs = \App\Support\UxmalComponents\System\Uom\ListJsUomHome::Object(['context' => 'uomhome']);
@@ -52,7 +52,7 @@ class SystemController extends Controller
     }
 
     public function users(){
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
 
@@ -60,7 +60,7 @@ class SystemController extends Controller
     }
 
     public function products(){
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
 

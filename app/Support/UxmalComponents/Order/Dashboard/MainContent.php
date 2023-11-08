@@ -4,12 +4,12 @@ namespace App\Support\UxmalComponents\Order\Dashboard;
 
 use \Enmaca\LaravelUxmal\Components\Form\Button;
 
-class MainContent extends \Enmaca\LaravelUxmal\Abstract\Content
+class MainContent extends \Enmaca\LaravelUxmal\Abstract\ContentBlock
 {
     public function build(): void
     {
-        $this->Row(
-            options: [
+        $this->ContentAddRow(
+            row_options: [
                 'row.append-attributes' => [
                     'data-uxmal-dashboard-order' => json_encode([]),
                     'class' => [

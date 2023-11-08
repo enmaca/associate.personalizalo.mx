@@ -1,7 +1,9 @@
 <?php
 namespace App\Support\UxmalComponents\Order;
 
-class EditScreen extends \Enmaca\LaravelUxmal\Abstract\Screen
+use Enmaca\LaravelUxmal\Abstract\ScreenBlock;
+
+class EditScreen extends ScreenBlock
 {
 
     public function build(): void

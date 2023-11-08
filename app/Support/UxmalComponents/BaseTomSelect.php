@@ -3,7 +3,7 @@
 namespace App\Support\UxmalComponents;
 
 
-class BaseTomSelect extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
+class BaseTomSelect extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock
 {
 
     protected $Model;
@@ -15,7 +15,7 @@ class BaseTomSelect extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelect
      */
     public function build(): void
     {
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
 
         $rows = $this->Model::orderBy('created_at', 'desc')->take(25)->get();
 

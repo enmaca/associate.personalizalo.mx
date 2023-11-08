@@ -29,14 +29,14 @@ class AddMfgOverheadToOrder extends Component
         }
         $one_subtotal = $mfgoverhead_data->value * (1 + $tax_factor);
 
-        $form = \Enmaca\LaravelUxmal\Uxmal::component('form', [
+        $form = \Enmaca\LaravelUxmal\UxmalComponent::Make('form', [
             'options' => [
                 'form.id' => $__formId,
                 'form.action' => route('orders_post_mfg_overhead')
             ]
         ]);
 
-        $main_row = new \Enmaca\LaravelUxmal\Uxmal();
+        $main_row = new \Enmaca\LaravelUxmal\UxmalComponent();
 
         $main_row->component('ui.row', [
             'options' => [
@@ -99,7 +99,7 @@ class AddMfgOverheadToOrder extends Component
 
     public function render()
     {
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         $uxmal->component('ui.row', [
             'options' => [
                 'row.append-attributes' => [
