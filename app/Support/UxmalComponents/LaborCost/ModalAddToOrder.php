@@ -23,7 +23,7 @@ class ModalAddToOrder extends \Enmaca\LaravelUxmal\Abstract\Modal
                 ] + $aggregate
         ]);
 
-        switch ($this->attributes['context']) {
+        switch ($this->GetContext()) {
             default:
                 $this->_callBtn = $modal->getShowButton([
                     'options' => [

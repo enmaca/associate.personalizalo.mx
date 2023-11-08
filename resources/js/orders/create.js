@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     //// Material Modal Updated From Livewire => Show
-    Livewire.on('add-to-order::show-material-modal', (event) => {
+    Livewire.on('add-to-order::show-material-modal', () => {
         uxmalModals.show('selectedMaterialToAddToOrderId');
     });
 
@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function () {
         uxmalCards.setLoading('orderCard', false);
         material_form_id = uxmalForm.init(this);
         // Attach On Child Materials Input Change.
-        uxmalForm.onChild(material_form_id, ['#materialProfitMarginId', '#materialQuantityId'], 'change', (event) => {
+        uxmalForm.onChild(material_form_id, ['#materialProfitMarginId', '#materialQuantityId'], 'change', () => {
             const mtQtyEl = document.getElementById('materialQuantityId');
             const uom_cost = Number(mtQtyEl.getAttribute('data-uom-cost'));
             const tax_data = Number(mtQtyEl.getAttribute('data-tax-factor'));
@@ -144,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
         uxmalForm.submit(material_form_id, {
             order_id: window.order_id,
             customer_id: window.customer_id
-        }, (elementName, data) => {
+        }, () => {
             Livewire.dispatch('order-product-dynamic-details.table.tbody::reload');
             uxmalModals.hide('selectedMaterialToAddToOrderId');
         });
@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // MfgOverHead
     let mfg_over_head_form_id;
-    Livewire.on('add-to-order::show-mfgoverhead-modal', (event) => {
+    Livewire.on('add-to-order::show-mfgoverhead-modal', () => {
         uxmalModals.show('selectedMfgOverHeadToAddToOrderId');
     });
     uxmalSelects.on('mfgOverHeadSelectedId', 'change', (value) => {
@@ -181,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
         uxmalForm.submit(mfg_over_head_form_id, {
             order_id: window.order_id,
             customer_id: window.customer_id
-        }, (elementName, data) => {
+        }, () => {
             Livewire.dispatch('order-product-dynamic-details.table.tbody::reload');
             uxmalModals.hide('selectedMfgOverHeadToAddToOrderId');
         });
@@ -189,11 +189,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // MfgLaborCost
     let mfg_labor_cost_form_id;
-    Livewire.on('add-to-order::show-laborcost-modal', (event) => {
+    Livewire.on('add-to-order::show-laborcost-modal', () => {
         uxmalModals.show('selectedLaborCostToAddToOrderId');
     });
     uxmalSelects.on('laborCostSelectedId', 'change', (value) => {
-        if (value == null || value == 0 || value == '')
+        if (value == null || value === 0 || value === '')
             return;
         uxmalCards.setLoading('orderCard', true);
         Livewire.dispatch('add-labor-cost-to-order::laborcost.changed', {laborcost: value});
@@ -221,7 +221,7 @@ document.addEventListener("DOMContentLoaded", function () {
         uxmalForm.submit(mfg_labor_cost_form_id, {
             order_id: window.order_id,
             customer_id: window.customer_id
-        }, (elementName, data) => {
+        }, () => {
             Livewire.dispatch('order-product-dynamic-details.table.tbody::reload');
             uxmalModals.hide('selectedLaborCostToAddToOrderId');
         });
@@ -252,7 +252,7 @@ document.addEventListener("DOMContentLoaded", function () {
         Livewire.dispatch('select-by-digital-art-body::product.changed', {product: value});
     });
 
-    Livewire.on('select-by-digital-art-body::showmodal', (event) => {
+    Livewire.on('select-by-digital-art-body::showmodal', () => {
         uxmalModals.show('selectProductWithDigitalArtId');
     });
 
@@ -269,7 +269,7 @@ document.addEventListener("DOMContentLoaded", function () {
         uxmalForm.submit(product_with_da_form, {
             order_id: window.order_id,
             customer_id: window.customer_id
-        }, (elementName, data) => {
+        }, () => {
             Livewire.dispatch('order-product-details.table.tbody::reload');
             uxmalModals.hide('selectProductWithDigitalArtId');
         });
@@ -300,16 +300,83 @@ document.addEventListener("DOMContentLoaded", function () {
     /**
      * Button DeliveryDate
      */
-    uxmalInput.on('deliveryDateId', 'change', (selectedDates, dateStr) => {
+    uxmalInput.on('deliveryDateId', 'change', (selectedDates) => {
         uxmalCards.setLoading('orderCard', true);
         const buttonEl = document.querySelector('#orderDeliveryDateButtonId');
         const data = {
             delivery_date: selectedDates[0].toISOString().slice(0, 19).replace('T', ' ')
         };
-        updateOrder(window.order_id, data, (data) => {
+        updateOrder(window.order_id, data, () => {
             Livewire.dispatch('order.button.delivery-date::reload');
             uxmalCards.setLoading('orderCard', false);
         });
     });
 
+
+    /**
+     **** Client Data && Delivery Data
+     */
+    uxmalSelects.get('mexDistrictId').tomselect2.controlInput = null;
+
+    const recipientDataDivEl = document.querySelector('[data-workshop-recipient-data]');
+
+    const updRecipientDataState = () => {
+        const userDataSelectors = ['recipientNameId', 'recipientLastNameId', 'recipientMobileId' ];
+        if( uxmalInput.get('recipientDataSameAsCustomerId').element.checked ){
+            recipientDataDivEl.classList.remove('d-none');
+            uxmalInput.for(userDataSelectors, (item) => {
+                item.setAttribute('required', '');
+            });
+        } else {
+            recipientDataDivEl.classList.add('d-none');
+            uxmalInput.for(userDataSelectors, (item) => {
+                item.removeAttribute('required');
+            });
+        }
+    };
+    //uxmalSelect.get('mexMunicipalitiesId').tomselect2.lock();
+    //uxmalSelect.get('mexStateId').tomselect2.lock();
+
+    uxmalInput.on('recipientDataSameAsCustomerId', 'change', () => {
+        updRecipientDataState();
+    });
+
+    uxmalInput.on('zipCodeId', 'change', (event) => {
+        console.log(event.target);
+        const mexDistrictIdEl = uxmalSelects.get('mexDistrictId').tomselect2;
+        mexDistrictIdEl.clear(true);
+        mexDistrictIdEl.clearOptions();
+        mexDistrictIdEl.load('zipcode::' + event.target.value);
+        mexDistrictIdEl.on('load', function () {
+            const keys = Object.keys(this.options);
+            this.setValue(keys.length === 2 ? keys[1] : '');
+        });
+
+        const mexMunicipalitiesIdEl = uxmalSelects.get('mexMunicipalitiesId').tomselect2;
+        mexMunicipalitiesIdEl.clear(true);
+        mexMunicipalitiesIdEl.clearOptions();
+        mexMunicipalitiesIdEl.load('zipcode::' + event.target.value);
+        mexMunicipalitiesIdEl.on('load', function () {
+            const keys = Object.keys(this.options);
+            this.setValue(keys.length === 2 ? keys[1] : '');
+        });
+
+        const mexStateIdEl = uxmalSelects.get('mexStateId').tomselect2;
+        mexStateIdEl.clear(true);
+        mexStateIdEl.clearOptions();
+        mexStateIdEl.load('zipcode::' + event.target.value);
+        mexStateIdEl.on('load', function () {
+            const keys = Object.keys(this.options);
+            this.setValue(keys.length === 2 ? keys[1] : '');
+        });
+    });
+
+
+    /**
+     * Initial State Dom
+     */
+    updRecipientDataState();
+    uxmalForm.on('deliveryData', 'change', function(event){
+        console.log(event.target);
+    });
 });

@@ -23,7 +23,7 @@ class ModalSelectProductWithDigitalArt extends \Enmaca\LaravelUxmal\Abstract\Mod
             ] + $aggregate
         ]);
 
-        switch ($this->attributes['context']) {
+        switch ($this->GetContext()) {
             default:
                 $this->_callBtn = $modal->getShowButton([
                     'options' => [

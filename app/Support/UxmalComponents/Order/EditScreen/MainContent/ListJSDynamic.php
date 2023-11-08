@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support\UxmalComponents\Order\FormCreateEdit;
+namespace App\Support\UxmalComponents\Order\EditScreen\MainContent;
 
 class ListJSDynamic extends \Enmaca\LaravelUxmal\Abstract\ListJs
 {

@@ -100,7 +100,7 @@ class ModalSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Modal
             ]
         ]);
 
-        switch ($this->attributes['context']) {
+        switch ($this->GetContext()) {
             case 'createclient':
                 $this->_callBtn = $modal->getShowButton([
                     'options' => [

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Support\UxmalComponents\Order\FormCreateEdit;
+namespace App\Support\UxmalComponents\Order\EditScreen\MainContent;
 
 use Enmaca\LaravelUxmal\Uxmal;
 use Illuminate\Support\Str;
@@ -8,10 +8,11 @@ use Illuminate\Support\Str;
 class ClientCard extends \Enmaca\LaravelUxmal\Abstract\Card
 {
 
-    public function build(){
+    public function build(): void
+    {
 
         $this->attributes['options']['customer.card.readonly'] ??= true;
-        
+
         $this->BodyRow();
 
         $this->BodyInput([
@@ -63,6 +64,8 @@ class ClientCard extends \Enmaca\LaravelUxmal\Abstract\Card
             'input.readonly' => $this->attributes['options']['customer.card.readonly'],
             'input.required' => true
         ]);
+
+        $this->Body()->addElement(new \App\Support\UxmalComponents\AddressBook\DefaultForm(['options' => ['form.id' => 'deliveryData', 'form.action' => '/order/delivery_data']]));
     }
 
 }

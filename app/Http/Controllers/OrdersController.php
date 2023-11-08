@@ -32,9 +32,9 @@ class OrdersController extends Controller
     public function root(Request $request)
     {
 
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
+        $root_screen = \App\Support\UxmalComponents\Order\Dashboard::Object();
 
-        $main_row = $uxmal->component('ui.row', []);
+        //$main_row = $uxmal->component('ui.row', []);
 
         /**
          * Create Predefined Modal with context 'createorder'
@@ -54,6 +54,8 @@ class OrdersController extends Controller
         /**
          * Create the main Card of Page with ListJS in the Body
          */
+
+        /*
         $main_row->component('ui.card', [
             'options' => [
                 'card.header' => 'Pedidos Pendientes',
@@ -65,7 +67,7 @@ class OrdersController extends Controller
         /**
          * Add Modal Button to Main Uxmal Struct
          */
-        $uxmal->addElement($client_modal['modal']);
+        // $uxmal->addElement($client_modal['modal']);
 
         /**
          * PushOnce to scripts
@@ -78,7 +80,7 @@ class OrdersController extends Controller
          * Set View
          */
         return view('uxmal::master-default', [
-            'uxmal_data' => $uxmal->toArray()
+            'uxmal_data' => $root_screen->toArray()
         ])->extends('uxmal::layout.master');
     }
 
@@ -111,77 +113,17 @@ class OrdersController extends Controller
         if (empty($order_data))
             $order_data = Order::CreateToCustomer($customer_data->id);
 
-        $uxmal = new \Enmaca\LaravelUxmal\Uxmal();
 
-        $main_row = $uxmal->component('ui.row', [
-            'options' => [
-                'row.append-attributes' => [
-                    'data-uxmal-order-data' => json_encode([
-                        'customer_id' => $customer_data->hashId,
-                        'order_id' => $order_data->hashId
-                    ]),
-                    'class' => [
-                        'row gy-4' => true
-                    ]
-                ]
-            ]
+        $edit_screen = \App\Support\UxmalComponents\Order\EditScreen::Object(values : [
+            'customer_id' => $customer_data->hashId,
+            'customer_name' => $customer_data->name,
+            'customer_last_name' => $customer_data->last_name,
+            'customer_mobile' => $customer_data->mobile,
+            'customer_email' => $customer_data->email,
+            'order_id' => $order_data->hashId,
+            'order_code' => $order_data->code
         ]);
 
-        $form = \App\Support\UxmalComponents\Order\FormCreateEdit::Object([
-            'options' => [
-                'form.id' => 'customerData',
-                'form.action' => '/customer',
-                'form.method' => 'PUT'
-            ],
-            'values' => [
-                'customer_id' => $customer_data->hashId,
-                'customer_name' => $customer_data->name,
-                'customer_last_name' => $customer_data->last_name,
-                'customer_mobile' => $customer_data->mobile,
-                'customer_email' => $customer_data->email,
-                'order_id' => $order_data->hashId,
-                'order_code' => $order_data->code
-            ]]);
-
-        // order.button.delivery-date
-
-        $DateButton = \Enmaca\LaravelUxmal\Uxmal::Component('livewire', [
-            'options' => [
-                'livewire.path' => 'order.button.delivery-date',
-                'livewire.append-data' => [
-                    'order_id' => $order_data->hashId
-                ]
-            ]
-        ]);
-
-        $main_row->component('ui.card', [
-            'options' => [
-                'card.name' => 'orderCard',
-                'card.header' => 'Pedido ' . $order_data->code,
-                'card.header.right' => $DateButton->toHtml(),
-                'card.body' => $form->toArray(),
-                'card.footer' => '&nbsp;'
-            ]
-        ]);
-
-        /**
-         * Add Modals
-         */
-        $uxmal->addElement(\App\Support\UxmalComponents\Products\ModalSelectProductWithDigitalArt::Modal());
-        $uxmal->addElement(\App\Support\UxmalComponents\Material\ModalAddToOrder::Modal());
-        $uxmal->addElement(\App\Support\UxmalComponents\LaborCost\ModalAddToOrder::Modal());
-        $uxmal->addElement(\App\Support\UxmalComponents\MfgOverHead\ModalAddToOrder::Modal());
-        $uxmal->addElement(\App\Support\UxmalComponents\Order\FormCreateEdit\ModalDeliveryDate::Modal());
-
-        /*
-                dump(
-                    'product_options' => $products_options,
-                    'material_options' => $material_options,
-                    'laborcost_options' => $laborcost_options,
-                    'mfgoverhead_options' => $mfgoverhead_options,
-                    'mfgareas_options' => $mfgareas_options]);
-
-                */
 
         View::startPush('scss', '<link rel="stylesheet" href="' . asset('enmaca/laravel-uxmal/assets/swiper.css') . '" type="text/css"/>');
         View::startPush('scss', '<link rel="stylesheet" href="' . Vite::asset('resources/scss/orders/create.scss', 'workshop') . '" type="text/css"/>');
@@ -192,7 +134,7 @@ class OrdersController extends Controller
         View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/component_form.js') . '" type="module"></script>');
 
         return view('uxmal::master-default', [
-            'uxmal_data' => $uxmal->toArray()
+            'uxmal_data' => $edit_screen->toArray()
 
         ])->extends('uxmal::layout.master');
     }
