@@ -3,8 +3,10 @@
 namespace App\Support\UxmalComponents\Material;
 
 use App\Models\Material;
+use Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock;
+use Enmaca\LaravelUxmal\UxmalComponent;
 
-class SelectByNameSkuDesc extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock
+class SelectByNameSkuDesc extends SelectTomSelectBlock
 {
 
     /**
@@ -13,10 +15,7 @@ class SelectByNameSkuDesc extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelectB
      */
     public function build(): void
     {
-        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
-
         $materials = Material::orderBy('created_at', 'desc')->take(25)->get();
-
         $aggregate = [];
 
         if(isset($this->attributes['options']['event-change-handler']))
@@ -27,7 +26,7 @@ class SelectByNameSkuDesc extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelectB
         foreach( $materials as $material )
             $items[$material->hashId] = "{$material->name}";
 
-        $this->_content = $uxmal->component('form.select.tomselect', [
+        $this->_content = UxmalComponent::Make('form.select.tomselect', [
             'options' => [
                 'tomselect.label' => 'Material Directo',
                 'tomselect.name' => 'materialSelected',

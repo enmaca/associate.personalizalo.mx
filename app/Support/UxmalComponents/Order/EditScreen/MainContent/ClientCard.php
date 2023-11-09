@@ -2,12 +2,17 @@
 
 namespace App\Support\UxmalComponents\Order\EditScreen\MainContent;
 
-use Enmaca\LaravelUxmal\Uxmal;
+use App\Support\UxmalComponents\AddressBook\DefaultForm as AddressBookDefaultForm;
+use Enmaca\LaravelUxmal\Abstract\CardBlock;
 use Illuminate\Support\Str;
+use Exception;
 
-class ClientCard extends \Enmaca\LaravelUxmal\Abstract\CardBlock
+class ClientCard extends CardBlock
 {
 
+    /**
+     * @throws Exception
+     */
     public function build(): void
     {
 
@@ -65,7 +70,7 @@ class ClientCard extends \Enmaca\LaravelUxmal\Abstract\CardBlock
             'input.required' => true
         ]);
 
-        $this->Body()->addElement(new \App\Support\UxmalComponents\AddressBook\DefaultForm(['options' => ['form.id' => 'deliveryData', 'form.action' => '/order/delivery_data']]));
+        $this->Body()->addElement(new AddressBookDefaultForm(['options' => ['form.id' => 'deliveryData', 'form.action' => '/order/delivery_data']]));
     }
 
 }

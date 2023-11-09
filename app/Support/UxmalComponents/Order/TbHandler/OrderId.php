@@ -2,9 +2,12 @@
 
 namespace App\Support\UxmalComponents\Order\TbHandler;
 
-class OrderId extends \Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\TableColumn {
+use Enmaca\LaravelUxmal\Support\Components\Ui\Table\Column as ColumTable;
 
-    public function parseValue($value){
+class OrderId extends ColumTable {
+
+    public function parseValue($value): mixed
+    {
         return $value;
     }
 }

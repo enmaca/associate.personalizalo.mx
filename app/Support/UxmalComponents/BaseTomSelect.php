@@ -2,12 +2,14 @@
 
 namespace App\Support\UxmalComponents;
 
+use Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock;
+use Enmaca\LaravelUxmal\UxmalComponent;
 
-class BaseTomSelect extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock
+class BaseTomSelect extends SelectTomSelectBlock
 {
 
-    protected $Model;
-    protected $Options;
+    protected string $Model;
+    protected array $Options;
 
     /**
      * @return void
@@ -15,8 +17,6 @@ class BaseTomSelect extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock
      */
     public function build(): void
     {
-        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
-
         $rows = $this->Model::orderBy('created_at', 'desc')->take(25)->get();
 
         $items = [];
@@ -29,7 +29,7 @@ class BaseTomSelect extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock
             'tomselect.options' => $items,
             ];
 
-        $this->_content = $uxmal->component('form.select.tomselect', [
+        $this->_content = UxmalComponent::Make('form.select.tomselect', [
             'options' => $options
         ]);
     }

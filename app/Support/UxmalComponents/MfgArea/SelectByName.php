@@ -6,9 +6,9 @@ use App\Models\MfgArea;
 
 class SelectByName extends \App\Support\UxmalComponents\BaseTomSelect
 {
-    protected $Model = MfgArea::class;
+    protected string $Model = MfgArea::class;
 
-    protected $Options = [
+    protected array $Options = [
         'tomselect.label' => 'Area de manufactura',
         'tomselect.name' => 'mfgAreaSelected',
         'tomselect.placeholder' => 'Seleccionar...',

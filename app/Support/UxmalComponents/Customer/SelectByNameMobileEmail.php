@@ -3,27 +3,26 @@
 namespace App\Support\UxmalComponents\Customer;
 
 use App\Models\Customer;
+use Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock;
+use Enmaca\LaravelUxmal\UxmalComponent;
+use Exception;
 
-class SelectByNameMobileEmail extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock
+class SelectByNameMobileEmail extends SelectTomSelectBlock
 {
 
     /**
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function build(): void
     {
-        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
-
         $customers = Customer::orderBy('created_at', 'desc')->take(25)->get();
-
         $items = [];
 
         foreach( $customers as $customer )
             $items[$customer->hashId] = "{$customer->name} {$customer->last_name} [{$customer->mobile}] ({$customer->email})";
 
-
-        $this->_content = $uxmal->component('form.select.tomselect', [
+        $this->_content = UxmalComponent::Make('form.select.tomselect', [
             'options' => [
                 'tomselect.label' => 'Cliente',
                 'tomselect.name' => 'customerId',

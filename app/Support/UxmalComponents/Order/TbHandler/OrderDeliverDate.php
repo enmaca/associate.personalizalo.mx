@@ -2,9 +2,16 @@
 
 namespace App\Support\UxmalComponents\Order\TbHandler;
 
-class OrderDeliverDate extends \Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\TableColumn {
+use Enmaca\LaravelUxmal\Support\Components\Ui\Table\Column as ColumTable;
 
-    public function parseValue($value){
+class OrderDeliverDate extends ColumTable {
+
+    /**
+     * @param $value
+     * @return string
+     */
+    public function parseValue($value): string
+    {
         if(empty($value))
             $value = 'OrderDeliverDate::empty';
 

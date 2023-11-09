@@ -2,15 +2,17 @@
 
 namespace App\Support\Uxmal\Order;
 
+use Enmaca\LaravelUxmal\Abstract\FormBlock;
 use Illuminate\Support\Str;
 
-class FormSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Form
+class FormSearchByMobile extends FormBlock
 {
-    public function build()
+    /**
+     * @throws \Exception
+     */
+    public function build(): void
     {
-
-        //dump($this->attributes['values']);
-        $this->Row();
+        $this->ContentAddRow();
 
         $this->Input([
             'input.type' => 'text',
@@ -20,8 +22,6 @@ class FormSearchByMobile extends \Enmaca\LaravelUxmal\Abstract\Form
             'input.value' => $this->attributes['values'][str::snake('customerMobile')] ?? '',
             'input.required' => true
         ]);
-
-
     }
 }
 

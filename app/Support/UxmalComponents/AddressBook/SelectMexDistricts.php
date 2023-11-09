@@ -4,44 +4,38 @@ namespace App\Support\UxmalComponents\AddressBook;
 
 use App\Models\MexDistricts;
 use Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock;
+use Enmaca\LaravelUxmal\UxmalComponent;
+use Exception;
 
 class SelectMexDistricts extends SelectTomSelectBlock
 {
 
     /**
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function build(): void
     {
-        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
-
-        $districts = [];
-
         $items = [];
-
-        foreach( $districts as $district )
-            $items[$district->hashId] = $district->name;
-
         $this->attributes['options'] ??= [];
 
-        $this->_content = $uxmal->component('form.select.tomselect', [
+        $this->_content = UxmalComponent::Make('form.select.tomselect', [
             'options' => [
-                'tomselect.label' => 'Colonia (MX)',
-                'tomselect.name' => 'mexDistrict',
-                'tomselect.placeholder' => 'Selecciona la colonia...',
-                'tomselect.load-url' => '/address_book/mex_district/search_tomselect',
-                'tomselect.options' => $items,
-                'tomselect.allow-empty-option' => true
-            ] + $this->attributes['options']
+                    'tomselect.label' => 'Colonia (MX)',
+                    'tomselect.name' => 'mexDistrict',
+                    'tomselect.placeholder' => 'Selecciona la colonia...',
+                    'tomselect.load-url' => '/address_book/mex_district/search_tomselect',
+                    'tomselect.options' => $items,
+                    'tomselect.allow-empty-option' => true
+                ] + $this->attributes['options']
         ]);
     }
 
     /**
-     * @param string $query
+     * @param string $postal_code
      * @return array
      */
-    public function searchByPostalCode(mixed $postal_code): array
+    public function searchByPostalCode(string $postal_code): array
     {
         $districts = MexDistricts::query()
             ->where('postal_code', $postal_code)

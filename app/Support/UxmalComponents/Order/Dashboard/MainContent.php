@@ -6,6 +6,9 @@ use \Enmaca\LaravelUxmal\Components\Form\Button;
 
 class MainContent extends \Enmaca\LaravelUxmal\Abstract\ContentBlock
 {
+    /**
+     * @throws \Exception
+     */
     public function build(): void
     {
         $this->ContentAddRow(

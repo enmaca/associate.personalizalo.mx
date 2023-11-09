@@ -2,13 +2,18 @@
 namespace App\Support\UxmalComponents\Order\TbHandler;
 
 use Enmaca\LaravelUxmal\Components\Ui\Listjs\Checkbox as ComponentCheckbox;
-use Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\Checkbox as SupportCheckbox;
+use Enmaca\LaravelUxmal\Support\Components\Ui\Table\Checkbox as SupportCheckbox;
+use Enmaca\LaravelUxmal\Support\Components\Ui\Table\Column as ColumTable;
+
 use Illuminate\Support\Facades\View;
 
-class OrderIdCheckbox extends \Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\TableColumn
+class OrderIdCheckbox extends ColumTable
 {
 
-    public function parseValue($value)
+    /**
+     * @throws \Exception
+     */
+    public function parseValue($value): mixed
     {
         $checkboxStruct = new SupportCheckbox([
             'options' => [

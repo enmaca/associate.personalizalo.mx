@@ -3,11 +3,16 @@
 namespace App\Support\UxmalComponents\LaborCost;
 
 use App\Models\LaborCost;
+use Exception;
 
 class SelectByName extends \App\Support\UxmalComponents\BaseTomSelect
 {
-    protected $Model = LaborCost::class;
+    protected string $Model = LaborCost::class;
 
+    /**
+     * @return void
+     * @throws Exception
+     */
     public function build(): void
     {
         $aggregate = [];
@@ -25,5 +30,4 @@ class SelectByName extends \App\Support\UxmalComponents\BaseTomSelect
 
         parent::build();
     }
-
 }

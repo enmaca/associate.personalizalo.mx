@@ -2,15 +2,23 @@
 
 namespace App\Support\UxmalComponents\Order\TbHandler;
 use App\Enums\OrderStatusEnum;
-class OrderStatus extends \Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\TableColumn {
-
-    public function __construct($attributes = [])
+use Enmaca\LaravelUxmal\Support\Components\Ui\Table\Column as ColumTable;
+class OrderStatus extends ColumTable {
+    /**
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = [])
     {
         $this->enumClass = OrderStatusEnum::class;
         parent::__construct($attributes);
     }
 
-    public function parseValue($value){
+    /**
+     * @param $value
+     * @return string
+     */
+    public function parseValue($value): string
+    {
         $value = parent::parseValue($value);
         return "<div>".$value ."</div>";
     }

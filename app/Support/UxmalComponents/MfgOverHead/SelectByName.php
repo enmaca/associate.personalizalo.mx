@@ -3,10 +3,11 @@
 namespace App\Support\UxmalComponents\MfgOverHead;
 
 use App\Models\MfgOverhead;
+use App\Support\UxmalComponents\BaseTomSelect;
 
-class SelectByName extends \App\Support\UxmalComponents\BaseTomSelect
+class SelectByName extends BaseTomSelect
 {
-    protected $Model = MfgOverHead::class;
+    protected string $Model = MfgOverHead::class;
 
     public function build(): void
     {

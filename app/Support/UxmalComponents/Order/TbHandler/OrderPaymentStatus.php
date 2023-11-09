@@ -3,18 +3,24 @@
 namespace App\Support\UxmalComponents\Order\TbHandler;
 
 use App\Enums\OrderPaymentStatusEnum;
+use Enmaca\LaravelUxmal\Support\Components\Ui\Table\Column as ColumTable;
 
-class OrderPaymentStatus extends \Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\TableColumn
+class OrderPaymentStatus extends ColumTable
 {
-
-    public function __construct($attributes = [])
+    /**
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = [])
     {
         $this->enumClass = OrderPaymentStatusEnum::class;
         parent::__construct($attributes);
     }
 
-
-    public function parseValue($value)
+    /**
+     * @param $value
+     * @return string
+     */
+    public function parseValue($value): string
     {
         $value = parent::parseValue($value);
         return "<div>" . $value . "</div>";

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Support\UxmalComponents\Order\EditScreen;
 
 use Enmaca\LaravelUxmal\Abstract\ContentBlock;
@@ -9,6 +8,9 @@ use Enmaca\LaravelUxmal\UxmalComponent;
 
 class MainContent extends ContentBlock
 {
+    /**
+     * @throws \Exception
+     */
     public function build(): void
     {
         $main_div = $this->ContentAddRow(row_options: [

@@ -3,8 +3,9 @@
 namespace App\Support\UxmalComponents\Order\TbHandler;
 
 use App\Enums\ShipmentStatusEnum;
+use Enmaca\LaravelUxmal\Support\Components\Ui\Table\Column as ColumTable;
 
-class OrderShipmentStatus extends \Enmaca\LaravelUxmal\Support\Components\Ui\Listjs\TableColumn {
+class OrderShipmentStatus extends ColumTable {
 
     public function __construct($attributes = [])
     {
@@ -12,8 +13,12 @@ class OrderShipmentStatus extends \Enmaca\LaravelUxmal\Support\Components\Ui\Lis
         parent::__construct($attributes);
     }
 
-
-    public function parseValue($value){
+    /**
+     * @param $value
+     * @return string
+     */
+    public function parseValue($value): string
+    {
         $value = parent::parseValue($value);
         return "<div>" .$value ."</div>";
     }

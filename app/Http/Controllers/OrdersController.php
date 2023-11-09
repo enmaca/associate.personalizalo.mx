@@ -76,6 +76,7 @@ class OrdersController extends Controller
         View::startPush('scripts', '<script src="' . Vite::asset('resources/js/orders/root.js', 'workshop') . '" type="module"></script>');
         View::startPush('livewire:initialized', Vite::content('resources/js/orders/root_livewire.js', 'workshop'));
 
+        dump($root_screen->toArray());
         /**
          * Set View
          */

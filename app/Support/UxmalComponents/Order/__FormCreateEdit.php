@@ -2,13 +2,19 @@
 
 namespace App\Support\UxmalComponents\Order;
 
-class FormCreateEdit extends \Enmaca\LaravelUxmal\Abstract\Form
+use Enmaca\LaravelUxmal\Abstract\Form;
+use Enmaca\LaravelUxmal\Components\Form\Input\Flatpickr;
+
+class FormCreateEdit extends Form
 {
-    public function build()
+    /**
+     * @return void
+     */
+    public function build(): void
     {
         $this->attributes['values'] ??= [];
 
-        $deliveryDateHidden = \Enmaca\LaravelUxmal\Components\Form\Input\Flatpickr::Options([
+        $deliveryDateHidden = Flatpickr::Options([
             'input.type' => 'flatpickr',
             'flatpickr.label' => null,
             'flatpickr.name' => 'deliveryDate',

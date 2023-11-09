@@ -6,27 +6,19 @@ use App\Models\MexDistricts;
 use App\Models\MexState;
 use Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock;
 use Enmaca\LaravelUxmal\UxmalComponent;
+use Exception;
 
 class SelectMexStates extends SelectTomSelectBlock
 {
 
     /**
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function build(): void
     {
-        $uxmal = new UxmalComponent();
-
-        //$states = MexState::take(25)->get();
-
-        /*
-        foreach( $states as $state )
-            $items[$state->hashId] = $state->name;
-*/
-
         $items = [];
-        $this->_content = $uxmal->component('form.select.tomselect', [
+        $this->_content = UxmalComponent::Make('form.select.tomselect', [
             'options' => [
                 'tomselect.label' => 'Estado (MX)',
                 'tomselect.name' => 'mexState',
@@ -39,10 +31,10 @@ class SelectMexStates extends SelectTomSelectBlock
     }
 
     /**
-     * @param string $query
+     * @param string $postal_code
      * @return array
      */
-    public function searchByPostalCode(mixed $postal_code): array
+    public function searchByPostalCode(string $postal_code): array
     {
         $districts = MexDistricts::query()
             ->with('municipalities.state')
@@ -70,6 +62,7 @@ class SelectMexStates extends SelectTomSelectBlock
             'total_count' => count($items)
         ];
     }
+
 
     /**
      * @param string $query

@@ -19,12 +19,11 @@ class DefaultForm extends FormBlock
         ], 'col-12');
 
 
-        $this->Row(true, [
+        $this->ContentAddRow(row_options: [
             'row.name' => 'recipientData',
             'row.append-attributes' => [
                 'data-workshop-recipient-data' => true
-            ]
-        ]);
+            ]]);
 
         $this->Input([
             'input.type' => 'text',
@@ -47,14 +46,15 @@ class DefaultForm extends FormBlock
             'input.value' => isset($this->attributes['values'][str::snake('recipientMobile')]) ? $this->attributes['values'][str::snake('recipientMobile')] : ''
         ]);
 
-        $this->Row();
+        $this->ContentAddRow();
 
-        $this->Input([
+        $this->Input(
+            options : [
             'input.type' => 'text',
             'input.label' => 'Calle y Número',
             'input.name' => 'address1',
             'input.value' => isset($this->attributes['values'][str::snake('address1')]) ? $this->attributes['values'][str::snake('address1')] : ''
-        ], 'col-6');
+        ], row_class: 'col-6');
 
         $this->Input([
             'input.type' => 'text',

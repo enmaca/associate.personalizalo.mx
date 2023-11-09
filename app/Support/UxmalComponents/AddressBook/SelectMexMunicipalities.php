@@ -5,27 +5,20 @@ namespace App\Support\UxmalComponents\AddressBook;
 use App\Models\MexDistricts;
 use App\Models\MexMunicipality;
 use Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock;
+use Enmaca\LaravelUxmal\UxmalComponent;
+use Exception;
 
 class SelectMexMunicipalities extends SelectTomSelectBlock
 {
 
     /**
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     public function build(): void
     {
-        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
-
-//        $municipalities = MexMunicipality::take(25)->get();
-
         $items = [];
-/*
-        foreach( $municipalities as $municipality )
-            $items[$municipality->hashId] = $municipality->name;
-*/
-
-        $this->_content = $uxmal->component('form.select.tomselect', [
+        $this->_content = UxmalComponent::Make('form.select.tomselect', [
             'options' => [
                 'tomselect.label' => 'Ciudad (MX)',
                 'tomselect.name' => 'mexMunicipalities',
@@ -38,10 +31,10 @@ class SelectMexMunicipalities extends SelectTomSelectBlock
     }
 
     /**
-     * @param string $query
+     * @param string $postal_code
      * @return array
      */
-    public function searchByPostalCode(mixed $postal_code): array
+    public function searchByPostalCode(string $postal_code): array
     {
         $districts = MexDistricts::query()
             ->with('municipalities')

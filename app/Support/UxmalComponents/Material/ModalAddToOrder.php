@@ -2,20 +2,26 @@
 
 namespace App\Support\UxmalComponents\Material;
 
+use Enmaca\LaravelUxmal\UxmalComponent;
+use Exception;
+
 class ModalAddToOrder extends \Enmaca\LaravelUxmal\Abstract\ModalBlock
 {
-
-    public function build()
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function build(): void
     {
         $aggregate = [];
         if( isset($this->attributes['options']['saveBtn.onclick']) )
             $aggregate['modal.saveBtn.onclick'] = $this->attributes['options']['saveBtn.onclick'];
 
-        $modal = \Enmaca\LaravelUxmal\UxmalComponent::Make('ui.modal', [
+        $modal = UxmalComponent::Make('ui.modal', [
             'options' => [
                 'modal.name' => 'selectedMaterialToAddToOrder',
                 'modal.title' => 'Agregar Material Directo',
-                'modal.body' => \Enmaca\LaravelUxmal\UxmalComponent::Make('livewire', [
+                'modal.body' => UxmalComponent::Make('livewire', [
                     'path' => 'material.modal.add-material-to-order'
                 ]),
                 'modal.saveBtn.label' => 'Agregar al Pedido',
@@ -23,17 +29,15 @@ class ModalAddToOrder extends \Enmaca\LaravelUxmal\Abstract\ModalBlock
             ] + $aggregate
         ]);
 
-        switch ($this->GetContext()) {
-            default:
-                $this->_callBtn = $modal->getShowButton([
-                    'options' => [
-                        'button.name' => 'showModalSelectedMaterialToAddToOrder',
-                        'button.label' => 'Mostrar'
-                    ]], 'object');
-                break;
-        }
+        $this->_callBtn = match ($this->GetContext()) {
+            default => $modal->getShowButton([
+                'options' => [
+                    'button.name' => 'showModalSelectedMaterialToAddToOrder',
+                    'button.label' => 'Mostrar'
+                ]], 'object'),
+        };
 
-        $this->_content = $modal;
+        $this->SetContent($modal);
 
     }
 }

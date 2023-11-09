@@ -3,12 +3,13 @@
 namespace App\Support\UxmalComponents\MfgDevices;
 
 use App\Models\MfgDevice;
+use App\Support\UxmalComponents\BaseTomSelect;
 
-class SelectByName extends \App\Support\UxmalComponents\BaseTomSelect
+class SelectByName extends BaseTomSelect
 {
-    protected $Model = MfgDevice::class;
+    protected string $Model = MfgDevice::class;
 
-    protected $Options = [
+    protected array $Options = [
         'tomselect.label' => 'Dispositivos',
         'tomselect.name' => 'mfgDevicesSelected',
         'tomselect.placeholder' => 'Seleccionar...',
