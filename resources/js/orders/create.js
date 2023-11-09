@@ -316,8 +316,6 @@ document.addEventListener("DOMContentLoaded", function () {
     /**
      **** Client Data && Delivery Data
      */
-    uxmalSelects.get('mexDistrictId').tomselect2.controlInput = null;
-
     const recipientDataDivEl = document.querySelector('[data-workshop-recipient-data]');
 
     const updRecipientDataState = () => {

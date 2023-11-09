@@ -125,18 +125,11 @@ class OrdersController extends Controller
             'order_code' => $order_data->code
         ]);
 
-
-        View::startPush('scss', '<link rel="stylesheet" href="' . asset('enmaca/laravel-uxmal/assets/swiper.css') . '" type="text/css"/>');
+        View::startPush('scss', '<link rel="stylesheet" href="' . asset('enmaca/laravel-uxmal/assets/swiper.css') . '" type="text/css"/>'); //TODO: REVISAR COMO se va a manejar esto, si lo tiene que manejar laravel-uxmal. al renderizar un swiper o como en este caso es manual[livewire]
         View::startPush('scss', '<link rel="stylesheet" href="' . Vite::asset('resources/scss/orders/create.scss', 'workshop') . '" type="text/css"/>');
+
         View::startPush('scripts', '<script src="' . Vite::asset('resources/js/workshop.js', 'workshop') . '" type="module"></script>');
         View::startPush('scripts', '<script src="' . Vite::asset('resources/js/orders/create.js', 'workshop') . '" type="module"></script>');
-        View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/swiper.js') . '" type="module"></script>');
-        View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/cleave.js') . '" type="module"></script>');
-        View::startPush('scripts', '<script src="' . asset('enmaca/laravel-uxmal/assets/component_form.js') . '" type="module"></script>');
-
-        dump($edit_screen);
-        dump($edit_screen->toArray());
-//dd('ok');
 
         return view('uxmal::master-default', [
             'uxmal_data' => $edit_screen->toArray()
