@@ -3,7 +3,9 @@
 namespace App\Support\UxmalComponents\Order\EditScreen\MainContent;
 
 use App\Support\UxmalComponents\AddressBook\DefaultForm as AddressBookDefaultForm;
+use Carbon\Carbon;
 use Enmaca\LaravelUxmal\Abstract\CardBlock;
+use Enmaca\LaravelUxmal\Components\Form\Button;
 use Illuminate\Support\Str;
 use Exception;
 
@@ -69,6 +71,13 @@ class ClientCard extends CardBlock
             'input.readonly' => $this->attributes['options']['customer.card.readonly'],
             'input.required' => true
         ]);
+
+        $this->Footer()->addElementInRow(element: Button::Options([
+            'button.style' => 'primary',
+            'button.name' => 'addressBookSubmit',
+            'button.label' => 'Guardar cambios',
+            'button.append-attributes' => [ 'class' => ['d-none' => true] ]
+        ]), row_options: ['row.replace-attributes' => ['class' => 'col-12 text-end']]);
 
         $this->Body()->addElement(new AddressBookDefaultForm(['options' => ['form.id' => 'deliveryData', 'form.action' => '/order/delivery_data']]));
     }

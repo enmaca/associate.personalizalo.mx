@@ -44,7 +44,7 @@ class OrdersController extends Controller
         /**
          * Create Predefined ListJS with Conext 'orderhome'
          */
-        $order_listjs = \App\Support\UxmalComponents\Order\ListjsOrderHome::Object(['context' => 'orderhome']);
+        //$order_listjs = \App\Support\UxmalComponents\Order\ListjsOrderHome::Object(['context' => 'orderhome']);
 
         /**
          * Set the top button to a listjs object from $modalStruct
@@ -125,6 +125,8 @@ class OrdersController extends Controller
             'order_code' => $order_data->code
         ]);
 
+        //dump($edit_screen);
+        //dd($edit_screen->toArray());
         View::startPush('scss', '<link rel="stylesheet" href="' . asset('enmaca/laravel-uxmal/assets/swiper.css') . '" type="text/css"/>'); //TODO: REVISAR COMO se va a manejar esto, si lo tiene que manejar laravel-uxmal. al renderizar un swiper o como en este caso es manual[livewire]
         View::startPush('scss', '<link rel="stylesheet" href="' . Vite::asset('resources/scss/orders/create.scss', 'workshop') . '" type="text/css"/>');
 

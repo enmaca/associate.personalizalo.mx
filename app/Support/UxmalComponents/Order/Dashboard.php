@@ -9,6 +9,6 @@ class Dashboard extends ScreenBlock
     public function build(): void
     {
         $this->SetMainContent(Dashboard\MainContent::Object() );
-        $this->addModal(\App\Support\UxmalComponents\Customer\ModalSearchByMobile::Object(['context' => 'createorder']));
+        $this->addModal(\App\Support\UxmalComponents\Customer\ModalSearchByMobile::Modal(context: 'createorder'));
     }
 }

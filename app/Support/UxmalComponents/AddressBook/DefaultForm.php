@@ -3,11 +3,15 @@
 namespace App\Support\UxmalComponents\AddressBook;
 
 use Enmaca\LaravelUxmal\Abstract\FormBlock;
+use Enmaca\LaravelUxmal\Components\Form;
 use Enmaca\LaravelUxmal\Components\Ui\Row;
 use Illuminate\Support\Str;
 
 class DefaultForm extends FormBlock
 {
+    /**
+     * @throws \Exception
+     */
     public function build(): void
     {
         $this->Input([
@@ -46,22 +50,31 @@ class DefaultForm extends FormBlock
             'input.value' => isset($this->attributes['values'][str::snake('recipientMobile')]) ? $this->attributes['values'][str::snake('recipientMobile')] : ''
         ]);
 
-        $this->ContentAddRow();
-
-        $this->Input(
-            options : [
+        /**
+         * Direccion
+         * class="card-body bg-light border-bottom border-top bg-opacity-25"
+         */
+        $this->ContentAddRow(row_options: [
+            'row.slot' => 'Dirección',
+            'row.append-attributes' => [
+                'class' => 'card-body bg-light border-bottom border-top bg-opacity-25'
+            ]
+        ]);
+        $this->Input( options: [
             'input.type' => 'text',
             'input.label' => 'Calle y Número',
             'input.name' => 'address1',
             'input.value' => isset($this->attributes['values'][str::snake('address1')]) ? $this->attributes['values'][str::snake('address1')] : ''
-        ], row_class: 'col-6');
+        ],
+            row_class: 'col-6');
 
-        $this->Input([
+        $this->Input(
+            options: [
             'input.type' => 'text',
             'input.label' => 'Entre Calles',
             'input.name' => 'address2',
             'input.value' => isset($this->attributes['values'][str::snake('address2')]) ? $this->attributes['values'][str::snake('address2')] : ''
-        ], 'col-6');
+        ], row_class: 'col-6');
 
         $this->Input([
             'input.type' => 'text',
@@ -70,8 +83,23 @@ class DefaultForm extends FormBlock
             'input.value' => isset($this->attributes['values'][str::snake('zipCode')]) ? $this->attributes['values'][str::snake('zipCode')] : ''
         ]);
 
-        $this->ContentAddRowInput(element : SelectMexDistricts::Object());
-        $this->ContentAddRowInput(element : SelectMexMunicipalities::Object());
-        $this->ContentAddRowInput(element : SelectMexStates::Object());
+        $row_selects = $this->ContentAddRow();
+        $row_selects->addElementInRow( element: SelectMexDistricts::Object(), row_options: [
+            'row.append-attributes' => [
+                'class' => 'col-12 col-md-6'
+            ]
+        ]);
+
+        $row_selects->addElementInRow(element: SelectMexMunicipalities::Object(), row_options: [
+            'row.append-attributes' => [
+                'class' => 'col-12 col-md-6'
+            ]
+        ]);
+
+        $row_selects->addElementInRow(element: SelectMexStates::Object(), row_options: [
+            'row.append-attributes' => [
+                'class' => 'col-12 col-md-6'
+            ]
+        ]);
     }
 }

@@ -313,25 +313,26 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    /**
-     **** Client Data && Delivery Data
-     */
+    /********************************
+     * Client Data && Delivery Data *
+     ********************************/
     const recipientDataDivEl = document.querySelector('[data-workshop-recipient-data]');
 
     const updRecipientDataState = () => {
         const userDataSelectors = ['recipientNameId', 'recipientLastNameId', 'recipientMobileId' ];
         if( uxmalInput.get('recipientDataSameAsCustomerId').element.checked ){
-            recipientDataDivEl.classList.remove('d-none');
-            uxmalInput.for(userDataSelectors, (item) => {
-                item.setAttribute('required', '');
-            });
-        } else {
             recipientDataDivEl.classList.add('d-none');
             uxmalInput.for(userDataSelectors, (item) => {
                 item.removeAttribute('required');
             });
+        } else {
+            recipientDataDivEl.classList.remove('d-none');
+            uxmalInput.for(userDataSelectors, (item) => {
+                item.setAttribute('required', '');
+            });
         }
     };
+
     //uxmalSelect.get('mexMunicipalitiesId').tomselect2.lock();
     //uxmalSelect.get('mexStateId').tomselect2.lock();
 
@@ -375,6 +376,6 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     updRecipientDataState();
     uxmalForm.on('deliveryData', 'change', function(event){
-        console.log(event.target);
+        console.log('Form, Change', event.target);
     });
 });

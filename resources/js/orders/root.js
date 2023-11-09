@@ -12,9 +12,7 @@ window.openModal = function (identifier) {
     }
     const modalInstance = new Modal(element);
     modalInstance.show();
-    setTimeout(function () {
-        window.init_swiper(element);
-    }, 500);
+    modalInstance.show();
 }
 
 window.closeModal = function (identifier) {
