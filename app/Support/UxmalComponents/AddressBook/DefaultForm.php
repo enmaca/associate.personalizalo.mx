@@ -71,28 +71,23 @@ class DefaultForm extends FormBlock
 
         $this->ContentAddRow();
 
-        $this->Input( options: [
-            'input.type' => 'text',
-            'input.label' => 'Calle y Número',
-            'input.name' => 'address1',
-            'input.value' => isset($this->attributes['values'][str::snake('address1')]) ? $this->attributes['values'][str::snake('address1')] : ''
-        ],
-            row_class: 'col-6');
+        $this->Input(new InputTextOptions(
+            label: 'Calle y Número',
+            name: 'address1',
+            value: isset($this->attributes['values'][str::snake('address1')]) ? $this->attributes['values'][str::snake('address1')] : ''
+        ), row_class: 'col-6');
 
-        $this->Input(
-            options: [
-            'input.type' => 'text',
-            'input.label' => 'Entre Calles',
-            'input.name' => 'address2',
-            'input.value' => isset($this->attributes['values'][str::snake('address2')]) ? $this->attributes['values'][str::snake('address2')] : ''
-        ], row_class: 'col-6');
+        $this->Input(new InputTextOptions(
+            label: 'Entre Calles',
+            name: 'address2',
+            value: isset($this->attributes['values'][str::snake('address2')]) ? $this->attributes['values'][str::snake('address2')] : ''
+        ), row_class: 'col-6');
 
-        $this->Input([
-            'input.type' => 'text',
-            'input.label' => 'Código Postal',
-            'input.name' => 'zipCode',
-            'input.value' => isset($this->attributes['values'][str::snake('zipCode')]) ? $this->attributes['values'][str::snake('zipCode')] : ''
-        ]);
+        $this->Input(new InputTextOptions(
+            label: 'Código Postal',
+            name: 'zipCode',
+            value: isset($this->attributes['values'][str::snake('zipCode')]) ? $this->attributes['values'][str::snake('zipCode')] : ''
+        ));
 
         $row_selects = $this->ContentAddRow();
         $row_selects->addElementInRow( element: SelectMexDistricts::Object(), row_options: [
