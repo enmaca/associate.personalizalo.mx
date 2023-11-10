@@ -14,8 +14,11 @@ class Test extends Controller
     //
     public function test()
     {
+
         $uxmal = new AddressBookDefaultForm(['options' => ['form.id' => 'deliveryData', 'form.action' => '/order/delivery_data']]);
 
+        dump($uxmal);
+        dd($uxmal->toArray());
         View::startPush('scripts', '<script src="' . Vite::asset('resources/js/test/test.js', 'workshop') . '" type="module"></script>');
 
         return view('uxmal::simple-default', [
