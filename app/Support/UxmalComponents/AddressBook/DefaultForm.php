@@ -3,7 +3,6 @@
 namespace App\Support\UxmalComponents\AddressBook;
 
 use Enmaca\LaravelUxmal\Abstract\FormBlock;
-use Enmaca\LaravelUxmal\Components\Form;
 use Enmaca\LaravelUxmal\Components\Form\Input\Checkbox as CheckboxInput;
 use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextOptions;
 use Illuminate\Support\Str;
@@ -52,19 +51,19 @@ class DefaultForm extends FormBlock
                 'data-workshop-recipient-data' => true
             ]]);
 
-        $this->Input(new InputTextOptions(
+        $this->Input( options: new InputTextOptions(
             label: 'Nombre (Destinatario)',
             name: 'recipientName',
             value: isset($this->attributes['values'][str::snake('recipientName')]) ? $this->attributes['values'][str::snake('recipientName')] : ''
         ));
 
-        $this->Input(new InputTextOptions(
+        $this->Input( options: new InputTextOptions(
             label: 'Apellido (Destinatario)',
             name: 'recipientLastName',
             value: isset($this->attributes['values'][str::snake('recipientLastName')]) ? $this->attributes['values'][str::snake('recipientLastName')] : ''
         ));
 
-        $this->Input(new InputTextOptions(
+        $this->Input( options: new InputTextOptions(
             label: 'Celular (Destinatario)',
             name: 'recipientMobile',
             value: isset($this->attributes['values'][str::snake('recipientMobile')]) ? $this->attributes['values'][str::snake('recipientMobile')] : ''
