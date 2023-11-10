@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Support\Uxmal\Order;
+namespace App\Support\UxmalComponents\Customer;
 
 use Enmaca\LaravelUxmal\Abstract\FormBlock;
+use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextOptions;
 use Illuminate\Support\Str;
 
 class FormSearchByMobile extends FormBlock
@@ -14,14 +15,13 @@ class FormSearchByMobile extends FormBlock
     {
         $this->ContentAddRow();
 
-        $this->Input([
-            'input.type' => 'text',
-            'input.label' => 'Celular',
-            'input.name' => 'customerMobile',
-            'input.placeholder' => '(+52) XXXXXXXXXX',
-            'input.value' => $this->attributes['values'][str::snake('customerMobile')] ?? '',
-            'input.required' => true
-        ]);
+        $this->Input(new InputTextOptions(
+            label: 'Celular',
+            name: 'customerMobile',
+            placeholder: '(+52) XXXXXXXXXX',
+            value: $this->attributes['values'][str::snake('customerMobile')] ?? '',
+            required: true
+        ));
     }
 }
 

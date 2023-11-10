@@ -4,6 +4,7 @@ namespace App\Support\UxmalComponents\Order\EditScreen;
 use Enmaca\LaravelUxmal\Abstract\ContentBlock;
 use Enmaca\LaravelUxmal\Components\Form\Input\Flatpickr as FlatpickrComponent;
 use Enmaca\LaravelUxmal\Components\Ui\Card as CardComponent;
+use Enmaca\LaravelUxmal\Support\Options\Ui\CardOptions;
 use Enmaca\LaravelUxmal\UxmalComponent;
 
 class MainContent extends ContentBlock
@@ -35,13 +36,15 @@ class MainContent extends ContentBlock
             ]
         ])->toHtml();
 
-        $main_card = $main_div->addElement(CardComponent::Options([
-            'card.name' => 'orderCard',
-            'card.header' => 'Pedido ' . $this->GetValue('order_code'),
-            'card.header.right' => $DateButton,
-            'card.body' => null,
-            'card.footer' => '&nbsp;'
-        ]));
+        $main_card = $main_div->addElement(CardComponent::Options(
+            new CardOptions(
+                name: 'orderCard',
+                header: 'Pedido ' . $this->GetValue('order_code'),
+                headerRight: $DateButton,
+                body: null,
+                footer: '&nbsp;'
+            )
+        ));
 
 
         $main_card->Body()->addElement(FlatpickrComponent::Options([
