@@ -4,6 +4,8 @@ namespace App\Support\UxmalComponents\Customer;
 use Enmaca\LaravelUxmal\Abstract\ModalBlock;
 use Enmaca\LaravelUxmal\Components\Form\Input;
 use Enmaca\LaravelUxmal\Components\Ui\Modal;
+use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextOptions;
+use Enmaca\LaravelUxmal\Support\Options\Ui\ModalOptions;
 use Enmaca\LaravelUxmal\UxmalComponent;
 use Exception;
 
@@ -38,50 +40,56 @@ class ModalSearchByMobile extends ModalBlock
             row_options: ['row.append-attributes' => ['class' => 'mb-3']]
         );
 
-        $main_row->addElementInRow(element: Input::Options([
-            'input.type' => 'text',
-            'input.label' => 'Celular',
-            'input.name' => 'customerMobile',
-            'input.placeholder' => '(+52) XXXXXXXXXX',
-            'input.required' => true,
-            'input.mask.cleave.type' => 'phone',
-            'input.mask.cleave.phone.region-code' => 'MX',
-            'input.mask.cleave.prefix' => '+52 '
-        ]), row_options: ['row.append-attributes' => ['class' => 'mb-3']]);
+        $main_row->addElementInRow(Input::Options(
+            new InputTextOptions(
+                label: 'Celular',
+                name: 'customerMobile',
+                placeholder: '(+52) XXXXXXXXXX',
+                required: true,
+                maskCleaveType: 'phone',
+                maskCleavePhoneRegionCode: 'MX',
+                maskCleavePrefix: '+52 ',
+            )
+        ), ['row.append-attributes' => ['class' => 'mb-3']]);
 
-        $main_row->addElementInRow(element: Input::Options([
-            'input.type' => 'text',
-            'input.label' => 'Nombre',
-            'input.name' => 'customerName',
-            'input.placeholder' => 'Ingresa el nombre del cliente',
-            'input.required' => true,
-        ]), row_options: ['row.append-attributes' => ['class' => 'mb-3']]);
-
-
-        $main_row->addElementInRow(element: Input::Options([
-            'input.type' => 'text',
-            'input.label' => 'Apellido',
-            'input.name' => 'customerLastName',
-            'input.placeholder' => 'Ingresa el apellido del cliente',
-            'input.required' => true,
-        ]), row_options: ['row.append-attributes' => ['class' => 'mb-3']]);
-
-        $main_row->addElementInRow(element: Input::Options([
-            'input.type' => 'text',
-            'input.label' => 'Correo Electrónico',
-            'input.name' => 'customerEmail',
-            'input.placeholder' => 'Ingresa el correo electrónico del cliente',
-            'input.required' => true
-        ]), row_options: ['row.append-attributes' => ['class' => 'mb-3']]);
+        $main_row->addElementInRow(Input::Options(
+            new InputTextOptions(
+                label: 'Nombre',
+                name: 'customerName',
+                placeholder: 'Ingresa el nombre del cliente',
+                required: true,
+            )
+        ), ['row.append-attributes' => ['class' => 'mb-3']]);
 
 
-        $modal = Modal::Options([
-            'modal.name' => 'customerSearchByMobile',
-            'modal.title' => 'Buscar/Crear Cliente',
-            'modal.body' => $form,
-            'modal.saveBtn.label' => 'Crear Pedido',
-            'modal.saveBtn.onclick' => 'submitNewOrderFrom()'
-        ]);
+        $main_row->addElementInRow(Input::Options(
+            new InputTextOptions(
+                label: 'Apellido',
+                name: 'customerLastName',
+                placeholder: 'Ingresa el apellido del cliente',
+                required: true
+            )
+        ), ['row.append-attributes' => ['class' => 'mb-3']]);
+
+        $main_row->addElementInRow(Input::Options(
+            new InputTextOptions(
+                label: 'Correo Electrónico',
+                name: 'customerEmail',
+                placeholder: 'Ingresa el correo electrónico del cliente',
+                required: true
+            )
+        ), ['row.append-attributes' => ['class' => 'mb-3']]);
+
+
+        $modal = Modal::Options(
+            new ModalOptions(
+                name: 'customerSearchByMobile',
+                title: 'Buscar/Crear Cliente',
+                body: $form,
+                saveBtnLabel: 'Crear Pedido',
+                saveBtnOnClick: 'submitNewOrderFrom()'
+            )
+        );
 
         $this->_callBtn = match ($this->GetContext()) {
             'createclient' => $modal->getShowButton([
