@@ -20,6 +20,13 @@ class ClientCard extends CardBlock
 
         $this->attributes['options']['customer.card.readonly'] ??= true;
 
+        $this->BodyRow(true, [
+            'row.slot' => '<h5>Datos del cliente</h5>',
+            'row.append-attributes' => [
+                'class' => 'bg-light border-bottom border-top p-3'
+            ]
+        ]);
+
         $this->BodyRow();
 
         $this->BodyInput([

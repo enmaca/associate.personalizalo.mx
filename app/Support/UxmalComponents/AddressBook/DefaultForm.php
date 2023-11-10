@@ -4,7 +4,8 @@ namespace App\Support\UxmalComponents\AddressBook;
 
 use Enmaca\LaravelUxmal\Abstract\FormBlock;
 use Enmaca\LaravelUxmal\Components\Form;
-use Enmaca\LaravelUxmal\Components\Ui\Row;
+use Enmaca\LaravelUxmal\Components\Form\Input\Checkbox as CheckboxInput;
+use Enmaca\LaravelUxmal\Support\Options\Form\Input\Text as TextOptions;
 use Illuminate\Support\Str;
 
 class DefaultForm extends FormBlock
@@ -14,6 +15,7 @@ class DefaultForm extends FormBlock
      */
     public function build(): void
     {
+/*
         $this->Input([
             'input.type' => 'checkbox',
             'checkbox.label' => 'Datos del Destinatario igual que el cliente?',
@@ -21,7 +23,28 @@ class DefaultForm extends FormBlock
             'checkbox.value' => 1,
             'checkbox.checked' => isset($this->attributes['values'][str::snake('recipientDataSameAsCustomer')]) && $this->attributes['values'][str::snake('recipientDataSameAsCustomer')] == 1
         ], 'col-12');
+*/
 
+        /**
+         * Direccion
+         * class="card-body bg-light border-bottom border-top bg-opacity-25"
+         */
+        $this->ContentAddRow(row_options: [
+            'row.slot' => '<h5>Dirección</h5>',
+            'row.append-attributes' => [
+                'class' => 'bg-light border-bottom border-top p-3'
+            ]
+        ]);
+
+        $this->ContentAddRow();
+
+        $this->ContentAddElement(element: CheckboxInput::Options([
+            'input.type' => 'checkbox',
+            'checkbox.label' => 'Datos del Destinatario igual que el cliente?',
+            'checkbox.name' => 'recipientDataSameAsCustomer',
+            'checkbox.value' => 1,
+            'checkbox.checked' => isset($this->attributes['values'][str::snake('recipientDataSameAsCustomer')]) && $this->attributes['values'][str::snake('recipientDataSameAsCustomer')] == 1
+        ]));
 
         $this->ContentAddRow(row_options: [
             'row.name' => 'recipientData',
@@ -29,37 +52,26 @@ class DefaultForm extends FormBlock
                 'data-workshop-recipient-data' => true
             ]]);
 
-        $this->Input([
-            'input.type' => 'text',
-            'input.label' => 'Nombre (Destinatario)',
-            'input.name' => 'recipientName',
-            'input.value' => isset($this->attributes['values'][str::snake('recipientName')]) ? $this->attributes['values'][str::snake('recipientName')] : ''
-        ]);
+        $this->Input( options: new TextOptions(
+            label: 'Nombre (Destinatario)',
+            name: 'recipientName',
+            value: isset($this->attributes['values'][str::snake('recipientName')]) ? $this->attributes['values'][str::snake('recipientName')] : ''
+        ));
 
-        $this->Input([
-            'input.type' => 'text',
-            'input.label' => 'Apellido (Destinatario)',
-            'input.name' => 'recipientLastName',
-            'input.value' => isset($this->attributes['values'][str::snake('recipientLastName')]) ? $this->attributes['values'][str::snake('recipientLastName')] : ''
-        ]);
+        $this->Input( options: new TextOptions(
+            label: 'Apellido (Destinatario)',
+            name: 'recipientLastName',
+            value: isset($this->attributes['values'][str::snake('recipientLastName')]) ? $this->attributes['values'][str::snake('recipientLastName')] : ''
+        ));
 
-        $this->Input([
-            'input.type' => 'text',
-            'input.label' => 'Celular (Destinatario)',
-            'input.name' => 'recipientMobile',
-            'input.value' => isset($this->attributes['values'][str::snake('recipientMobile')]) ? $this->attributes['values'][str::snake('recipientMobile')] : ''
-        ]);
+        $this->Input( options: new TextOptions(
+            label: 'Celular (Destinatario)',
+            name: 'recipientMobile',
+            value: isset($this->attributes['values'][str::snake('recipientMobile')]) ? $this->attributes['values'][str::snake('recipientMobile')] : ''
+        ));
 
-        /**
-         * Direccion
-         * class="card-body bg-light border-bottom border-top bg-opacity-25"
-         */
-        $this->ContentAddRow(row_options: [
-            'row.slot' => 'Dirección',
-            'row.append-attributes' => [
-                'class' => 'card-body bg-light border-bottom border-top bg-opacity-25'
-            ]
-        ]);
+        $this->ContentAddRow();
+
         $this->Input( options: [
             'input.type' => 'text',
             'input.label' => 'Calle y Número',

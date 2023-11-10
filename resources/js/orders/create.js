@@ -9,6 +9,7 @@ import {
 } from "../../../public/enmaca/laravel-uxmal/js/uxmal.js";
 
 import {updateOrder} from "../workshop.js";
+import button from "bootstrap/js/src/button.js";
 
 const uxmalCards = new UxmalCard();
 const uxmalModals = new UxmalModal();
@@ -333,8 +334,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    //uxmalSelect.get('mexMunicipalitiesId').tomselect2.lock();
-    //uxmalSelect.get('mexStateId').tomselect2.lock();
+    uxmalSelects.get('mexMunicipalitiesId').tomselect2.lock();
+    uxmalSelects.get('mexStateId').tomselect2.lock();
 
     uxmalInput.on('recipientDataSameAsCustomerId', 'change', () => {
         updRecipientDataState();
@@ -370,12 +371,18 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-
+    const buttonEl = document.getElementById('addressBookSubmitId');
+    buttonEl.addEventListener('click', (event) => {
+       uxmalForm.submit('deliveryData');
+    });
     /**
      * Initial State Dom
      */
     updRecipientDataState();
     uxmalForm.on('deliveryData', 'change', function(event){
+        const buttonEl = document.getElementById('addressBookSubmitId');
+        if( buttonEl )
+            buttonEl.classList.remove('d-none');
         console.log('Form, Change', event.target);
     });
 });
