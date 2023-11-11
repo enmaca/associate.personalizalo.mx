@@ -80,248 +80,20 @@ window.removeOPDD = (row) => {
         });
 }
 
-Livewire.hook('component.init', ({ component, cleanup }) => {
-    console.log('component =>', component);
-    console.log('cleanup =>', cleanup);
-    switch(component.name){
-        case 'order.button.delivery-date':
-            component.el.querySelector('#orderDeliveryDateButtonId').onclick = () => {
-                uxmalInput.get('deliveryDateId').flatpickrEl.open();
-            };
-            break;
-    }
-})
-
-document.addEventListener("DOMContentLoaded", function () {
-
-    uxmalCards.init(document);
-    uxmalModals.init(document);
-    uxmalSelects.init(document);
-    uxmalForm.init(document);
-    uxmalInput.init(document);
-
-    /******************************
-     * OrderProductDynamicDetails *
-     ******************************
-     */
-
-    // Material
-        // Material AddFormId
-    let material_form_id;
-
-    //// Attach On Change Event when selected material change
-    uxmalSelects.on('materialSelectedId', 'change', (value) => {
-        if (value == null || value === 0 || value === '')
-            return;
-        uxmalCards.setLoading('orderCard', true);
-        Livewire.dispatch('add-material-to-order::material.changed', {material: value});
+/**
+ * Init the interactive behavior of the Delivery Address Book
+ */
+const initDeliveryAddressBook = () => {
+    uxmalForm.on('deliveryData', 'change', function (event) {
+        const buttonEl = document.getElementById('addressBookSubmitId');
+        if (buttonEl && buttonEl.classList.contains('d-none'))
+            buttonEl.classList.remove('d-none');
     });
-
-    //// Material Modal Updated From Livewire => Show
-    Livewire.on('add-to-order::show-material-modal', () => {
-        uxmalModals.show('selectedMaterialToAddToOrderId');
-    });
-
-    //// Attach On shown.bs.modal Del Modal de Seleccion de Material
-    uxmalModals.on('selectedMaterialToAddToOrderId', 'shown.bs.modal', function () {
-        uxmalCards.setLoading('orderCard', false);
-        material_form_id = uxmalForm.init(this);
-        // Attach On Child Materials Input Change.
-        uxmalForm.onChild(material_form_id, ['#materialProfitMarginId', '#materialQuantityId'], 'change', () => {
-            const mtQtyEl = document.getElementById('materialQuantityId');
-            const uom_cost = Number(mtQtyEl.getAttribute('data-uom-cost'));
-            const tax_data = Number(mtQtyEl.getAttribute('data-tax-factor'));
-            const profit_margin = Number(document.getElementById('materialProfitMarginId').value);
-            document.getElementById('materialSubtotalId').value = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD'
-            }).format((uom_cost * mtQtyEl.value * (1 + (profit_margin / 100))) * (1 + tax_data));
-        });
-    });
-    // Attach On Child Materials SaveBtn Click.
-    uxmalModals.onChild('selectedLaborCostToAddToOrderId', '.save-button', 'click', (event) => {
-        console.log('selectedLaborCostToAddToOrderSaveBtn::event::click', event);
-        uxmalCards.setLoading('orderCard', true);
-        uxmalForm.submit(material_form_id, {
-            order_id: window.order_id,
-            customer_id: window.customer_id
-        }, () => {
-            Livewire.dispatch('order-product-dynamic-details.table.tbody::reload');
-            uxmalModals.hide('selectedMaterialToAddToOrderId');
-        });
-    });
-
-
-    // MfgOverHead
-    let mfg_over_head_form_id;
-    Livewire.on('add-to-order::show-mfgoverhead-modal', () => {
-        uxmalModals.show('selectedMfgOverHeadToAddToOrderId');
-    });
-    uxmalSelects.on('mfgOverHeadSelectedId', 'change', (value) => {
-        if (value == null || value === 0 || value === '')
-            return;
-        uxmalCards.setLoading('orderCard', true);
-        Livewire.dispatch('add-mfg-overhead-to-order::mfgoverhead.changed', {mfgoverhead: value});
-    });
-    uxmalModals.on('selectedMfgOverHeadToAddToOrderId', 'shown.bs.modal', function () {
-        uxmalCards.setLoading('orderCard', false);
-        mfg_over_head_form_id = uxmalForm.init(this);
-        uxmalForm.onChild(mfg_over_head_form_id, '#mfgOverheadQuantityId', 'change', (event) => {
-            let mfgQtyEl = event.target;
-            let tax_data = Number(mfgQtyEl.getAttribute('data-tax-factor'));
-            let uom = Number(mfgQtyEl.getAttribute('data-value'));
-            document.getElementById('mfgOverheadSubtotalId').value = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD'
-            }).format((mfgQtyEl.value * uom) * (1 + tax_data));
-        });
-    });
-    uxmalModals.onChild('selectedMfgOverHeadToAddToOrderId', '.save-button', 'click', (event) => {
-        console.log('selectedMfgOverHeadToAddToOrderSaveBtn::event::click', event);
-        uxmalCards.setLoading('orderCard', true);
-        uxmalForm.submit(mfg_over_head_form_id, {
-            order_id: window.order_id,
-            customer_id: window.customer_id
-        }, () => {
-            Livewire.dispatch('order-product-dynamic-details.table.tbody::reload');
-            uxmalModals.hide('selectedMfgOverHeadToAddToOrderId');
-        });
-    });
-
-    // MfgLaborCost
-    let mfg_labor_cost_form_id;
-    Livewire.on('add-to-order::show-laborcost-modal', () => {
-        uxmalModals.show('selectedLaborCostToAddToOrderId');
-    });
-    uxmalSelects.on('laborCostSelectedId', 'change', (value) => {
-        if (value == null || value === 0 || value === '')
-            return;
-        uxmalCards.setLoading('orderCard', true);
-        Livewire.dispatch('add-labor-cost-to-order::laborcost.changed', {laborcost: value});
-    });
-    uxmalModals.on('selectedLaborCostToAddToOrderId', 'shown.bs.modal', function () {
-        uxmalCards.setLoading('orderCard', false);
-        mfg_labor_cost_form_id = uxmalForm.init(this);
-        uxmalForm.onChild(mfg_labor_cost_form_id, '#laborCostQuantityId', 'change', (event) => {
-            const laborCostQtyEl = event.target;
-            const tax_data = Number(laborCostQtyEl.getAttribute('data-tax-factor'));
-            const uom = Number(laborCostQtyEl.getAttribute('data-value'));
-            const quantity = Number(laborCostQtyEl.value);
-            const subtotal = (quantity * uom);
-            const totaltaxes = (subtotal * tax_data);
-            document.getElementById('laborCostSubtotalId').value = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD'
-            }).format(subtotal + totaltaxes);
-        });
-    });
-
-    document.getElementById('selectedLaborCostToAddToOrderSaveBtn').addEventListener('click', (event) => {
-        console.log('selectedMfgOverHeadToAddToOrderSaveBtn::event::click', event);
-        uxmalCards.setLoading('orderCard', true);
-        uxmalForm.submit(mfg_labor_cost_form_id, {
-            order_id: window.order_id,
-            customer_id: window.customer_id
-        }, () => {
-            Livewire.dispatch('order-product-dynamic-details.table.tbody::reload');
-            uxmalModals.hide('selectedLaborCostToAddToOrderId');
-        });
-    });
-
-    // Listen To Event When Inserted Record on Table OrderProductDynamicDetails
-    Livewire.on('order-product-dynamic-details.table.tbody::updated', (data) => {
-        console.log('order-product-dynamic-details.table.tbody::updated', data);
-        const tableEl = document.querySelector("table[id='orderProductDynamicDetailsId']");
-        const tFoot = tableEl.querySelector('tfoot');
-        if (tFoot) {
-            tFoot.innerHTML = data.tfoot;
-        }
-        uxmalCards.setLoading('orderCard', false);
-    });
-
-
-    /***********************
-     * OrderProductDetails *
-     ***********************
-     */
-    let product_with_da_form;
-    // Product
-    uxmalSelects.on('OrderProductAddId', 'change', (value) => {
-        if (value == null || value === 0 || value === '')
-            return;
-        uxmalCards.setLoading('orderCard', true);
-        Livewire.dispatch('select-by-digital-art-body::product.changed', {product: value});
-    });
-
-    Livewire.on('select-by-digital-art-body::showmodal', () => {
-        uxmalModals.show('selectProductWithDigitalArtId');
-    });
-
-    uxmalModals.on('selectProductWithDigitalArtId', 'shown.bs.modal', function () {
-        uxmalSwiper.init(this);
-        product_with_da_form = uxmalForm.init(this);
-        uxmalCards.setLoading('orderCard', false);
-    });
-
-    document.getElementById('selectProductWithDigitalArtSaveBtn').addEventListener('click', (event) => {
-        //submitModalAddToOrderForm('data-selected-product-form-id');
-        console.log('selectProductWithDigitalArtSaveBtn::event::click', event);
-        uxmalCards.setLoading('orderCard', true);
-        uxmalForm.submit(product_with_da_form, {
-            order_id: window.order_id,
-            customer_id: window.customer_id
-        }, () => {
-            Livewire.dispatch('order-product-details.table.tbody::reload');
-            uxmalModals.hide('selectProductWithDigitalArtId');
-        });
-    });
-
-    // Listen To Event When Inserted Record on Table OrderProductDetails
-    Livewire.on('order-product-details.table.tbody::updated', (data) => {
-        console.log('order-product-details.table.tbody::updated', data);
-        const tableEl = document.querySelector("table[id='orderProductDetailsId']");
-        const tFoot = tableEl.querySelector('tfoot');
-        if (tFoot) {
-            tFoot.innerHTML = data.tfoot;
-        }
-        uxmalCards.setLoading('orderCard', false);
-    });
-
-
-    let divElement = document.querySelector('div[data-uxmal-order-data]');
-    if (divElement) {
-        const order_data = JSON.parse(divElement.getAttribute('data-uxmal-order-data').toString());
-        if (order_data) {
-            window.order_id = order_data.order_id;
-            window.customer_id = order_data.customer_id;
-        }
-    }
-
-
-    /**
-     * Button DeliveryDate
-     */
-    uxmalInput.on('deliveryDateId', 'change', (selectedDates) => {
-        uxmalCards.setLoading('orderCard', true);
-        const buttonEl = document.querySelector('#orderDeliveryDateButtonId');
-        const data = {
-            delivery_date: selectedDates[0].toISOString().slice(0, 19).replace('T', ' ')
-        };
-        updateOrder(window.order_id, data, () => {
-            Livewire.dispatch('order.button.delivery-date::reload');
-            uxmalCards.setLoading('orderCard', false);
-        });
-    });
-
-
-    /********************************
-     * Client Data && Delivery Data *
-     ********************************/
     const recipientDataDivEl = document.querySelector('[data-workshop-recipient-data]');
-
     const updRecipientDataState = () => {
-        const userDataSelectors = ['recipientNameId', 'recipientLastNameId', 'recipientMobileId' ];
-        if( uxmalInput.get('recipientDataSameAsCustomerId').element.checked ){
+        const userDataSelectors = ['recipientNameId', 'recipientLastNameId', 'recipientMobileId'];
+        console.log('===============>', uxmalInput.get('recipientDataSameAsCustomerId').element.checked);
+        if (uxmalInput.get('recipientDataSameAsCustomerId').element.checked) {
             recipientDataDivEl.classList.add('d-none');
             uxmalInput.for(userDataSelectors, (item) => {
                 item.removeAttribute('required');
@@ -371,18 +143,293 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    const buttonEl = document.getElementById('addressBookSubmitId');
-    buttonEl.addEventListener('click', (event) => {
-       uxmalForm.submit('deliveryData');
-    });
-    /**
-     * Initial State Dom
-     */
     updRecipientDataState();
-    uxmalForm.on('deliveryData', 'change', function(event){
-        const buttonEl = document.getElementById('addressBookSubmitId');
-        if( buttonEl )
-            buttonEl.classList.remove('d-none');
-        console.log('Form, Change', event.target);
+}
+
+document.addEventListener('livewire:init', () => {
+    Livewire.hook('component.init', ({component, cleanup}) => {
+        console.log('init.component.name ===>', component.name);
+        switch (component.name) {
+            case 'order.button.delivery-date':
+                component.el.querySelector('#orderDeliveryDateButtonId').onclick = () => {
+                    uxmalInput.get('deliveryDateId').flatpickrEl.open();
+                };
+                break;
+            case 'addressbook.form.default-form':
+                break;
+        }
     });
+})
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    uxmalCards.init(document);
+    uxmalModals.init(document);
+    uxmalSelects.init(document);
+    uxmalForm.init(document);
+    uxmalInput.init(document);
+
+    /********************************
+     * Client Data && Delivery Data *
+     ********************************/
+    //// Update Delivery Date Interactions
+    uxmalInput.on('deliveryDateId', 'change', (selectedDates) => {
+        uxmalCards.setLoading('orderCard', true);
+        const buttonEl = document.querySelector('#orderDeliveryDateButtonId');
+        const data = {
+            delivery_date: selectedDates[0].toISOString().slice(0, 19).replace('T', ' ')
+        };
+        updateOrder(window.order_id, data, () => {
+            Livewire.dispatch('order.button.delivery-date::reload');
+            uxmalCards.setLoading('orderCard', false);
+        });
+    });
+
+    initDeliveryAddressBook();
+
+    //// OnClick for Button For Save Delivery Data
+    // TODO uxmalButton helpers
+    document.getElementById('addressBookSubmitId').addEventListener( 'click', (event) => {
+        uxmalCards.setLoading('orderCard', true);
+        uxmalForm.submit('deliveryData', {
+            order_id: window.order_id,
+            customer_id: window.customer_id
+        }, () => {
+            console.log('===> OK <===');
+            Livewire.dispatch('addressbook.form.default-form::reload');
+        });
+    });
+
+    //// Listen To Event When Livewire request message Succedes
+    document.addEventListener('livewire:addressbook.form.default-form:request:succeed', (event) => {
+        setTimeout(() => {
+            console.log('livewire:addressbook.form.default-form:request:succeed', event.detail.id);
+            const scope = document.querySelector(`[wire\\:id="${event.detail.id}"]`);
+            uxmalForm.init(scope);
+            uxmalInput.init(scope);
+            initDeliveryAddressBook();
+            document.getElementById('addressBookSubmitId').classList.add('d-none');
+            uxmalCards.setLoading('orderCard', false);
+        }, 500);
+    });
+
+
+    /******************************
+     * OrderProductDynamicDetails *
+     ******************************/
+
+        // Material
+        // Material AddFormId
+    let material_form_id;
+
+    //// Attach On Change Event when selected material change
+    uxmalSelects.on('materialSelectedId', 'change', (value) => {
+        if (value == null || value === 0 || value === '')
+            return;
+        uxmalCards.setLoading('orderCard', true);
+        Livewire.dispatch('add-material-to-order::material.changed', {material: value});
+    });
+
+    //// Material Modal Updated From Livewire => Show
+    Livewire.on('add-to-order::show-material-modal', () => {
+        uxmalModals.show('selectedMaterialToAddToOrderId');
+    });
+
+    //// Attach On shown.bs.modal Del Modal de Seleccion de Material
+    uxmalModals.on('selectedMaterialToAddToOrderId', 'shown.bs.modal', function () {
+        uxmalCards.setLoading('orderCard', false);
+        material_form_id = uxmalForm.init(this);
+        // Attach On Child Materials Input Change.
+        uxmalForm.onChild(material_form_id, ['#materialProfitMarginId', '#materialQuantityId'], 'change', () => {
+            const mtQtyEl = document.getElementById('materialQuantityId');
+            const uom_cost = Number(mtQtyEl.getAttribute('data-uom-cost'));
+            const tax_data = Number(mtQtyEl.getAttribute('data-tax-factor'));
+            const profit_margin = Number(document.getElementById('materialProfitMarginId').value);
+            document.getElementById('materialSubtotalId').value = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            }).format((uom_cost * mtQtyEl.value * (1 + (profit_margin / 100))) * (1 + tax_data));
+        });
+    });
+    //// Attach On Child Materials SaveBtn Click.
+    uxmalModals.onChild('selectedMaterialToAddToOrderId', '.save-button', 'click', (event) => {
+        console.log('selectedMaterialToAddToOrderId::event::click', event);
+        uxmalCards.setLoading('orderCard', true);
+        uxmalForm.submit(material_form_id, {
+            order_id: window.order_id,
+            customer_id: window.customer_id
+        }, () => {
+            Livewire.dispatch('order-product-dynamic-details.table.tbody::reload');
+            uxmalModals.hide('selectedMaterialToAddToOrderId');
+        });
+    });
+
+
+    // MfgOverHead
+    // MfgOverHead AddFormId
+    let mfg_over_head_form_id;
+
+    //// Attach On Change Event when selected MfgOverHead change
+    uxmalSelects.on('mfgOverHeadSelectedId', 'change', (value) => {
+        if (value == null || value === 0 || value === '')
+            return;
+        uxmalCards.setLoading('orderCard', true);
+        Livewire.dispatch('add-mfg-overhead-to-order::mfgoverhead.changed', {mfgoverhead: value});
+    });
+
+    //// MfgOverHead Modal Updated From Livewire => Show
+    Livewire.on('add-to-order::show-mfgoverhead-modal', () => {
+        uxmalModals.show('selectedMfgOverHeadToAddToOrderId');
+    });
+
+    //// Attach On shown.bs.modal Del Modal de Seleccion de MfgOverHead
+    uxmalModals.on('selectedMfgOverHeadToAddToOrderId', 'shown.bs.modal', function () {
+        uxmalCards.setLoading('orderCard', false);
+        mfg_over_head_form_id = uxmalForm.init(this);
+        uxmalForm.onChild(mfg_over_head_form_id, '#mfgOverheadQuantityId', 'change', (event) => {
+            let mfgQtyEl = event.target;
+            let tax_data = Number(mfgQtyEl.getAttribute('data-tax-factor'));
+            let uom = Number(mfgQtyEl.getAttribute('data-value'));
+            document.getElementById('mfgOverheadSubtotalId').value = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            }).format((mfgQtyEl.value * uom) * (1 + tax_data));
+        });
+    });
+
+    //// Attach On Child MfgOverHead SaveBtn Click.
+    uxmalModals.onChild('selectedMfgOverHeadToAddToOrderId', '.save-button', 'click', (event) => {
+        console.log('selectedMfgOverHeadToAddToOrderSaveBtn::event::click', event);
+        uxmalCards.setLoading('orderCard', true);
+        uxmalForm.submit(mfg_over_head_form_id, {
+            order_id: window.order_id,
+            customer_id: window.customer_id
+        }, () => {
+            Livewire.dispatch('order-product-dynamic-details.table.tbody::reload');
+            uxmalModals.hide('selectedMfgOverHeadToAddToOrderId');
+        });
+    });
+
+    // MfgLaborCost
+    // MfgLaborCost AddFormId
+    let mfg_labor_cost_form_id;
+
+    //// Attach On Change Event when selected MfgLaborCost change
+    uxmalSelects.on('laborCostSelectedId', 'change', (value) => {
+        if (value == null || value === 0 || value === '')
+            return;
+        uxmalCards.setLoading('orderCard', true);
+        Livewire.dispatch('add-labor-cost-to-order::laborcost.changed', {laborcost: value});
+    });
+
+    //// MfgLaborCost Modal Updated From Livewire => Show
+    Livewire.on('add-to-order::show-laborcost-modal', () => {
+        uxmalModals.show('selectedLaborCostToAddToOrderId');
+    });
+
+    //// Attach On shown.bs.modal Del Modal de Seleccion de MfgLaborCost
+    uxmalModals.on('selectedLaborCostToAddToOrderId', 'shown.bs.modal', function () {
+        uxmalCards.setLoading('orderCard', false);
+        mfg_labor_cost_form_id = uxmalForm.init(this);
+        uxmalForm.onChild(mfg_labor_cost_form_id, '#laborCostQuantityId', 'change', (event) => {
+            const laborCostQtyEl = event.target;
+            const tax_data = Number(laborCostQtyEl.getAttribute('data-tax-factor'));
+            const uom = Number(laborCostQtyEl.getAttribute('data-value'));
+            const quantity = Number(laborCostQtyEl.value);
+            const subtotal = (quantity * uom);
+            const totaltaxes = (subtotal * tax_data);
+            document.getElementById('laborCostSubtotalId').value = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            }).format(subtotal + totaltaxes);
+        });
+    });
+
+    //// Attach On Child MfgLaborCost SaveBtn Click.
+    uxmalModals.onChild('selectedLaborCostToAddToOrderId', '.save-button', 'click', (event) => {
+        console.log('selectedLaborCostToAddToOrderSaveBtn::event::click', event);
+        uxmalCards.setLoading('orderCard', true);
+        uxmalForm.submit(mfg_labor_cost_form_id, {
+            order_id: window.order_id,
+            customer_id: window.customer_id
+        }, () => {
+            Livewire.dispatch('order-product-dynamic-details.table.tbody::reload');
+            uxmalModals.hide('selectedLaborCostToAddToOrderId');
+        });
+    });
+
+    // Listen To Event When Inserted Record on Table OrderProductDynamicDetails
+    Livewire.on('order-product-dynamic-details.table.tbody::updated', (data) => {
+        console.log('order-product-dynamic-details.table.tbody::updated', data);
+        const tableEl = document.querySelector("table[id='orderProductDynamicDetailsId']");
+        const tFoot = tableEl.querySelector('tfoot');
+        if (tFoot) {
+            tFoot.innerHTML = data.tfoot;
+        }
+        uxmalCards.setLoading('orderCard', false);
+    });
+
+
+    /***********************
+     * OrderProductDetails *
+     ***********************
+     */
+        // Product
+        // Product AddFormId
+    let product_with_da_form;
+
+    //// Product Modal Updated From Livewire => Show
+    Livewire.on('select-by-digital-art-body::showmodal', () => {
+        uxmalModals.show('selectProductWithDigitalArtId');
+    });
+
+    //// Attach On Change Event when selected Product change
+    uxmalSelects.on('OrderProductAddId', 'change', (value) => {
+        if (value == null || value === 0 || value === '')
+            return;
+        uxmalCards.setLoading('orderCard', true);
+        Livewire.dispatch('select-by-digital-art-body::product.changed', {product: value});
+    });
+
+    //// Attach On shown.bs.modal Del Modal de Seleccion de Product
+    uxmalModals.on('selectProductWithDigitalArtId', 'shown.bs.modal', function () {
+        uxmalSwiper.init(this);
+        product_with_da_form = uxmalForm.init(this);
+        uxmalCards.setLoading('orderCard', false);
+    });
+
+    //// Attach On Child Product SaveBtn Click.
+    uxmalModals.onChild('selectProductWithDigitalArtId', '.save-button', 'click', (event) => {
+        console.log('selectProductWithDigitalArtSaveBtn::event::click', event);
+        uxmalCards.setLoading('orderCard', true);
+        uxmalForm.submit(product_with_da_form, {
+            order_id: window.order_id,
+            customer_id: window.customer_id
+        }, () => {
+            Livewire.dispatch('order-product-details.table.tbody::reload');
+            uxmalModals.hide('selectProductWithDigitalArtId');
+        });
+    });
+
+    //// Listen To Event When Inserted Record on Table OrderProductDetails
+    Livewire.on('order-product-details.table.tbody::updated', (data) => {
+        console.log('order-product-details.table.tbody::updated', data);
+        const tableEl = document.querySelector("table[id='orderProductDetailsId']");
+        const tFoot = tableEl.querySelector('tfoot');
+        if (tFoot) {
+            tFoot.innerHTML = data.tfoot;
+        }
+        uxmalCards.setLoading('orderCard', false);
+    });
+
+
+    //// Get From dom the order_id and customer_id
+    let divElement = document.querySelector('div[data-uxmal-order-data]');
+    if (divElement) {
+        const order_data = JSON.parse(divElement.getAttribute('data-uxmal-order-data').toString());
+        if (order_data) {
+            window.order_id = order_data.order_id;
+            window.customer_id = order_data.customer_id;
+        }
+    }
 });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\Workshop\Material\SelectByNameSkuDesc;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -30,11 +31,12 @@ class MaterialsController extends Controller
 
         $context = $request->input('context');
 
+
         switch ($context) {
             case 'by_name_sku_desc':
             default:
-                $searchObj = new \App\Support\UxmalComponents\Material\SelectByNameSkuDesc();
-                return $request->json($searchObj->search($search));
+                $searchObj = new SelectByNameSkuDesc(['context' => $context]);
+                return response()->json($searchObj->search($search));
         }
 
     }

@@ -8,6 +8,9 @@ use App\Models\DigitalArt;
 use App\Models\DigitalArtCategory;
 use App\Models\LaborCost;
 use App\Models\MaterialVariationsGroup;
+use App\Models\MexDistricts;
+use App\Models\MexMunicipalities;
+use App\Models\MexState;
 use App\Models\MfgArea;
 use App\Models\MfgOverhead;
 use App\Models\Order;
@@ -21,6 +24,7 @@ use App\Models\Product;
 use App\Models\Material;
 use App\Support\Services\OrderService;
 use Carbon\Carbon;
+use Deligoez\LaravelModelHashId\Exceptions\UnknownHashIdConfigParameterException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use \Illuminate\Support\Facades\View;
@@ -32,19 +36,19 @@ class OrdersController extends Controller
     public function root(Request $request)
     {
 
-        $root_screen = \App\Support\UxmalComponents\Order\Dashboard::Object();
+        $root_screen = \App\Support\Workshop\Order\Dashboard::Object();
 
         //$main_row = $uxmal->component('ui.row', []);
 
         /**
          * Create Predefined Modal with context 'createorder'
          */
-        $client_modal = \App\Support\UxmalComponents\Customer\ModalSearchByMobile::Object(['context' => 'createorder']);
+        $client_modal = \App\Support\Workshop\Customer\ModalSearchByMobile::Object(['context' => 'createorder']);
 
         /**
          * Create Predefined ListJS with Conext 'orderhome'
          */
-        //$order_listjs = \App\Support\UxmalComponents\Order\ListjsOrderHome::Object(['context' => 'orderhome']);
+        //$order_listjs = \App\Support\Workshop\Order\ListjsOrderHome::Object(['context' => 'orderhome']);
 
         /**
          * Set the top button to a listjs object from $modalStruct
@@ -115,7 +119,7 @@ class OrdersController extends Controller
             $order_data = Order::CreateToCustomer($customer_data->id);
 
 
-        $edit_screen = \App\Support\UxmalComponents\Order\EditScreen::Object(values : [
+        $edit_screen = \App\Support\Workshop\Order\EditScreen::Object(values: [
             'customer_id' => $customer_data->hashId,
             'customer_name' => $customer_data->name,
             'customer_last_name' => $customer_data->last_name,
@@ -125,8 +129,8 @@ class OrdersController extends Controller
             'order_code' => $order_data->code
         ]);
 
-         dump($edit_screen);
-         dd($edit_screen->toArray());
+        //dump($edit_screen);
+        //dd($edit_screen->toArray());
         View::startPush('scss', '<link rel="stylesheet" href="' . asset('enmaca/laravel-uxmal/assets/swiper.css') . '" type="text/css"/>'); //TODO: REVISAR COMO se va a manejar esto, si lo tiene que manejar laravel-uxmal. al renderizar un swiper o como en este caso es manual[livewire]
         View::startPush('scss', '<link rel="stylesheet" href="' . Vite::asset('resources/scss/orders/create.scss', 'workshop') . '" type="text/css"/>');
 
@@ -472,6 +476,65 @@ class OrdersController extends Controller
             return response()->json(['ok' => $result]);
         else
             return response()->json(['fail' => 'sepa la verga que paso']);
+    }
+
+    // http://127.0.0.1:8000/orderdelivery_data
+
+    /**
+     * @throws UnknownHashIdConfigParameterException
+     */
+    public function post_delivery_data(Request $request, string $hash_id = null)
+    {
+        $allInput = $request->all();
+        /**
+         * "recipientDataSameAsCustomer" => "1"
+         * "recipientName" => null
+         * "recipientLastName" => null
+         * "recipientMobile" => null
+         * "address1" => "Rodi 410"
+         * "address2" => null
+         * "zipCode" => "66636"
+         * "mexDistrict" => null
+         * "mexMunicipalities" => "mex_OyRPzQjp4ZM7k"
+         * "mexState" => "mex_L8kmREqGAGOX3"
+         * "order_id" => "ord_OyRPzQjWKEM7k"
+         * "customer_id" => "cus_WJ2v5Z2xQDO9Y"
+         */
+
+        if( empty( MexDistricts::keyFromHashId($allInput['mexDistrict'])) )
+            return response()->json(['fail' => 'La colonia necesita ser seleccionada']);
+
+        $order_record = Order::with(['address'])->findOrFail(Order::keyFromHashId($allInput['order_id']));
+        if (empty($order_record->address)) {
+            $address_record = new AddressBook();
+        } else {
+            $address_record = $order_record->address;
+        }
+
+        if (empty($allInput['recipientDataSameAsCustomer'])) {
+            $address_record->recipient_name = $allInput['recipientName'];
+            $address_record->recipient_last_name = $allInput['recipientLastName'];
+            $address_record->recipient_mobile = $allInput['recipientMobile'];
+        } else {
+            $address_record->recipient_data_same_as_customer = 1;
+        }
+
+        $address_record->customer_id = Customer::keyFromHashId($allInput['customer_id']);
+        $address_record->address_1 = $allInput['address1'];
+        $address_record->address_2 = $allInput['address2'];
+        $address_record->zip_code = $allInput['zipCode'];
+        $address_record->district_id = MexDistricts::keyFromHashId($allInput['mexDistrict']);
+        $address_record->municipality_id = MexMunicipalities::keyFromHashId($allInput['mexMunicipalities']);
+        $address_record->state_id = MexState::keyFromHashId($allInput['mexState']);
+        $address_record->directions = $allInput['directions'];
+        $address_record->save();
+
+        if ($address_record->save()) {
+            $order_record->address_book_id = $address_record->id;
+            $order_record->save();
+            return response()->json(['ok' => 'La direccion de entrega se actualizo correctamente']);
+        } else
+            return response()->json(['fail' => 'Error al Actualizar la direccion de entrega']);
     }
 
     /**

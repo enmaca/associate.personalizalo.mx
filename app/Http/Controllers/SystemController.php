@@ -35,7 +35,7 @@ class SystemController extends Controller
         $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
 
         $main_row = $uxmal->component('ui.row');
-        $listjs = \App\Support\UxmalComponents\System\Uom\ListJsUomHome::Object(['context' => 'uomhome']);
+        $listjs = \App\Support\Workshop\System\Uom\ListJsUomHome::Object(['context' => 'uomhome']);
 
         $main_row->component('ui.card', [
             'options' => [

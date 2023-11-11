@@ -13,7 +13,7 @@ class AddressBook extends Model
 
     public function municipality(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(MexMunicipality::class, 'municipalities_id', 'id');
+        return $this->belongsTo(MexMunicipalities::class, 'municipalities_id', 'id');
     }
 
     public function state(): \Illuminate\Database\Eloquent\Relations\BelongsTo

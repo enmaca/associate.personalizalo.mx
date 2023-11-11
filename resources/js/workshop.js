@@ -1,4 +1,4 @@
-import { UxmalCSRF } from "../../public/enmaca/laravel-uxmal/js/uxmal.js";
+import {UxmalCSRF} from "../../public/enmaca/laravel-uxmal/js/uxmal.js";
 
 window.workshopDispatchEvent = (scriptContent) => {
     if (scriptContent.startsWith('livewire::')) {
@@ -16,6 +16,25 @@ window.workshopDispatchEvent = (scriptContent) => {
         document.dispatchEvent(event);
     }
 }
+window.livewireEvents = new Map();
+
+document.addEventListener('livewire:initialized', () => {
+    Livewire.hook('request', ({uri, options, succeed}) => {
+        succeed(({status, json}) => {
+            if (status === 200 && json.components) {
+                Array.from(json.components).forEach((item) => {
+                    const component = JSON.parse(item.snapshot);
+                    console.log(component);
+                    if (!window.livewireEvents.get(component.checksum)) {
+                        window.livewireEvents.set(component.checksum, true);
+                        console.log('workshop.js Dispatch:', 'livewire:' + component.memo.name + ':request:succeed')
+                        document.dispatchEvent(new CustomEvent('livewire:' + component.memo.name + ':request:succeed', {detail: component.memo}))
+                    }
+                })
+            }
+        })
+    });
+});
 
 /**
  *
@@ -32,7 +51,7 @@ export const updateOrder = (order_id, data, onsuccess_callback = (data) => {
 }, onwarning_callback = (data) => {
     console.warn(data);
 }) => {
-    fetch('/orders/' + order_id , {
+    fetch('/orders/' + order_id, {
         method: 'PUT', // or 'PUT' if you're updating
         headers: {
             'Content-Type': 'application/json',

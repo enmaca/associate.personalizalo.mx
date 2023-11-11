@@ -37,6 +37,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/orders/mfgoverhead','post_mfg_overhead')->name('orders_post_mfg_overhead');
         Route::post('/orders/material','post_material')->name('orders_post_material');
         Route::post('/orders/product','post_product')->name('orders_post_product');
+        Route::post('/orders/delivery_data','post_delivery_data')->name('orders_post_delivery_data');
     });
 
     Route::controller(\App\Http\Controllers\ManufacturingController::class)->group(function () {

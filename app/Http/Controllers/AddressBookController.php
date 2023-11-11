@@ -14,7 +14,7 @@ class AddressBookController extends Controller
 
         switch ($context) {
             default:
-                $searchObj = new \App\Support\UxmalComponents\AddressBook\SelectMexDistricts();
+                $searchObj = new \App\Support\Workshop\AddressBook\SelectMexDistricts();
                 if (str_starts_with($search, 'zipcode::')) {
                     $search = str_replace('zipcode::', '', $search);
                     return $searchObj->searchByPostalCode($search);
@@ -32,7 +32,7 @@ class AddressBookController extends Controller
 
         switch ($context) {
             default:
-                $searchObj = new \App\Support\UxmalComponents\AddressBook\SelectMexMunicipalities();
+                $searchObj = new \App\Support\Workshop\AddressBook\SelectMexMunicipalities();
                 if (str_starts_with($search, 'zipcode::')) {
                     $search = str_replace('zipcode::', '', $search);
                     return $searchObj->searchByPostalCode($search);
@@ -50,7 +50,7 @@ class AddressBookController extends Controller
 
         switch ($context) {
             default:
-                $searchObj = new \App\Support\UxmalComponents\AddressBook\SelectMexStates();
+                $searchObj = new \App\Support\Workshop\AddressBook\SelectMexStates();
                 if (str_starts_with($search, 'zipcode::')) {
                     $search = str_replace('zipcode::', '', $search);
                     return $searchObj->searchByPostalCode($search);

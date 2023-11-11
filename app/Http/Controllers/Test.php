@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Support\UxmalComponents\AddressBook\DefaultForm as AddressBookDefaultForm;
-use Carbon\Carbon;
-use Enmaca\LaravelUxmal\UxmalComponent;
+use Enmaca\LaravelUxmal\Components\Form\Input\TextArea;
+use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextAreaOptions;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\Str;
@@ -15,10 +14,13 @@ class Test extends Controller
     public function test()
     {
 
-        $uxmal = new AddressBookDefaultForm(['options' => ['form.id' => 'deliveryData', 'form.action' => '/order/delivery_data']]);
+        $uxmal = TextArea::Options(new InputTextAreaOptions(
+                label: 'Indicaciones de Entrega',
+                name: 'directions',
+                value: 'texto de prueba',
+                rows: 3
+            ));
 
-        dump($uxmal);
-        dd($uxmal->toArray());
         View::startPush('scripts', '<script src="' . Vite::asset('resources/js/test/test.js', 'workshop') . '" type="module"></script>');
 
         return view('uxmal::simple-default', [
