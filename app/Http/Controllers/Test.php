@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Enmaca\LaravelUxmal\Components\Form\Input\TextArea;
+use Enmaca\LaravelUxmal\Components\Form\Input\Checkbox;
+use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputCheckboxOptions;
 use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextAreaOptions;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Vite;
-use Illuminate\Support\Str;
 
 class Test extends Controller
 {
@@ -14,12 +14,14 @@ class Test extends Controller
     public function test()
     {
 
-        $uxmal = TextArea::Options(new InputTextAreaOptions(
-                label: 'Indicaciones de Entrega',
-                name: 'directions',
-                value: 'texto de prueba',
-                rows: 3
-            ));
+        $uxmal = Checkbox::Options(new InputCheckboxOptions(
+            name: 'deliveryNeeded',
+            label: 'Se recogera en tienda',
+            style: 'primary',
+            type: 'switch',
+            value: '1',
+            direction: 'right'
+        ));
 
         View::startPush('scripts', '<script src="' . Vite::asset('resources/js/test/test.js', 'workshop') . '" type="module"></script>');
 

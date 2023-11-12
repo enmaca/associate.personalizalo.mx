@@ -5,6 +5,7 @@ namespace App\Support\Workshop\Order\EditScreen\MainContent;
 use App\Support\Workshop\OrderProductDetails\TbHandler\MfgStatus as MfgStatusTbHandler;
 use App\Support\Workshop\Products\SelectByName as SelectByNameProducts;
 use Enmaca\LaravelUxmal\Abstract\CardBlock;
+use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 use Enmaca\LaravelUxmal\UxmalComponent;
 
 class ProductCard extends CardBlock
@@ -15,17 +16,23 @@ class ProductCard extends CardBlock
      */
     public function build(): void
     {
-        $this->BodyRow();
+        $this->Body()->addRow();
 
         $this->setBodyFieldRowClass('col-xxl-6 mb-3');
 
-        $this->BodyRow();
+        $this->Body()->addRow();
 
-        $this->BodyInput(SelectByNameProducts::Object([
-            'values' => $this->attributes['values']
-        ]));
+        $this->Body()->addElementInRow(
+            element: SelectByNameProducts::Object([
+                'values' => $this->GetValues()
+            ]),
+            row_options: new RowOptions(
+                replaceAttributes: [
+                    'class' => 'col-xxl-6 mb-3'
+                ]
+            ));
 
-        $table = $this->Footer()->addElementInRow(element: UxmalComponent::Make(type: 'ui.table', attributes: [
+        $this->Footer()->addElementInRow(element: UxmalComponent::Make(type: 'ui.table', attributes: [
             'options' => [
                 'table.name' => 'orderProductDetails',
                 'table.columns' => [
@@ -71,7 +78,7 @@ class ProductCard extends CardBlock
                 ],
                 'table.data.livewire' => 'order-product-details.table.tbody',
                 'table.data.livewire.append-data' => [
-                    'values' => $this->attributes['values']
+                    'values' => $this->GetValues()
                 ],
                 'table.footer' => [
                     'mfg_data' => [
@@ -88,7 +95,12 @@ class ProductCard extends CardBlock
                     ]
                 ]
             ]
-        ]), row_options: ['row.append-attributes' => ['class' => 'table-responsive']]);
+        ]), row_options: new RowOptions(
+            appendAttributes: [
+                'class' => 'table-responsive'
+            ]
+        )
+        );
     }
 
 }

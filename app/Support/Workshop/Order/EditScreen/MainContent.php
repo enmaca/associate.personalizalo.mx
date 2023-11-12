@@ -1,10 +1,14 @@
 <?php
+
 namespace App\Support\Workshop\Order\EditScreen;
 
 use Enmaca\LaravelUxmal\Abstract\ContentBlock;
+use Enmaca\LaravelUxmal\Components\Form\Input\Checkbox;
 use Enmaca\LaravelUxmal\Components\Form\Input\Flatpickr as FlatpickrComponent;
 use Enmaca\LaravelUxmal\Components\Ui\Card as CardComponent;
+use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputCheckboxOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\CardOptions;
+use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 use Enmaca\LaravelUxmal\UxmalComponent;
 
 class MainContent extends ContentBlock
@@ -14,8 +18,8 @@ class MainContent extends ContentBlock
      */
     public function build(): void
     {
-        $main_div = $this->ContentAddRow(row_options: [
-            'row.append-attributes' => [
+        $this->NewContentRow(new RowOptions(
+            replaceAttributes: [
                 'data-uxmal-order-data' => json_encode([
                     'customer_id' => $this->GetValue('customer_id'),
                     'order_id' => $this->GetValue('order_id')
@@ -23,9 +27,7 @@ class MainContent extends ContentBlock
                 'class' => [
                     'row gy-4' => true
                 ]
-            ]
-        ]);
-        $this->attributes['values'] ??= [];
+            ]));
 
         $DateButton = UxmalComponent::Make('livewire', [
             'options' => [
@@ -36,7 +38,7 @@ class MainContent extends ContentBlock
             ]
         ])->toHtml();
 
-        $main_card = $main_div->addElement(CardComponent::Options(
+        $orderCardObj = $this->ContentRow()->addElement(CardComponent::Options(
             new CardOptions(
                 name: 'orderCard',
                 header: 'Pedido ' . $this->GetValue('order_code'),
@@ -47,7 +49,9 @@ class MainContent extends ContentBlock
         ));
 
 
-        $main_card->Body()->addElement(FlatpickrComponent::Options([
+        $orderCardBodyObj = $orderCardObj->Body();
+
+        $orderCardBodyObj->addElement(FlatpickrComponent::Options([
             'input.type' => 'flatpickr',
             'flatpickr.label' => null,
             'flatpickr.name' => 'deliveryDate',
@@ -57,47 +61,57 @@ class MainContent extends ContentBlock
         ]));
 
 
-        $main_card->Body()->addElement(MainContent\ClientCard::Object(values: $this->GetValues(), options: [
-            'card.header' => 'Datos Cliente/Entrega',
-            'card.body' => null,
-            'card.footer' => null,
-            'card.style' => 'primary',
-            'card.name' => 'clientCard'
-        ]));
+        $orderCardBodyObj->addElement(MainContent\ClientCard::Object(
+            values: $this->GetValues(),
+            options: [
+                'card.header' => 'Datos Cliente/Entrega',
+                'card.body' => null,
+                'card.footer' => null,
+                'card.style' => 'primary',
+                'card.name' => 'clientCard'
+            ]));
 
 
-        $main_card->Body()->addElement(MainContent\MfgCard::Object(values: $this->GetValues(), options: [
-            'card.header' => 'Datos de Manufactura',
-            'card.body' => null,
-            'card.footer' => null,
-            'card.style' => 'success',
-            'card.name' => 'deliveryCard'
-        ]));
+        $orderCardBodyObj->addElement(MainContent\MfgCard::Object(
+            values: $this->GetValues(),
+            options: [
+                'card.header' => 'Datos de Manufactura',
+                'card.body' => null,
+                'card.footer' => null,
+                'card.style' => 'success',
+                'card.name' => 'deliveryCard'
+            ]));
 
 
-        $main_card->Body()->addElement(MainContent\ProductCard::Object(values: $this->GetValues(), options: [
-            'card.header' => 'Productos',
-            'card.body' => null,
-            'card.footer' => null,
-            'card.style' => 'info',
-            'card.name' => 'productCard'
-        ]));
+        $orderCardBodyObj->addElement(MainContent\ProductCard::Object(
+            values: $this->GetValues(),
+            options: [
+                'card.header' => 'Productos',
+                'card.body' => null,
+                'card.footer' => null,
+                'card.style' => 'info',
+                'card.name' => 'productCard'
+            ]));
 
-        $main_card->Body()->addElement(MainContent\DynamicCard::Object(values: $this->GetValues(), options: [
-            'card.header' => 'Costos Directos',
-            'card.body' => null,
-            'card.footer' => null,
-            'card.style' => 'warning',
-            'card.name' => 'dynamicCard'
-        ]));
+        $orderCardBodyObj->addElement(MainContent\DynamicCard::Object(
+            values: $this->GetValues(),
+            options: [
+                'card.header' => 'Costos Directos',
+                'card.body' => null,
+                'card.footer' => null,
+                'card.style' => 'warning',
+                'card.name' => 'dynamicCard'
+            ]));
 
-        $main_card->Body()->addElement(MainContent\PaymentCard::Object(values: $this->GetValues(), options: [
-            'card.header' => 'Información de Pago',
-            'card.body' => null,
-            'card.footer' => '',
-            'card.style' => 'dark',
-            'card.name' => 'paymentCard'
-        ]));
+        $orderCardBodyObj->addElement(MainContent\PaymentCard::Object(
+            values: $this->GetValues(),
+            options: [
+                'card.header' => 'Información de Pago',
+                'card.body' => null,
+                'card.footer' => '',
+                'card.style' => 'dark',
+                'card.name' => 'paymentCard'
+            ]));
     }
 }
 

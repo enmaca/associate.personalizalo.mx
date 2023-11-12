@@ -501,7 +501,7 @@ class OrdersController extends Controller
          * "customer_id" => "cus_WJ2v5Z2xQDO9Y"
          */
 
-        if( empty( MexDistricts::keyFromHashId($allInput['mexDistrict'])) )
+        if( empty($allInput['mexDistrict']) || empty( MexDistricts::keyFromHashId($allInput['mexDistrict'])) )
             return response()->json(['fail' => 'La colonia necesita ser seleccionada']);
 
         $order_record = Order::with(['address'])->findOrFail(Order::keyFromHashId($allInput['order_id']));

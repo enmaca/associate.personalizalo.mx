@@ -3,9 +3,11 @@
 namespace App\Support\Workshop\AddressBook;
 
 use Enmaca\LaravelUxmal\Abstract\FormBlock;
-use Enmaca\LaravelUxmal\Components\Form\Input\Checkbox as CheckboxInput;
+use Enmaca\LaravelUxmal\Components\Form\Input\Checkbox;
+use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputCheckboxOptions;
 use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextAreaOptions;
 use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextOptions;
+use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 use Illuminate\Support\Str;
 
 class DefaultForm extends FormBlock
@@ -19,28 +21,72 @@ class DefaultForm extends FormBlock
          * Direccion
          * class="card-body bg-light border-bottom border-top bg-opacity-25"
          */
-        $this->ContentAddRow(row_options: [
-            'row.slot' => '<h5>Dirección</h5>',
-            'row.append-attributes' => [
+
+        $main_content = $this->Content();
+
+        $this->NewContentRow();
+
+        $this->ContentRow()->addRow(row_options: new RowOptions(
+            replaceAttributes: [
                 'class' => 'bg-light border-bottom border-top p-3'
+            ],
+            content: '<h5>Dirección</h5>'
+        ));
+
+        $this->NewContentRow(row_options: new RowOptions(
+            replaceAttributes: [
+                'class' => 'row p-3 '
             ]
-        ]);
+        ));
 
-        $this->ContentAddRow();
+        $this->ContentRow()->addElementInRow(
+            element: Checkbox::Options(
+                new InputCheckboxOptions(
+                    name: 'deliveryNeeded',
+                    label: 'Se recogera en tienda',
+                    style: 'primary',
+                    type: 'switch',
+                    value: '1',
+                    direction: 'right'
+                )),
+            row_options: new RowOptions(
+                replaceAttributes: [
+                    'class' => 'col-12 col-md-6'
+                ]
+            ));
 
-        $this->ContentAddElement(element: CheckboxInput::Options([
-            'input.type' => 'checkbox',
-            'checkbox.label' => 'Datos del Destinatario igual que el cliente?',
-            'checkbox.name' => 'recipientDataSameAsCustomer',
-            'checkbox.value' => 1,
-            'checkbox.checked' => $this->GetValue(str::snake('recipientDataSameAsCustomer'))
-        ]));
+        $this->ContentRow()->addElementInRow(
+            element: Checkbox::Options(new InputCheckboxOptions(
+                name: 'recipientDataSameAsCustomer',
+                label: 'Datos del Destinatario igual que el cliente?',
+                style: 'primary',
+                type: 'switch',
+                value: '1',
+                direction: 'right',
+                checked: $this->GetValue(str::snake('recipientDataSameAsCustomer'))
+            )),
+            row_options: new RowOptions(
+                replaceAttributes: [
+                    'class' => 'col-12 col-md-6'
+                ]
+            ));
 
-        $this->ContentAddRow(row_options: [
-            'row.name' => 'recipientData',
-            'row.append-attributes' => [
+        /**
+         * [
+         * 'input.type' => 'checkbox',
+         * 'checkbox.label.slot' => ,
+         * 'checkbox.name' => ,
+         * 'checkbox.value' => 1,
+         * 'checkbox.checked' =>
+         * ]
+         */
+
+        $this->NewContentRow(row_options: new RowOptions(
+            name: 'recipientData',
+            appendAttributes: [
                 'data-workshop-recipient-data' => true
-            ]]);
+            ]
+        ));
 
         $this->Input(options: new InputTextOptions(
             label: 'Nombre (Destinatario)',
@@ -60,7 +106,7 @@ class DefaultForm extends FormBlock
             value: $this->GetValue(str::snake('recipientMobile'))
         ));
 
-        $this->ContentAddRow();
+        $this->NewContentRow();
 
         $this->Input(new InputTextOptions(
             label: 'Calle y Número',
@@ -82,33 +128,40 @@ class DefaultForm extends FormBlock
             required: true
         ));
 
-        $this->Input( options: new InputTextAreaOptions(
+        $this->Input(options: new InputTextAreaOptions(
             label: 'Indicaciones de Entrega',
             name: 'directions',
             value: $this->GetValue(str::snake('deliveryInstructions')),
             rows: 3
         ), row_class: 'col-12 col-md-9');
 
-        $row_selects = $this->ContentAddRow();
-        $row_selects->addElementInRow(element: SelectMexDistricts::Object(), row_options: [
-            'row.replace-attributes' => [
-                'wire:ignore' => true,
-                'class' => 'col-12 col-md-6'
-            ]
-        ]);
+        $row_selects = $this->NewContentRow();
 
-        $row_selects->addElementInRow(element: SelectMexMunicipalities::Object(), row_options: [
-            'row.replace-attributes' => [
-                'wire:ignore' => true,
-                'class' => 'col-12 col-md-6'
-            ]
-        ]);
+        $row_selects->addElementInRow(
+            element: SelectMexDistricts::Object(),
+            row_options: new RowOptions(
+                replaceAttributes: [
+                    'wire:ignore' => true,
+                    'class' => 'col-12 col-md-6'
+                ])
+        );
 
-        $row_selects->addElementInRow(element: SelectMexStates::Object(), row_options: [
-            'row.replace-attributes' => [
-                'wire:ignore' => true,
-                'class' => 'col-12 col-md-6'
-            ]
-        ]);
+        $row_selects->addElementInRow(element: SelectMexMunicipalities::Object(),
+            row_options: new RowOptions(
+                replaceAttributes: [
+                    'wire:ignore' => true,
+                    'class' => 'col-12 col-md-6'
+                ])
+        );
+
+
+        $row_selects->addElementInRow(element: SelectMexStates::Object(),
+            row_options: new RowOptions(
+                replaceAttributes: [
+                    'wire:ignore' => true,
+                    'class' => 'col-12 col-md-6'
+                ])
+        );
+
     }
 }

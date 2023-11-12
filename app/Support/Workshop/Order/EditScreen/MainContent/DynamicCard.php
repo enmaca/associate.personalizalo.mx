@@ -7,6 +7,7 @@ use App\Support\Workshop\Material\SelectByNameSkuDesc as SelectByNameSkuDescMate
 use App\Support\Workshop\MfgOverHead\SelectByName as SelectByNameMfgOverHead;
 use App\Support\Workshop\OrderProductDynamicDetails\TbHandler\ProfitMargin as ProfitMarginTbHandler;
 use Enmaca\LaravelUxmal\Abstract\CardBlock;
+use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 use Enmaca\LaravelUxmal\UxmalComponent;
 use Exception;
 
@@ -18,17 +19,35 @@ class DynamicCard extends CardBlock
      */
     public function build(): void
     {
-        $this->BodyRow();
+        $this->Body()->addRow();
 
         $this->setBodyFieldRowClass('col-xxl-6 mb-3');
 
-        $this->BodyInput(SelectByNameSkuDescMaterial::Object(['options' => ['event-change-handler' => 'onChangeSelectedMaterialByNameSkuDesc']]));
+        $this->Body()->addElementInRow(
+            element: SelectByNameSkuDescMaterial::Object(['options' => ['event-change-handler' => 'onChangeSelectedMaterialByNameSkuDesc']]),
+            row_options: new RowOptions(
+                replaceAttributes: [
+                    'class' => 'col-xxl-6 mb-3'
+                ]
+            ));
 
-        $this->BodyInput(SelectByNameLaborCost::Object(['options' => ['event-change-handler' => 'onChangeSelectedLaborCostByName']]));
+        $this->Body()->addElementInRow(
+            element: SelectByNameLaborCost::Object(['options' => ['event-change-handler' => 'onChangeSelectedLaborCostByName']]),
+            row_options: new RowOptions(
+                replaceAttributes: [
+                    'class' => 'col-xxl-6 mb-3'
+                ]
+            ));
 
-        $this->BodyInput(SelectByNameMfgOverHead::Object(['options' => ['event-change-handler' => 'onChangeSelectedMfgOverHeadByName']]));
+        $this->Body()->addElementInRow(
+            element:SelectByNameMfgOverHead::Object(['options' => ['event-change-handler' => 'onChangeSelectedMfgOverHeadByName']]),
+            row_options: new RowOptions(
+                replaceAttributes: [
+                    'class' => 'col-xxl-6 mb-3'
+                ]
+            ));
 
-        $table = $this->Footer()->addElementInRow(element: UxmalComponent::Make(type: 'ui.table', attributes: [
+        $this->Footer()->addElementInRow(element: UxmalComponent::Make(type: 'ui.table', attributes: [
             'options' => [
                 'table.name' => 'orderProductDynamicDetails',
                 'table.columns' => [
@@ -73,7 +92,7 @@ class DynamicCard extends CardBlock
                 ],
                 'table.data.livewire' => 'order-product-dynamic-details.table.tbody',
                 'table.data.livewire.append-data' => [
-                    'values' => $this->attributes['values']
+                    'values' => $this->GetValues()
                 ],
                 'table.footer' => [
                     'related.name' => [
@@ -93,7 +112,13 @@ class DynamicCard extends CardBlock
                     ]
                 ]
             ]
-        ]), row_options: ['row.append-attributes' => ['class' => 'table-responsive']]);
+        ]),
+            row_options: new RowOptions(
+                appendAttributes: [
+                    'class' => 'table-responsive'
+                ]
+            )
+        );
     }
 
 }

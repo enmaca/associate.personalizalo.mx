@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Support\Workshop\Customer;
 
 use Enmaca\LaravelUxmal\Abstract\ModalBlock;
@@ -6,6 +7,7 @@ use Enmaca\LaravelUxmal\Components\Form\Input;
 use Enmaca\LaravelUxmal\Components\Ui\Modal;
 use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\ModalOptions;
+use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 use Enmaca\LaravelUxmal\UxmalComponent;
 use Exception;
 
@@ -37,48 +39,64 @@ class ModalSearchByMobile extends ModalBlock
 
         $main_row->addElementInRow(
             element: SelectByNameMobileEmail::Object(),
-            row_options: ['row.append-attributes' => ['class' => 'mb-3']]
+            row_options: new RowOptions(appendAttributes: ['class' => 'mb-3'])
         );
 
-        $main_row->addElementInRow(Input::Options(
-            new InputTextOptions(
-                label: 'Celular',
-                name: 'customerMobile',
-                placeholder: '(+52) XXXXXXXXXX',
-                required: true,
-                maskCleaveType: 'phone',
-                maskCleavePhoneRegionCode: 'MX',
-                maskCleavePrefix: '+52 ',
-            )
-        ), ['row.append-attributes' => ['class' => 'mb-3']]);
+        $main_row->addElementInRow(
+            element: Input::Options(
+                new InputTextOptions(
+                    label: 'Celular',
+                    name: 'customerMobile',
+                    placeholder: '(+52) XXXXXXXXXX',
+                    required: true,
+                    maskCleaveType: 'phone',
+                    maskCleavePhoneRegionCode: 'MX',
+                    maskCleavePrefix: '+52 ',
+                )
+            ),
+            row_options: new RowOptions(
+                appendAttributes: ['class' => 'mb-3']
+            ));
 
-        $main_row->addElementInRow(Input::Options(
-            new InputTextOptions(
-                label: 'Nombre',
-                name: 'customerName',
-                placeholder: 'Ingresa el nombre del cliente',
-                required: true,
-            )
-        ), ['row.append-attributes' => ['class' => 'mb-3']]);
+        $main_row->addElementInRow(
+            element: Input::Options(
+                new InputTextOptions(
+                    label: 'Nombre',
+                    name: 'customerName',
+                    placeholder: 'Ingresa el nombre del cliente',
+                    required: true,
+                )
+            ),
+            row_options: new RowOptions(
+                appendAttributes: ['class' => 'mb-3']
+            ));
 
 
-        $main_row->addElementInRow(Input::Options(
-            new InputTextOptions(
-                label: 'Apellido',
-                name: 'customerLastName',
-                placeholder: 'Ingresa el apellido del cliente',
-                required: true
-            )
-        ), ['row.append-attributes' => ['class' => 'mb-3']]);
+        $main_row->addElementInRow(
+            element: Input::Options(
+                new InputTextOptions(
+                    label: 'Apellido',
+                    name: 'customerLastName',
+                    placeholder: 'Ingresa el apellido del cliente',
+                    required: true
+                )
+            ),
+            row_options: new RowOptions(
+                appendAttributes: ['class' => 'mb-3']
+            ));
 
-        $main_row->addElementInRow(Input::Options(
-            new InputTextOptions(
-                label: 'Correo Electrónico',
-                name: 'customerEmail',
-                placeholder: 'Ingresa el correo electrónico del cliente',
-                required: true
-            )
-        ), ['row.append-attributes' => ['class' => 'mb-3']]);
+        $main_row->addElementInRow(
+            element: Input::Options(
+                new InputTextOptions(
+                    label: 'Correo Electrónico',
+                    name: 'customerEmail',
+                    placeholder: 'Ingresa el correo electrónico del cliente',
+                    required: true
+                )
+            ),
+            row_options: new RowOptions(
+                appendAttributes: ['class' => 'mb-3']
+            ));
 
 
         $modal = Modal::Options(
