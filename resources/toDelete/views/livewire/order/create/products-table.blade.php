@@ -1,3 +1,0 @@
-<div>
-    {!! $orderId !!}
-</div>
