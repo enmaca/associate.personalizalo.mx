@@ -3,6 +3,14 @@
 namespace App\Livewire\Material\Modal;
 
 use App\Models\Material;
+use Enmaca\LaravelUxmal\Components\Form\Input;
+use Enmaca\LaravelUxmal\Components\Ui\Row;
+use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputHiddenOptions;
+use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputNumberOptions;
+use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextOptions;
+use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
+use Enmaca\LaravelUxmal\UxmalComponent;
+use Exception;
 use Illuminate\Support\Facades\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -10,128 +18,109 @@ use Livewire\Component;
 class AddMaterialToOrder extends Component
 {
     public $content;
+    public $increment = 0;
 
     public function mount()
     {
         $this->content = 'Initial::Content';
     }
 
+    /**
+     * @throws Exception
+     */
     #[On('add-material-to-order::material.changed')]
     public function material_changed($material): void
     {
+        $this->increment++;
+
         $__formId = '__' . bin2hex(random_bytes(4));
 
-        $material_data = Material::With([
-            'unit_of_measure',
-            'taxes'])->findByHashId($material); //
-
-/*
-        dump($material_data->toArray());
-        dump($material_data->unit_of_measure->toArray());
-        dd('ok');
-*/
+        $material_data = Material::With(['unit_of_measure', 'taxes'])->findByHashId($material);
 
         $tax_factor = 0;
-        foreach($material_data->taxes as $tax){
+        foreach ($material_data->taxes as $tax) {
             $tax_factor += $tax->value;
         }
         $one_subtotal = $material_data->invt_uom_cost * (1 + $tax_factor);
 
-        $form = \Enmaca\LaravelUxmal\UxmalComponent::Make('form', [
+        $form = UxmalComponent::Make('form', [
             'options' => [
                 'form.id' => $__formId,
                 'form.action' => route('orders_post_material')
             ]
         ]);
 
-        $main_row = new \Enmaca\LaravelUxmal\UxmalComponent();
+        $main_row = new UxmalComponent();
 
-        $main_row->component('ui.row', [
-            'options' => [
-                'row.slot' => '<h6>'.$material_data->name.'</h6>',
-                'row.append-attributes' => [ 'class' => 'm-3']
-            ]]);
+        $main_row->addRow(row_options: new RowOptions(
+            appendAttributes: ['class' => 'm-3'],
+            content: '<h6>' . $material_data->name . '</h6>'
+        ));
 
-        $main_row->component('form.input', [
-            'options' => [
-                'input.type' => 'hidden',
-                'hidden.name' => 'materialId',
-                'hidden.value' => $material_data->hashId
-            ]]);
+        $main_row->addElement(element: Input::Options(new InputHiddenOptions(
+            name: 'materialId',
+            value: $material_data->hashId
+        )));
 
-        $main_row->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[
-            'path' => 'form.input',
-            'attributes' => [
-                'options' => [
-                    'input.type' => 'number',
-                    'input.label' => 'Cantidad ( '.$material_data->invt_quantity.' en Existencia)',
-                    'input.name' => 'materialQuantity',
-                    'input.value' => 1,
-                    'input.max' => $material_data->invt_quantity,
-                    'input.min' => 1,
-                    'input.required' => true,
-                    'input.append-attributes' => [
-                        'data-uom-cost' => $material_data->invt_uom_cost,
-                        'data-tax-factor' => $tax_factor,
-                    ]
-                ]
-            ]]
-        ]);
+        $main_row->addElementInRow(element: Input::Options(new InputNumberOptions(
+            label: 'Cantidad ( ' . $material_data->invt_quantity . ' en Existencia)',
+            name: 'materialQuantity',
+            value: 1,
+            required: true,
+            appendAttributes: [
+                'data-uom-cost' => $material_data->invt_uom_cost,
+                'data-tax-factor' => $tax_factor,
+            ],
+            min: 1,
+            max: $material_data->invt_quantity
+        )), row_options: new RowOptions(
+            appendAttributes: ['class' => 'mb-3']
+        ));
 
-        $main_row->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[
-            'path' => 'form.input',
-            'attributes' => [
-                'options' => [
-                    'input.type' => 'number',
-                    'input.label' => 'Margen (Porcentaje)',
-                    'input.name' => 'materialProfitMargin',
-                    'input.value' => 35,
-                    'input.min' => 5,
-                    'input.required' => true,
-                    'input.event-change-handler' => 'updateMaterialSubtotal()'
-                ]
-            ]]
-        ]);
+        $main_row->addElementInRow(element: Input::Options(new InputNumberOptions(
+            label: 'Margen (Porcentaje)',
+            name: 'materialProfitMargin',
+            value: 35,
+            required: true,
+            min: 5
+        )), row_options: new RowOptions(
+            appendAttributes: ['class' => 'mb-3']
+        ));
 
-        $main_row->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3'] ]], [[
-            'path' => 'form.input',
-            'attributes' => [
-                'options' => [
-                    'input.type' => 'text',
-                    'input.label' => 'Subtotal',
-                    'input.value' => '$'.number_format($one_subtotal,2),
-                    'input.name' => 'materialSubtotal',
-                    'input.required' => true,
-                    'input.readonly' => true
-                ]
-            ]]
-        ]);
+        $main_row->addElementInRow(element: Input::Options(new InputTextOptions(
+            label: 'Subtotal',
+            name: 'materialSubtotal',
+            value: '$' . number_format($one_subtotal, 2),
+            required: true,
+            readonly: true
+        )), row_options: new RowOptions(
+            appendAttributes: ['class' => 'mb-3']
+        ));
 
-        $form->component('ui.row', ['options' => [
-            'row.slot' => $main_row,
-            'row.append-attributes' => [
+        $form->addRow( row_options: new RowOptions(
+            appendAttributes: [
                 'data-selected-material-form-id' => $__formId
-            ]
-        ]]);
+            ],
+            content: $main_row
+        ));
 
         $this->content = View::make($form->view, [
             'data' => $form->toArray()
         ])->render();
     }
 
+    /**
+     * @throws Exception
+     */
     public function render()
     {
-        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
-        $uxmal->component('ui.row', [
-            'options' => [
-                'row.append-attributes' => [
-                    'wire:model' => 'content'
-                ],
-                'row.slot' => $this->content
+        $this->increment++;
+        $uxmal = Row::Options(new RowOptions(
+            appendAttributes: [
+                'wire:key' => $this->increment
             ],
-        ]);
-
-
+            content: $this->content
+        ));
         return view('uxmal::livewire', ['data' => $uxmal->toArray()]);
     }
 }

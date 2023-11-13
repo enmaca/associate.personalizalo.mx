@@ -12,6 +12,8 @@ class Tbody extends Component
     public $table_columns;
     public $table_footer;
 
+    public $increment = 0;
+
     public $appended;
 
     public function mount($table_name, $table_columns, $table_footer, $appended){
@@ -22,13 +24,15 @@ class Tbody extends Component
     }
 
     #[On('order-product-dynamic-details.table.tbody::reload')]
-    public function reload(){
-
+    public function reload(): void
+    {
+        $this->increment++;
     }
 
 
-    public function render()
+    public function render(): string
     {
+        $this->increment++;
         $table = \Enmaca\LaravelUxmal\UxmalComponent::Make('ui.table', ['options' => [
             'table.name' => $this->table_name,
             'table.columns' => $this->table_columns,
@@ -54,9 +58,6 @@ class Tbody extends Component
                 'profit_margin',
                 'subtotal',
                 'created_by'])->get();
-
-       //dump($table->toHtml('tbody'));
-       //dd($table);
 
         $this->dispatch('order-product-dynamic-details.table.tbody::updated', tfoot: $table->toHtml('tfoot') );
         return $table->toHtml('tbody');

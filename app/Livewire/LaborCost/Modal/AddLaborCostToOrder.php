@@ -3,7 +3,6 @@
 namespace App\Livewire\LaborCost\Modal;
 
 use App\Models\LaborCost;
-use App\Models\MfgOverhead;
 use Enmaca\LaravelUxmal\Components\Form\Input;
 use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
@@ -13,11 +12,12 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use OpenSpout\Common\Entity\Row;
+use \Enmaca\LaravelUxmal\Components\Ui\Row;
 
 class AddLaborCostToOrder extends Component
 {
     public $content;
+    public $increment;
 
     public function mount()
     {
@@ -30,6 +30,8 @@ class AddLaborCostToOrder extends Component
     #[On('add-labor-cost-to-order::laborcost.changed')]
     public function laborcost_changed($laborcost): void
     {
+        $this->increment++;
+
         $__formId = '__' . bin2hex(random_bytes(4));
 
         $laborcost_data = LaborCost::With(['taxes'])->findByHashId($laborcost);
@@ -114,13 +116,12 @@ class AddLaborCostToOrder extends Component
         $this->content = View::make($form->view, [
             'data' => $form->toArray()
         ])->render();
-
-        $this->dispatch('add-to-order::show-laborcost-modal');
     }
 
     public function render(): Factory|Application|\Illuminate\Contracts\View\View|\Illuminate\Contracts\Foundation\Application
     {
-        $uxmal = \Enmaca\LaravelUxmal\Components\Ui\Row::Options(new RowOptions(
+        $this->increment++;
+        $uxmal = Row::Options(new RowOptions(
             appendAttributes: [
                 'wire:model' => 'content'
             ],

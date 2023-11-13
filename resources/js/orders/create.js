@@ -1,4 +1,4 @@
-import { UxmalCSRF, UxmalSwiper, Uxmal } from "laravel-uxmal-npm";
+import {UxmalCSRF,UxmalSwiper,Uxmal} from "laravel-uxmal-npm";
 import {updateOrder} from "../workshop.js";
 
 const uxmalSwiper = new UxmalSwiper();
@@ -27,13 +27,12 @@ window.removeOPD = (row) => {
         .then(data => {
             if (data.ok) {
                 Livewire.dispatch('order-product-details.table.tbody::reload');
-            } else if (data.error)
-                console.error(data.error);
-            else if (data.warning)
-                console.warn(data.warning);
+            } else if (data.fail) {
+                uxmal.sweetAlert(data.fail, 'warning');
+            }
         })
         .catch((error) => {
-            console.error('removeOPD [FAIL]', error);
+            uxmal.sweetAlert(error.message, 'danger');
         });
 }
 
@@ -53,16 +52,14 @@ window.removeOPDD = (row) => {
     })
         .then(response => response.json())  // assuming server responds with json
         .then(data => {
-            console.log('data', data);
             if (data.ok) {
                 Livewire.dispatch('order-product-dynamic-details.table.tbody::reload');
-            } else if (data.error)
-                console.error(data.error);
-            else if (data.warning)
-                console.warn(data.warning);
+            } else if (data.fail) {
+                uxmal.sweetAlert(data.fail, 'warning');
+            }
         })
         .catch((error) => {
-            console.error('removeOPDD [FAIL]', error);
+            uxmal.sweetAlert(error.message, 'danger');
         });
 }
 
@@ -78,7 +75,6 @@ const initDeliveryAddressBook = () => {
     const recipientDataDivEl = document.querySelector('[data-workshop-recipient-data]');
     const updRecipientDataState = () => {
         const userDataSelectors = ['recipientNameId', 'recipientLastNameId', 'recipientMobileId'];
-        console.log('===============>', uxmal.Inputs.get('recipientDataSameAsCustomerId').element.checked);
         if (uxmal.Inputs.get('recipientDataSameAsCustomerId').element.checked) {
             recipientDataDivEl.classList.add('d-none');
             uxmal.Inputs.for(userDataSelectors, (item) => {
@@ -100,7 +96,6 @@ const initDeliveryAddressBook = () => {
     });
 
     uxmal.Inputs.on('zipCodeId', 'change', (event) => {
-        console.log(event.target);
         const mexDistrictIdEl = uxmal.Selects.get('mexDistrictId').tomselect2;
         mexDistrictIdEl.clear(true);
         mexDistrictIdEl.clearOptions();
@@ -155,7 +150,6 @@ document.addEventListener("DOMContentLoaded", function () {
     //// Update Delivery Date Interactions
     uxmal.Inputs.on('deliveryDateId', 'change', (selectedDates) => {
         uxmal.Cards.setLoading('orderCard', true);
-        const buttonEl = document.querySelector('#orderDeliveryDateButtonId');
         const data = {
             delivery_date: selectedDates[0].toISOString().slice(0, 19).replace('T', ' ')
         };
@@ -188,7 +182,6 @@ document.addEventListener("DOMContentLoaded", function () {
     //// Listen To Event When Livewire request message Succedes
     document.addEventListener('livewire:addressbook.form.default-form:request:succeed', (event) => {
         setTimeout(() => {
-            console.log('livewire:addressbook.form.default-form:request:succeed', event.detail.id);
             const scope = document.querySelector(`[wire\\:id="${event.detail.id}"]`);
             uxmal.Forms.init(scope);
             uxmal.Inputs.init(scope);
@@ -240,7 +233,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     //// Attach On Child Materials SaveBtn Click.
     uxmal.Modals.onChild('selectedMaterialToAddToOrderId', '.uxmal-modal-save-button', 'click', (event) => {
-        console.log('selectedMaterialToAddToOrderId::event::click', event);
         uxmal.Cards.setLoading('orderCard', true);
         uxmal.Forms.submit(material_form_id, {
             order_id: window.order_id,
@@ -287,7 +279,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     //// Attach On Child MfgOverHead SaveBtn Click.
     uxmal.Modals.onChild('selectedMfgOverHeadToAddToOrderId', '.uxmal-modal-save-button', 'click', (event) => {
-        console.log('selectedMfgOverHeadToAddToOrderSaveBtn::event::click', event);
         uxmal.Cards.setLoading('orderCard', true);
         uxmal.Forms.submit(mfg_over_head_form_id, {
             order_id: window.order_id,
@@ -335,7 +326,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     //// Attach On Child MfgLaborCost SaveBtn Click.
     uxmal.Modals.onChild('selectedLaborCostToAddToOrderId', '.uxmal-modal-save-button', 'click', (event) => {
-        console.log('selectedLaborCostToAddToOrderSaveBtn::event::click', event);
         uxmal.Cards.setLoading('orderCard', true);
         uxmal.Forms.submit(mfg_labor_cost_form_id, {
             order_id: window.order_id,
@@ -393,7 +383,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     //// Attach On Child Product SaveBtn Click.
     uxmal.Modals.onChild('selectProductWithDigitalArtId', '.uxmal-modal-save-button', 'click', (event) => {
-        console.log('selectProductWithDigitalArtSaveBtn::event::click', event);
         uxmal.Cards.setLoading('orderCard', true);
         uxmal.Forms.submit(product_with_da_form, {
             order_id: window.order_id,
