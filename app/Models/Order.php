@@ -12,7 +12,8 @@ class Order extends BaseModel
     protected $table = 'orders';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'delivery_date'
+        'delivery_date',
+        'shipment_status'
     ];
 
     public static function CreateToCustomer($customer_id): Order

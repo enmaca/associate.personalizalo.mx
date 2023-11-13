@@ -111,7 +111,7 @@ class ClientCard extends CardBlock
 
         $this->NewBodyRow(new RowOptions(
             replaceAttributes: [
-                'class' => 'p-3'
+                'class' => 'row'
             ]
         ))->addElement(UxmalComponent::Make('livewire', [
             'options' => [

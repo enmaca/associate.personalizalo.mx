@@ -3,6 +3,7 @@
 namespace App\Support\Workshop\Order\EditScreen;
 
 use Enmaca\LaravelUxmal\Abstract\ContentBlock;
+use Enmaca\LaravelUxmal\Components\Form\Button;
 use Enmaca\LaravelUxmal\Components\Form\Input\Checkbox;
 use Enmaca\LaravelUxmal\Components\Form\Input\Flatpickr as FlatpickrComponent;
 use Enmaca\LaravelUxmal\Components\Ui\Card as CardComponent;
@@ -44,9 +45,21 @@ class MainContent extends ContentBlock
                 header: 'Pedido ' . $this->GetValue('order_code'),
                 headerRight: $DateButton,
                 body: null,
-                footer: '&nbsp;'
+                footer: null
             )
         ));
+
+        $orderCardObj->Footer()->addElementInRow(
+            element: Button::Options([
+                'button.style' => 'success',
+                'button.name' => 'validateOrderButton',
+                'button.label' => 'Validar Pedido'
+            ]),
+            row_options: new RowOptions(
+                replaceAttributes: [
+                    'class' => 'col-12 text-end'
+                ]
+            ));
 
 
         $orderCardBodyObj = $orderCardObj->Body();
@@ -108,7 +121,7 @@ class MainContent extends ContentBlock
             options: [
                 'card.header' => 'Información de Pago',
                 'card.body' => null,
-                'card.footer' => '',
+                'card.footer' => null,
                 'card.style' => 'dark',
                 'card.name' => 'paymentCard'
             ]));

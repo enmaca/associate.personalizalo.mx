@@ -39,6 +39,8 @@ class DefaultForm extends Component
         if( !empty($order_data->address))
             $values = $order_data->address->toArray();
 
+        $values['shipment_status'] = $order_data->shipment_status;
+
         $uxmal = AddressBookDefaultForm::Object(
             values: $values ?? [],
             options: ['form.id' => 'deliveryData', 'form.action' => '/orders/delivery_data']

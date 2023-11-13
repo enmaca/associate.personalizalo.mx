@@ -1,5 +1,15 @@
 <?php
 
+use App\Http\Controllers\PaymentMethodController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DigitalArtController;
+use App\Http\Controllers\ManufacturingController;
+use App\Http\Controllers\MaterialsController;
+use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\SystemController;
+use App\Http\Controllers\Test;
+use App\Livewire\Auth\Login;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,20 +23,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/login', \App\Livewire\Auth\Login::class)->name('login');
-Route::get('/logout', [ \App\Http\Controllers\SystemController::class, 'logout' ])->name('logout');
+Route::get('/login', Login::class)->name('login');
+Route::get('/logout', [ SystemController::class, 'logout' ])->name('logout');
 
 Route::get('/test', [
-    \App\Http\Controllers\Test::class,
+    Test::class,
     'test'])->name('test');
 Route::post('/test/tomselect_load', [
-    \App\Http\Controllers\Test::class,
+    Test::class,
     'tomselect_load'])->name('test_tomselect_load');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::redirect('/', '/orders', 301);
 
-    Route::controller(\App\Http\Controllers\OrdersController::class)->group(function () {
+    Route::controller(OrdersController::class)->group(function () {
         Route::get('/orders','root')->name('orders_root');
         Route::put('/orders/{hashed_id}','put_order')->name('put_order');
         Route::post('/orders','create')->name('orders_create');
@@ -40,7 +50,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/orders/delivery_data','post_delivery_data')->name('orders_post_delivery_data');
     });
 
-    Route::controller(\App\Http\Controllers\ManufacturingController::class)->group(function () {
+    Route::controller(ManufacturingController::class)->group(function () {
         Route::get('/manufacturing', 'dashboard')->name('manufacturing_root');
         Route::get('/manufacturing/products', 'products')->name('manufacturing_products');
         Route::get('/manufacturing/laborcosts', 'laborcosts')->name('manufacturing_laborcosts');
@@ -49,13 +59,13 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/manufacturing/pvg', 'printvariation')->name('manufacturing_printvariation');
     });
 
-    Route::controller(\App\Http\Controllers\MaterialsController::class)->group(function () {
+    Route::controller(MaterialsController::class)->group(function () {
         Route::get('/material', 'root')->name('material_root');
         Route::post('/material/search_tomselect', 'search_tomselect')->name('material_search_tomselect');
         Route::get('/material/mvg', 'mvg')->name('material_variation_group');
     });
 
-    Route::controller( \App\Http\Controllers\SystemController::class)->group(function(){
+    Route::controller( SystemController::class)->group(function(){
         Route::get('/system/customers', 'customers')->name('system_customers');
         Route::get('/system/suppliers', 'suppliers')->name('system_suppliers');
         Route::get('/system/taxes', 'taxes')->name('system_taxes');
@@ -64,25 +74,23 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/system/products', 'products')->name('system_products');
     });
 
-    Route::controller( App\Http\Controllers\CustomerController::class)->group(function(){
+    Route::controller( CustomerController::class)->group(function(){
         Route::get('/customer', 'root')->name('customers');
         Route::get('/customer/{id}', 'get_id')->name('customer_get_id');
         Route::post('/customer/search_tomselect', 'search_tomselect')->name('customer_search_tomselect');
     });
 
-    Route::controller( App\Http\Controllers\ProductsController::class)->group(function(){
+    Route::controller( ProductsController::class)->group(function(){
         Route::get('/products', 'root')->name('products');
         Route::get('/products/{id}', 'get_id')->name('products_get_id');
         Route::post('/products/search_tomselect', 'search_tomselect')->name('products_search_tomselect');
     });
 
-    Route::controller( \App\Http\Controllers\DigitalArtController::class)->group(function(){
+    Route::controller( DigitalArtController::class)->group(function(){
         Route::get('/digital_art/{id}', 'download')->name('digital_art_get');
     });
 
-    Route::controller(\App\Http\Controllers\AddressBookController::class)->group(function(){
-        Route::post('/address_book/mex_municipality/search_tomselect', 'search_tomselect_mex_municipality')->name('mex_municipality_search_tomselect');
-        Route::post('/address_book/mex_state/search_tomselect', 'search_tomselect_mex_state')->name('mex_state_search_tomselect');
-        Route::post('/address_book/mex_district/search_tomselect', 'search_tomselect_mex_district')->name('mex_district_search_tomselect');
+    Route::controller(PaymentMethodController::class)->group(function(){
+        Route::post('/address_book/mex_municipality/search_tomselect', 'search_tomselect')->name('payment_method_search_tomselect');
     });
 });

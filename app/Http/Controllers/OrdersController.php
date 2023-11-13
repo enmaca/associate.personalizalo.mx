@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ShipmentStatusEnum;
 use App\Models\AddressBook;
 use App\Models\Customer;
 use App\Models\DigitalArt;
@@ -18,11 +19,13 @@ use App\Models\OrderPayment;
 use App\Models\OrderProductDetail;
 use App\Models\OrderProductDynamic;
 use App\Models\OrderProductDynamicDetails;
+use App\Models\PaymentMethod;
 use App\Models\PrintVariationsGroup;
 use App\Models\PrintVariationsGroupDetails;
 use App\Models\Product;
 use App\Models\Material;
 use App\Support\Services\OrderService;
+use App\Support\Workshop\Order\EditScreen;
 use Carbon\Carbon;
 use Deligoez\LaravelModelHashId\Exceptions\UnknownHashIdConfigParameterException;
 use Illuminate\Http\Request;
@@ -30,6 +33,7 @@ use Illuminate\Support\Facades\Auth;
 use \Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Enum;
 
 class OrdersController extends Controller
 {
@@ -103,7 +107,7 @@ class OrdersController extends Controller
         if (isset($allInput['customerId'])) {
             $customer_data = Customer::findByHashId($allInput['customerId']);
 
-            if (!isset($allInput['customerId']) || empty($customer_data)) {
+            if (empty($customer_data)) {
                 $customer_data = new Customer();
                 $customer_data->mobile = $allInput['customerMobile'];
                 $customer_data->name = $allInput['customerName'];
@@ -112,14 +116,15 @@ class OrdersController extends Controller
                 $customer_data->save();
             }
         } else if (isset($allInput['orderId'])) {
-            //TODO: Get OrderData
+            $order_data = Order::findOrFail(Order::keyFromHashId($allInput['orderId']));
         }
 
         if (empty($order_data))
             $order_data = Order::CreateToCustomer($customer_data->id);
 
+        // $payment_methods_array
 
-        $edit_screen = \App\Support\Workshop\Order\EditScreen::Object(values: [
+        $edit_screen = EditScreen::Object(values: [
             'customer_id' => $customer_data->hashId,
             'customer_name' => $customer_data->name,
             'customer_last_name' => $customer_data->last_name,
@@ -139,7 +144,6 @@ class OrdersController extends Controller
 
         return view('uxmal::master-default', [
             'uxmal_data' => $edit_screen->toArray()
-
         ])->extends('uxmal::layout.master');
     }
 
@@ -464,9 +468,9 @@ class OrdersController extends Controller
     public function put_order(Request $request, string $hash_id = null)
     {
         $validatedData = $request->validate([
-            'delivery_date' => 'date'
+            'delivery_date' => 'date',
+            'shipment_status' => ['string', new Enum(ShipmentStatusEnum::class)],
         ]);
-
 
         $order_record = Order::findOrFail(Order::keyFromHashId($hash_id));
         $order_record->fill($validatedData);
@@ -501,7 +505,7 @@ class OrdersController extends Controller
          * "customer_id" => "cus_WJ2v5Z2xQDO9Y"
          */
 
-        if( empty($allInput['mexDistrict']) || empty( MexDistricts::keyFromHashId($allInput['mexDistrict'])) )
+        if (empty($allInput['mexDistrict']) || empty(MexDistricts::keyFromHashId($allInput['mexDistrict'])))
             return response()->json(['fail' => 'La colonia necesita ser seleccionada']);
 
         $order_record = Order::with(['address'])->findOrFail(Order::keyFromHashId($allInput['order_id']));
@@ -531,6 +535,7 @@ class OrdersController extends Controller
 
         if ($address_record->save()) {
             $order_record->address_book_id = $address_record->id;
+            $order_record->shipment_status = 'pending';
             $order_record->save();
             return response()->json(['ok' => 'La direccion de entrega se actualizo correctamente']);
         } else

@@ -1,4 +1,4 @@
-import {UxmalCSRF,UxmalSwiper,Uxmal} from "laravel-uxmal-npm";
+import {UxmalCSRF, UxmalSwiper, Uxmal} from "laravel-uxmal-npm";
 import {updateOrder} from "../workshop.js";
 
 const uxmalSwiper = new UxmalSwiper();
@@ -66,12 +66,25 @@ window.removeOPDD = (row) => {
 /**
  * Init the interactive behavior of the Delivery Address Book
  */
+
 const initDeliveryAddressBook = () => {
     uxmal.Forms.on('deliveryData', 'change', function (event) {
         const buttonEl = document.getElementById('addressBookSubmitId');
         if (buttonEl && buttonEl.classList.contains('d-none'))
             buttonEl.classList.remove('d-none');
     });
+
+    uxmal.Inputs.on('shipmentStatusId', 'change', (event) => {
+        const shipmentStatusDivEl = document.querySelector('[data-workshop-shipment-data]');
+        if(!event.target.checked) {
+            shipmentStatusDivEl.classList.remove('d-none');
+        } else {
+            shipmentStatusDivEl.classList.add('d-none');
+        }
+    });
+
+
+
     const recipientDataDivEl = document.querySelector('[data-workshop-recipient-data]');
     const updRecipientDataState = () => {
         const userDataSelectors = ['recipientNameId', 'recipientLastNameId', 'recipientMobileId'];
@@ -163,20 +176,30 @@ document.addEventListener("DOMContentLoaded", function () {
 
     //// OnClick for Button For Save Delivery Data
     // TODO: uxmalButton helpers
-    document.getElementById('addressBookSubmitId').addEventListener( 'click', (event) => {
+    document.getElementById('addressBookSubmitId').addEventListener('click', (event) => {
         uxmal.Cards.setLoading('orderCard', true);
-        uxmal.Forms.submit('deliveryData', {
-            order_id: window.order_id,
-            customer_id: window.customer_id
-        }, () => {
-            Livewire.dispatch('addressbook.form.default-form::reload');
-        }, (elementName, data) => {
-            uxmal.sweetAlert(data.fail, 'warning');
-            uxmal.Cards.setLoading('orderCard', false);
-        }, (elementName, error) => {
-            uxmal.sweetAlert(error, 'danger');
-            uxmal.Cards.setLoading('orderCard', false);
-        });
+        if( uxmal.Inputs.get('shipmentStatusId').element.checked ) {
+            const data = {
+                shipment_status: 'not_needed'
+            };
+            updateOrder(window.order_id, data, () => {
+                Livewire.dispatch('addressbook.form.default-form::reload');
+                uxmal.Cards.setLoading('orderCard', false);
+            });
+        } else {
+            uxmal.Forms.submit('deliveryData', {
+                order_id: window.order_id,
+                customer_id: window.customer_id
+            }, () => {
+                Livewire.dispatch('addressbook.form.default-form::reload');
+            }, (elementName, data) => {
+                uxmal.sweetAlert(data.fail, 'warning');
+                uxmal.Cards.setLoading('orderCard', false);
+            }, (elementName, error) => {
+                uxmal.sweetAlert(error, 'danger');
+                uxmal.Cards.setLoading('orderCard', false);
+            });
+        }
     });
 
     //// Listen To Event When Livewire request message Succedes
@@ -339,7 +362,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let productDynamicDetailsTableFooterData;
     // Listen To Event When Inserted Record on Table OrderProductDynamicDetails
     Livewire.on('order-product-dynamic-details.table.tbody::updated', (data) => {
-        productDynamicDetailsTableFooterData =  data.tfoot;
+        productDynamicDetailsTableFooterData = data.tfoot;
     });
 
     // livewire:order-product-dynamic-details.table.tbody:request:succeed
@@ -422,8 +445,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     //// On all dismiss/close buttons on modals remove indicator
     document.querySelectorAll('.uxmal-modal-close-button').forEach((item) => {
-       item.addEventListener('click', () => {
-          uxmal.Cards.setLoading('orderCard', false);
-       });
+        item.addEventListener('click', () => {
+            uxmal.Cards.setLoading('orderCard', false);
+        });
     });
 });
