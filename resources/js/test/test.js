@@ -2,7 +2,7 @@ import {
     UxmalSelect,
     UxmalInput,
     UxmalForm,
-} from "../../../public/enmaca/laravel-uxmal/js/uxmal.js";
+} from "laravel-uxmal-npm";
 
 const uxmalInput = new UxmalInput();
 const uxmalSelect = new UxmalSelect();

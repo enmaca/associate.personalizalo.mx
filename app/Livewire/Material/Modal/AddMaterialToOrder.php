@@ -117,8 +117,6 @@ class AddMaterialToOrder extends Component
         $this->content = View::make($form->view, [
             'data' => $form->toArray()
         ])->render();
-
-        $this->dispatch('add-to-order::show-material-modal');
     }
 
     public function render()

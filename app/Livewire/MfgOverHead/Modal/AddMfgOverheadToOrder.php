@@ -93,8 +93,6 @@ class AddMfgOverheadToOrder extends Component
         $this->content = View::make($form->view, [
             'data' => $form->toArray()
         ])->render();
-
-        $this->dispatch('add-to-order::show-mfgoverhead-modal');
     }
 
     public function render()

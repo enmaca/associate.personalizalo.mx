@@ -19,11 +19,9 @@ class DynamicCard extends CardBlock
      */
     public function build(): void
     {
-        $this->Body()->addRow();
+        $this->NewBodyRow();
 
-        $this->setBodyFieldRowClass('col-xxl-6 mb-3');
-
-        $this->Body()->addElementInRow(
+        $this->BodyRow()->addElementInRow(
             element: SelectByNameSkuDescMaterial::Object(['options' => ['event-change-handler' => 'onChangeSelectedMaterialByNameSkuDesc']]),
             row_options: new RowOptions(
                 replaceAttributes: [
@@ -31,7 +29,7 @@ class DynamicCard extends CardBlock
                 ]
             ));
 
-        $this->Body()->addElementInRow(
+        $this->BodyRow()->addElementInRow(
             element: SelectByNameLaborCost::Object(['options' => ['event-change-handler' => 'onChangeSelectedLaborCostByName']]),
             row_options: new RowOptions(
                 replaceAttributes: [
@@ -39,8 +37,8 @@ class DynamicCard extends CardBlock
                 ]
             ));
 
-        $this->Body()->addElementInRow(
-            element:SelectByNameMfgOverHead::Object(['options' => ['event-change-handler' => 'onChangeSelectedMfgOverHeadByName']]),
+        $this->BodyRow()->addElementInRow(
+            element: SelectByNameMfgOverHead::Object(['options' => ['event-change-handler' => 'onChangeSelectedMfgOverHeadByName']]),
             row_options: new RowOptions(
                 replaceAttributes: [
                     'class' => 'col-xxl-6 mb-3'

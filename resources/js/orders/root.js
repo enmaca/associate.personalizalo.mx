@@ -1,5 +1,5 @@
 import {Modal} from "bootstrap";
-import {UxmalSelect} from "../../../public/enmaca/laravel-uxmal/js/uxmal.js";
+import {UxmalSelect} from "laravel-uxmal-npm";
 
 const uxmalSelects = new UxmalSelect();
 

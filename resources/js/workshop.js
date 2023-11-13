@@ -1,21 +1,5 @@
-import {UxmalCSRF} from "../../public/enmaca/laravel-uxmal/js/uxmal.js";
+import {UxmalCSRF} from "laravel-uxmal-npm";
 
-window.workshopDispatchEvent = (scriptContent) => {
-    if (scriptContent.startsWith('livewire::')) {
-        // Extract the event name after 'livewire::event'
-        const eventName = scriptContent.replace('livewire::', '').trim();
-
-        // Dispatch the Livewire event
-        Livewire.dispatch(eventName);
-    } else if (scriptContent.startsWith('javascript::')) {
-        // Extract the event name after 'javascript::event'
-        const eventName = scriptContent.replace('javascript::', '').trim();
-
-        // Create and dispatch the pure JavaScript event
-        const event = new Event(eventName);
-        document.dispatchEvent(event);
-    }
-}
 window.livewireEvents = new Map();
 
 document.addEventListener('livewire:initialized', () => {
@@ -24,10 +8,9 @@ document.addEventListener('livewire:initialized', () => {
             if (status === 200 && json.components) {
                 Array.from(json.components).forEach((item) => {
                     const component = JSON.parse(item.snapshot);
-                    console.log(component);
                     if (!window.livewireEvents.get(component.checksum)) {
                         window.livewireEvents.set(component.checksum, true);
-                        console.log('workshop.js Dispatch:', 'livewire:' + component.memo.name + ':request:succeed')
+                        console.log('workshop.js Dispatch ===> ', 'livewire:' + component.memo.name + ':request:succeed')
                         document.dispatchEvent(new CustomEvent('livewire:' + component.memo.name + ':request:succeed', {detail: component.memo}))
                     }
                 })
@@ -37,7 +20,6 @@ document.addEventListener('livewire:initialized', () => {
 });
 
 /**
- *
  * @param order_id
  * @param data
  * @param onsuccess_callback
