@@ -1,9 +1,9 @@
 <?php
 
 namespace App\Support\Workshop\OrderProductDetails\TbHandler;
-use Enmaca\LaravelUxmal\Support\Components\Ui\Table\ColumnSupport;
+use Enmaca\LaravelUxmal\Support\Builders\Ui\Table\ColumnParseValue;
 
-class MfgStatus extends ColumnSupport
+class MfgStatus extends ColumnParseValue
 {
 
     /**

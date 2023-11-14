@@ -5,6 +5,7 @@ namespace App\Support\Workshop\Customer;
 use Enmaca\LaravelUxmal\Abstract\ModalBlock;
 use Enmaca\LaravelUxmal\Components\Form\Input;
 use Enmaca\LaravelUxmal\Components\Ui\Modal;
+use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
 use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\ModalOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
@@ -110,21 +111,18 @@ class ModalSearchByMobile extends ModalBlock
         );
 
         $this->_callBtn = match ($this->GetContext()) {
-            'createclient' => $modal->getShowButton([
-                'options' => [
-                    'button.name' => 'clientAdd',
-                    'button.label' => 'Agregar Cliente'
-                ]], 'object'),
-            'createorder' => $modal->getShowButton([
-                'options' => [
-                    'button.name' => 'orderCreate',
-                    'button.label' => 'Crear Pedido'
-                ]], 'object'),
-            default => $modal->getShowButton([
-                'options' => [
-                    'button.name' => 'showBtn',
-                    'button.label' => 'Mostrar'
-                ]], 'object'),
+            'createclient' => $modal->getShowButton(btnAttributes: new ButtonOptions(
+                label: 'Agregar Cliente',
+                name: 'clientAdd'
+            ), return_type: 'object'),
+            'createorder' => $modal->getShowButton(btnAttributes: new ButtonOptions(
+                label: 'Crear Pedido',
+                name: 'orderCreate'
+            ), return_type: 'object'),
+            default => $modal->getShowButton(btnAttributes: new ButtonOptions(
+                label: 'Mostrar',
+                name: 'showBtn'
+            ), return_type: 'object')
         };
 
         $this->SetContent($modal);

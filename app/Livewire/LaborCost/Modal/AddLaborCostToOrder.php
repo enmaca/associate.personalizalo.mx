@@ -4,28 +4,31 @@ namespace App\Livewire\LaborCost\Modal;
 
 use App\Models\LaborCost;
 use Enmaca\LaravelUxmal\Components\Form\Input;
+use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputHiddenOptions;
+use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputNumberOptions;
 use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 use Enmaca\LaravelUxmal\UxmalComponent;
+use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use \Enmaca\LaravelUxmal\Components\Ui\Row;
+use Enmaca\LaravelUxmal\Components\Ui\Row;
 
 class AddLaborCostToOrder extends Component
 {
     public $content;
     public $increment;
 
-    public function mount()
+    public function mount(): void
     {
         $this->content = 'Initial::Content';
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     #[On('add-labor-cost-to-order::laborcost.changed')]
     public function laborcost_changed($laborcost): void
@@ -62,24 +65,23 @@ class AddLaborCostToOrder extends Component
         ));
 
 
-        $main_row->addElement(element: Input\Hidden::Options([
-            'input.type' => 'hidden',
-            'hidden.name' => 'laborCostId',
-            'hidden.value' => $laborcost_data->hashId
-        ]));
+        $main_row->addElement(element: Input\Hidden::Options(new InputHiddenOptions(
+            name: 'laborCostId',
+            value: $laborcost_data->hashId
+        )));
 
-        $main_row->addElementInRow(element: Input::Options([
-            'input.type' => 'number',
-            'input.label' => 'Cantidad (Minimo [' . $laborcost_data->min_fraction_cost_in_minutes . '] Minutos)',
-            'input.name' => 'laborCostQuantity',
-            'input.value' => $laborcost_data->min_fraction_cost_in_minutes,
-            'input.min' => $laborcost_data->min_fraction_cost_in_minutes,
-            'input.required' => true,
-            'input.append-attributes' => [
-                'data-value' => $cost_by_minute,
-                'data-tax-factor' => $tax_factor,
-            ]
-        ]),
+        $main_row->addElementInRow(
+            element: Input::Options(new InputNumberOptions(
+                label: 'Cantidad (Minimo [' . $laborcost_data->min_fraction_cost_in_minutes . '] Minutos)',
+                name: 'laborCostQuantity',
+                value: $laborcost_data->min_fraction_cost_in_minutes,
+                required: true,
+                appendAttributes: [
+                    'data-value' => $cost_by_minute,
+                    'data-tax-factor' => $tax_factor,
+                ],
+                min: $laborcost_data->min_fraction_cost_in_minutes
+            )),
             row_options: new RowOptions(
                 appendAttributes: [
                     'class' => 'mb-3'
@@ -118,6 +120,9 @@ class AddLaborCostToOrder extends Component
         ])->render();
     }
 
+    /**
+     * @throws Exception
+     */
     public function render(): Factory|Application|\Illuminate\Contracts\View\View|\Illuminate\Contracts\Foundation\Application
     {
         $this->increment++;

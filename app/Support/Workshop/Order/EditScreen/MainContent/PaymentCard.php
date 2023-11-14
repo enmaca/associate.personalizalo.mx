@@ -5,6 +5,7 @@ namespace App\Support\Workshop\Order\EditScreen\MainContent;
 use App\Support\Workshop\PaymentMethods\SelectPaymentMethods;
 use Enmaca\LaravelUxmal\Components\Form\Button;
 use Enmaca\LaravelUxmal\Components\Form\Input;
+use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
 use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 use Exception;
@@ -52,11 +53,11 @@ class PaymentCard extends \Enmaca\LaravelUxmal\Abstract\CardBlock
             ));
 
         $this->Footer()->addElementInRow(
-            element: Button::Options([
-                'button.style' => 'info',
-                'button.name' => 'addPaymentFormButton',
-                'button.label' => 'Agregar Pago'
-            ]),
+            element: Button::Options( new ButtonOptions(
+                label: 'Agregar Pago',
+                name: 'addPaymentFormButton',
+                style: 'info'
+            )),
             row_options: new RowOptions(
                 replaceAttributes: [
                     'class' => 'col-12 text-end'

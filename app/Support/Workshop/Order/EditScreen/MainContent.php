@@ -7,7 +7,9 @@ use Enmaca\LaravelUxmal\Components\Form\Button;
 use Enmaca\LaravelUxmal\Components\Form\Input\Checkbox;
 use Enmaca\LaravelUxmal\Components\Form\Input\Flatpickr as FlatpickrComponent;
 use Enmaca\LaravelUxmal\Components\Ui\Card as CardComponent;
+use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
 use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputCheckboxOptions;
+use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputFlatpickrOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\CardOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 use Enmaca\LaravelUxmal\UxmalComponent;
@@ -50,31 +52,26 @@ class MainContent extends ContentBlock
         ));
 
         $orderCardObj->Footer()->addElementInRow(
-            element: Button::Options([
-                'button.style' => 'success',
-                'button.name' => 'validateOrderButton',
-                'button.label' => 'Validar Pedido'
-            ]),
+            element: Button::Options(new ButtonOptions(
+                label: 'Validar Pedido',
+                name: 'validateOrderButton',
+                style: 'success'
+            )),
             row_options: new RowOptions(
                 replaceAttributes: [
                     'class' => 'col-12 text-end'
                 ]
             ));
 
+        $orderCardObj->Body()->addElement(FlatpickrComponent::Options(new InputFlatpickrOptions(
+            name: 'deliveryDate',
+            label: 'flatpickr',
+            appendAttributes: ['style' => 'display: none'],
+            dateFormat: "d M, Y",
+            positionElement: '#orderDeliveryDateButtonId'
+        )));
 
-        $orderCardBodyObj = $orderCardObj->Body();
-
-        $orderCardBodyObj->addElement(FlatpickrComponent::Options([
-            'input.type' => 'flatpickr',
-            'flatpickr.label' => null,
-            'flatpickr.name' => 'deliveryDate',
-            'flatpickr.append-attributes' => ['style' => 'display: none'],
-            'flatpickr.date-format' => "d M, Y",
-            'flatpickr.positionElement' => '#orderDeliveryDateButtonId'
-        ]));
-
-
-        $orderCardBodyObj->addElement(MainContent\ClientCard::Object(
+        $orderCardObj->Body()->addElement(MainContent\ClientCard::Object(
             values: $this->GetValues(),
             options: [
                 'card.header' => 'Datos Cliente/Entrega',
@@ -84,8 +81,7 @@ class MainContent extends ContentBlock
                 'card.name' => 'clientCard'
             ]));
 
-
-        $orderCardBodyObj->addElement(MainContent\MfgCard::Object(
+        $orderCardObj->Body()->addElement(MainContent\MfgCard::Object(
             values: $this->GetValues(),
             options: [
                 'card.header' => 'Datos de Manufactura',
@@ -96,7 +92,7 @@ class MainContent extends ContentBlock
             ]));
 
 
-        $orderCardBodyObj->addElement(MainContent\ProductCard::Object(
+        $orderCardObj->Body()->addElement(MainContent\ProductCard::Object(
             values: $this->GetValues(),
             options: [
                 'card.header' => 'Productos',
@@ -106,7 +102,7 @@ class MainContent extends ContentBlock
                 'card.name' => 'productCard'
             ]));
 
-        $orderCardBodyObj->addElement(MainContent\DynamicCard::Object(
+        $orderCardObj->Body()->addElement(MainContent\DynamicCard::Object(
             values: $this->GetValues(),
             options: [
                 'card.header' => 'Costos Directos',
@@ -116,7 +112,7 @@ class MainContent extends ContentBlock
                 'card.name' => 'dynamicCard'
             ]));
 
-        $orderCardBodyObj->addElement(MainContent\PaymentCard::Object(
+        $orderCardObj->Body()->addElement(MainContent\PaymentCard::Object(
             values: $this->GetValues(),
             options: [
                 'card.header' => 'Información de Pago',

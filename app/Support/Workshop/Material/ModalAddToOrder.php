@@ -2,6 +2,10 @@
 
 namespace App\Support\Workshop\Material;
 
+use Enmaca\LaravelUxmal\Components\Form\Button;
+use Enmaca\LaravelUxmal\Components\Ui\Modal;
+use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
+use Enmaca\LaravelUxmal\Support\Options\Ui\ModalOptions;
 use Enmaca\LaravelUxmal\UxmalComponent;
 use Exception;
 
@@ -13,28 +17,19 @@ class ModalAddToOrder extends \Enmaca\LaravelUxmal\Abstract\ModalBlock
      */
     public function build(): void
     {
-        $aggregate = [];
-        if( isset($this->attributes['options']['saveBtn.onclick']) )
-            $aggregate['modal.saveBtn.onclick'] = $this->attributes['options']['saveBtn.onclick'];
-
-        $modal = UxmalComponent::Make('ui.modal', [
-            'options' => [
-                'modal.name' => 'selectedMaterialToAddToOrder',
-                'modal.title' => 'Agregar Material Directo',
-                'modal.body' => UxmalComponent::Make('livewire', [
-                    'path' => 'material.modal.add-material-to-order'
-                ]),
-                'modal.saveBtn.label' => 'Agregar al Pedido',
-                'modal.size' => 'normal'
-            ] + $aggregate
-        ]);
+        $modal = Modal::Options(new ModalOptions(
+            name: 'selectedMaterialToAddToOrder',
+            size: 'normal',
+            title: 'Agregar Material Directo',
+            body: UxmalComponent::Make('livewire', [
+                'path' => 'material.modal.add-material-to-order'
+            ]),
+            saveBtnLabel: 'Agregar al Pedido',
+            saveBtnOnClick: $this->GetOption('saveBtn.onclick') ?? null
+        ));
 
         $this->_callBtn = match ($this->GetContext()) {
-            default => $modal->getShowButton([
-                'options' => [
-                    'button.name' => 'showModalSelectedMaterialToAddToOrder',
-                    'button.label' => 'Mostrar'
-                ]], 'object'),
+            default => $modal->getShowButton( new ButtonOptions( name: 'showModalSelectedMaterialToAddToOrder', label: 'Mostrar'), 'object'),
         };
 
         $this->SetContent($modal);

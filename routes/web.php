@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressBookController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DigitalArtController;
@@ -90,7 +91,13 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/digital_art/{id}', 'download')->name('digital_art_get');
     });
 
+    Route::controller(AddressBookController::class)->group(function(){
+        Route::post('/address_book/mex_municipality/search_tomselect', 'search_tomselect_mex_municipality')->name('mex_municipality_search_tomselect');
+        Route::post('/address_book/mex_state/search_tomselect', 'search_tomselect_mex_state')->name('mex_state_search_tomselect');
+        Route::post('/address_book/mex_district/search_tomselect', 'search_tomselect_mex_district')->name('mex_district_search_tomselect');
+    });
+
     Route::controller(PaymentMethodController::class)->group(function(){
-        Route::post('/address_book/mex_municipality/search_tomselect', 'search_tomselect')->name('payment_method_search_tomselect');
+        Route::post('/payment_method/search_tomselect', 'search_tomselect')->name('payment_method_search_tomselect');
     });
 });

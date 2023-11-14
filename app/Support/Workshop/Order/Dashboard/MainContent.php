@@ -2,10 +2,12 @@
 
 namespace App\Support\Workshop\Order\Dashboard;
 
+use Enmaca\LaravelUxmal\Abstract\ContentBlock;
 use \Enmaca\LaravelUxmal\Components\Form\Button;
+use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 
-class MainContent extends \Enmaca\LaravelUxmal\Abstract\ContentBlock
+class MainContent extends ContentBlock
 {
     /**
      * @throws \Exception
@@ -23,13 +25,13 @@ class MainContent extends \Enmaca\LaravelUxmal\Abstract\ContentBlock
                 ]
             ]));
 
-        $this->ContentRow()->addElement(element: Button::Options([
-            'button.name' => 'orderHome',
-            'button.type' => 'normal',
-            'button.style' => 'primary',
-            'button.onclick' => 'createOrder()',
-            'button.label' => 'Crear Pedido'
-        ]));
+        $this->ContentRow()->addElement(element: Button::Options(new ButtonOptions(
+            label: 'Crear Pedido',
+            name: 'orderHome',
+            style: 'primary',
+            type: 'normal',
+            onclick: 'createOrder()'
+        )));
 
     }
 }

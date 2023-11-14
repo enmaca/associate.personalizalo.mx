@@ -5,6 +5,7 @@ namespace App\Support\Workshop\Order\EditScreen\MainContent;
 use Enmaca\LaravelUxmal\Abstract\CardBlock;
 use Enmaca\LaravelUxmal\Components\Form\Button;
 use Enmaca\LaravelUxmal\Components\Form\Input;
+use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
 use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 use Enmaca\LaravelUxmal\UxmalComponent;
@@ -97,12 +98,12 @@ class ClientCard extends CardBlock
             ));
 
         $this->Footer()->addElementInRow(
-            element: Button::Options([
-                'button.style' => 'primary',
-                'button.name' => 'addressBookSubmit',
-                'button.label' => 'Guardar cambios',
-                'button.append-attributes' => ['class' => ['d-none' => true]]
-            ]),
+            element: Button::Options(new ButtonOptions(
+                label: 'Guardar cambios',
+                name: 'addressBookSubmit',
+                style: 'primary',
+                appendAttributes: ['class' => ['d-none' => true]]
+            )),
             row_options: new RowOptions(
                 replaceAttributes: [
                     'class' => 'col-12 text-end'

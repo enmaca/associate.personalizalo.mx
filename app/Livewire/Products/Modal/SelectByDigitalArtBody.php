@@ -4,6 +4,14 @@ namespace App\Livewire\Products\Modal;
 
 use App\Models\DigitalArt;
 use App\Models\Product;
+use Enmaca\LaravelUxmal\Components\Form\Input;
+use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputNumberOptions;
+use Enmaca\LaravelUxmal\Support\Options\Form\InputOptions;
+use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
+use Enmaca\LaravelUxmal\UxmalComponent;
+use Exception;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\View;
 use Livewire\Component;
 use Livewire\Attributes\On;
@@ -24,7 +32,7 @@ class SelectByDigitalArtBody extends Component
             'digital_category.arts',
             'mfg_costs'])->findByHashId($product);
 
-        if( empty($product_data))
+        if (empty($product_data))
             return;
 
         $__formId = '__' . bin2hex(random_bytes(4));
@@ -66,25 +74,25 @@ END;
             ];
         }
 
-        $form = \Enmaca\LaravelUxmal\UxmalComponent::Make('form', [
+        $form = UxmalComponent::Make('form', [
             'options' => [
                 'form.id' => $__formId,
                 'form.action' => route('orders_post_product')
             ]
         ]);
 
-        $form->component('form.input', [
+        $form->addComponent('form.input', [
             'options' => [
                 'input.type' => 'hidden',
                 'hidden.name' => 'catalog_product_id',
                 'hidden.value' => $product_data->hashId
             ]]);
 
-        $digital_art_swiper_row = $form->component('ui.row');
+        $digital_art_swiper_row = $form->addComponent('ui.row');
 
         $swiper_name = 'digitalArtSwiper' . $product_data->digital_category->hashId;
 
-        $digital_art_swiper_row->component('ui.swiper', [
+        $digital_art_swiper_row->addComponent('ui.swiper', [
             'options' => [
                 'swiper.name' => $swiper_name,
                 'swiper.items' => $items,
@@ -133,7 +141,7 @@ EOT;
 EOT;
             }
             $__pvg_html .= '</div>';
-            $form->component('ui.row', ['options' => [
+            $form->addComponent('ui.row', ['options' => [
                 'row.slot' => $__pvg_html
             ]]);
 
@@ -152,8 +160,8 @@ EOT;
                         $__mvg_data .= '<label class="mb-1 d-block">Color:</label>';
                         $__mvg_data .= '<div class="d-flex flex-wrap color-variant">';
                         $__loopCount = 0;
-                        foreach ($variation_data as $color){
-                            $checked = ($__loopCount==0) ? 'checked' : '';
+                        foreach ($variation_data as $color) {
+                            $checked = ($__loopCount == 0) ? 'checked' : '';
                             $__loopCount++;
                             $__mvg_data .= <<<EOT
                             <input data-mvg-color="{$color}" class="d-none" id="{$color}Id" name="mvg_color_{$mvg_data['hashId']}" type="radio" value="{$color}" {$checked}/>
@@ -169,8 +177,8 @@ EOT;
                         $__mvg_data .= '<label class="mb-1 d-block">Tamaño:</label>';
                         $__mvg_data .= '<div class="d-flex justify-content-between size-variant">';
                         $__loopCount = 0;
-                        foreach ($variation_data as $size){
-                            $checked = ($__loopCount==0) ? 'checked' : '';
+                        foreach ($variation_data as $size) {
+                            $checked = ($__loopCount == 0) ? 'checked' : '';
                             $__loopCount++;
                             $__mvg_data .= <<<EOT
                             <input data-mvg-size="{$size}" class="d-none" id="{$size}Id" name="mvg_size_{$mvg_data['hashId']}" type="radio" value="{$size}" {$checked}/>
@@ -184,7 +192,7 @@ EOT;
             }
 
 
-            $form->component('ui.row', ['options' => [
+            $form->addComponent('ui.row', ['options' => [
                 'row.slot' => $__mvg_data,
                 'row.append-attributes' => [
                     'data-selected-product-form-id' => $__formId
@@ -192,19 +200,18 @@ EOT;
             ]]);
         }
 
-        $form->componentsInDiv(['options' => [ 'row.append-attributes' => [ 'class' => 'mb-3 mt-3'] ]], [[
-            'path' => 'form.input',
-            'attributes' => [
-                'options' => [
-                    'input.type' => 'number',
-                    'input.label' => 'Cantidad',
-                    'input.name' => 'quantity',
-                    'input.value' => 1,
-                    'input.min' => 1,
-                    'input.required' => true
-                ]
-            ]]
-        ]);
+        $form->addElementInRow(
+            element: Input::Options(new InputNumberOptions(
+                label: 'Cantidad',
+                name: 'quantity',
+                value: 1,
+                required: true,
+                min: 1
+            )), row_options: new RowOptions(
+            appendAttributes: [
+                'class' => 'mb-3 mt-3'
+            ]
+        ));
 
         $this->content = View::make($form->view, [
             'data' => $form->toArray()
@@ -215,12 +222,13 @@ EOT;
     }
 
 
-    public function render()
+    /**
+     * @throws Exception
+     */
+    public function render(): Factory|Application|\Illuminate\Contracts\View\View|\Illuminate\Contracts\Foundation\Application
     {
-
-
-        $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
-        $uxmal->component('ui.row', [
+        $uxmal = new UxmalComponent();
+        $uxmal->addComponent('ui.row', [
             'options' => [
                 'row.append-attributes' => [
                     'wire:model' => 'content'
@@ -228,8 +236,6 @@ EOT;
                 'row.slot' => $this->content
             ],
         ]);
-
-
         return view('uxmal::livewire', ['data' => $uxmal->toArray()]);
     }
 

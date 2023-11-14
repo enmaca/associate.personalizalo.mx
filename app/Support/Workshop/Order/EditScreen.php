@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Support\Workshop\Order;
 
 use Enmaca\LaravelUxmal\Abstract\ScreenBlock;
@@ -8,7 +9,7 @@ class EditScreen extends ScreenBlock
 
     public function build(): void
     {
-       $this->SetMainContent(EditScreen\MainContent::Object(values: $this->GetValues()));
+        $this->SetMainContent(EditScreen\MainContent::Object(values: $this->GetValues()));
         /**
          * Add Modals
          */

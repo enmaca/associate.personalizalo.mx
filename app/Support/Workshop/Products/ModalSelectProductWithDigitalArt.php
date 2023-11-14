@@ -3,6 +3,10 @@
 namespace App\Support\Workshop\Products;
 
 use Enmaca\LaravelUxmal\Abstract\ModalBlock;
+use Enmaca\LaravelUxmal\Components\Form\Button;
+use Enmaca\LaravelUxmal\Components\Ui\Modal;
+use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
+use Enmaca\LaravelUxmal\Support\Options\Ui\ModalOptions;
 use Enmaca\LaravelUxmal\UxmalComponent;
 use Exception;
 
@@ -14,28 +18,19 @@ class ModalSelectProductWithDigitalArt extends ModalBlock
      */
     public function build(): void
     {
-        $aggregate = [];
-        if( $this->GetOption('saveBtn.onclick') )
-            $aggregate['modal.saveBtn.onclick'] = $this->GetOption('saveBtn.onclick');
-
-        $modal = UxmalComponent::Make('ui.modal', [
-            'options' => [
-                'modal.name' => 'selectProductWithDigitalArt',
-                'modal.title' => 'Agregar Producto (Arte Digital)',
-                'modal.body' => UxmalComponent::Make('livewire', [
-                    'path' => 'products.modal.select-by-digital-art-body'
-                ]),
-                'modal.saveBtn.label' => 'Agregar al Pedido',
-                'modal.size' => 'large'
-            ] + $aggregate
-        ]);
+        $modal = Modal::Options(new ModalOptions(
+            name: 'selectProductWithDigitalArt',
+            size: 'large',
+            title: 'Agregar Producto (Arte Digital)',
+            body: UxmalComponent::Make('livewire', [
+                'path' => 'products.modal.select-by-digital-art-body'
+            ]),
+            saveBtnLabel: 'Agregar al Pedido',
+            saveBtnOnClick: $this->GetOption('saveBtn.onclick') ?? null
+        ));
 
         $this->_callBtn = match ($this->GetContext()) {
-            default => $modal->getShowButton([
-                'options' => [
-                    'button.name' => 'showModalSelectProductWithDigitalArt',
-                    'button.label' => 'Mostrar'
-                ]], 'object'),
+            default => $modal->getShowButton( new ButtonOptions( label: 'Mostrar', name: 'showModalSelectProductWithDigitalArt'), 'object')
         };
         $this->_content = $modal;
     }
