@@ -1,5 +1,6 @@
 import {UxmalCSRF, UxmalSwiper, Uxmal} from "laravel-uxmal-npm";
 import {updateOrder} from "../workshop.js";
+import update from "../../../public/enmaca/laravel-uxmal/libs/swiper/core/update/index.js";
 
 const uxmalSwiper = new UxmalSwiper();
 const uxmal = new Uxmal();
@@ -202,7 +203,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    //// Listen To Event When Livewire request message Succedes
+    //// Listen To Event When Livewire request message Succeds
     document.addEventListener('livewire:addressbook.form.default-form:request:succeed', (event) => {
         setTimeout(() => {
             const scope = document.querySelector(`[wire\\:id="${event.detail.id}"]`);
@@ -449,4 +450,13 @@ document.addEventListener("DOMContentLoaded", function () {
             uxmal.Cards.setLoading('orderCard', false);
         });
     });
+
+    uxmal.Inputs.on('advance_payment_50Id', 'change', (event) => {
+        console.log('advance_payment_50Id', event.target.checked);
+        updateAmount(event.target.checked ? 50 : 0);
+    })
+
+    const updateAmount = (quantity) => {
+        uxmal.Inputs.setValue('amountId', quantity);
+    };
 });
