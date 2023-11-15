@@ -5,8 +5,11 @@ namespace App\Support\Services;
 use App\Models\DigitalArt;
 use App\Models\MaterialVariationsGroup;
 use App\Models\MaterialVariationsGroupDetails;
+use App\Models\Order;
 use App\Models\OrderProductDetail;
 use App\Models\OrderProductDetailsDigitalArt;
+use App\Models\OrderProductDynamic;
+use App\Models\OrderProductDynamicDetails;
 use App\Models\PrintVariationsGroupDetails;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
@@ -152,7 +155,7 @@ class OrderService
             'quantity' => $data['quantity'],
             'unit_cost' => $unit_cost,
             'unit_taxes' => $unit_taxes,
-            'unit_profit' => $unit_price - $unit_cost,
+            'unit_profit' => $unit_subtotal - $unit_cost,
             'unit_price' => $unit_price,
             'unit_subtotal' => $unit_subtotal,
             'cost' => $cost,
@@ -201,5 +204,38 @@ class OrderService
         return $order_product_detail->toArray() + ['with_digital_art' => $order_product_detail_digital_art->toArray()];
     }
 
+
+    public static function updateTotal($order_id): array
+    {
+        $order = Order::findOrFail($order_id);
+        $order_product_details = OrderProductDetail::where('order_id', $order_id)->get();
+        $subtotal = 0;
+        $taxes = 0;
+        $profit = 0;
+        $price = 0;
+        $cost = 0;
+        foreach ($order_product_details as $order_product_detail){
+            $subtotal += $order_product_detail->subtotal;
+            $taxes += $order_product_detail->taxes;
+            $profit += $order_product_detail->profit;
+            $price += $order_product_detail->price;
+            $cost += $order_product_detail->cost;
+        }
+        $order_product_dynamict_details = OrderProductDynamic::with('items')->where('order_id', $order_id)->first();
+        foreach( $order_product_dynamict_details->items as $item){
+            $subtotal += $item->subtotal;
+            $taxes += $item->taxes;
+            $profit += $item->profit_margin_subtotal;
+            $price += $item->price;
+            $cost += $item->cost;
+        }
+        $order->subtotal = $subtotal;
+        $order->taxes = $taxes;
+        $order->profit = $profit;
+        $order->price = $price;
+        $order->cost = $cost;
+        $order->save();
+        return $order->toArray();
+    }
 
 }

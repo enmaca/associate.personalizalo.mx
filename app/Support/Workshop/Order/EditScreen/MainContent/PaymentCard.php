@@ -56,6 +56,7 @@ class PaymentCard extends CardBlock
                 name: 'amount',
                 placeholder: 'Monto',
                 labelAppendAttributes: [ 'style' => [ 'width: 100%' ] ],
+                disabled: true
             )),
             row_options: new RowOptions(
                 replaceAttributes: [

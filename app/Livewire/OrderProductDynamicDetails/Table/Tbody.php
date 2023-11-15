@@ -3,6 +3,7 @@
 namespace App\Livewire\OrderProductDynamicDetails\Table;
 
 use App\Models\Order;
+use App\Support\Services\OrderService;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -57,9 +58,11 @@ class Tbody extends Component
                 'taxes',
                 'profit_margin',
                 'subtotal',
+                'price',
                 'created_by'])->get();
 
-        $this->dispatch('order-product-dynamic-details.table.tbody::updated', tfoot: $table->toHtml('tfoot') );
+        $price = Order::select('price')->findOrFail($order_id)->price;
+        $this->dispatch('order-product-dynamic-details.table.tbody::updated', tfoot: $table->toHtml('tfoot'), price: $price );
         return $table->toHtml('tbody');
 
     }

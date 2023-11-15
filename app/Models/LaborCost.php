@@ -35,7 +35,8 @@ class LaborCost extends BaseModel
             'cost' => $cost,
             'taxes' => $taxes,
             'profit_margin' => 0,
-            'subtotal' => ($cost + $taxes)
+            'subtotal' => $cost,
+            'price' => ($cost + $taxes)
         ];
 
     }

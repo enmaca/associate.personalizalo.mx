@@ -364,6 +364,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Listen To Event When Inserted Record on Table OrderProductDynamicDetails
     Livewire.on('order-product-dynamic-details.table.tbody::updated', (data) => {
         productDynamicDetailsTableFooterData = data.tfoot;
+        currentPrice = data.price;
+        currentPriceDiv2 = data.price / 2;
+        checkAdvancePayment50();
     });
 
     // livewire:order-product-dynamic-details.table.tbody:request:succeed
@@ -421,6 +424,9 @@ document.addEventListener("DOMContentLoaded", function () {
     //// Listen To Event When Inserted Record on Table OrderProductDetails workshop.js Dispatch ===>
     Livewire.on('order-product-details.table.tbody::updated', (data) => {
         productDetailsTableFooterData = data.tfoot;
+        currentPrice = data.price;
+        currentPriceDiv2 = data.price / 2;
+        checkAdvancePayment50();
     });
 
     //// Event livewire:order-product-details.table.tbody:request:succeed
@@ -451,12 +457,23 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    uxmal.Inputs.on('advance_payment_50Id', 'change', (event) => {
-        console.log('advance_payment_50Id', event.target.checked);
-        updateAmount(event.target.checked ? 50 : 0);
-    })
+    const checkAdvancePayment50 = () => {
+        const advance_payment_50 = uxmal.Inputs.get('advance_payment_50Id').element;
+        if(advance_payment_50.checked) {
+            updateOrderAmount(currentPriceDiv2);
+        } else {
+            updateOrderAmount(currentPrice);
+        }
+    }
 
-    const updateAmount = (quantity) => {
-        uxmal.Inputs.setValue('amountId', quantity);
+    uxmal.Inputs.on('advance_payment_50Id', 'change', (event) => {
+        checkAdvancePayment50();
+    });
+
+
+    let currentPrice = 0;
+    let currentPriceDiv2 = 0;
+    const updateOrderAmount = (price) => {
+        uxmal.Inputs.setValue('amountId', price);
     };
 });

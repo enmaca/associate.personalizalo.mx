@@ -187,7 +187,7 @@ class OrdersController extends Controller
      *      [laborCostSubtotal] => $18.13
      *      [order_id] => ord_XXXXX
      *      [customer_id] => cus_XXXXX
-     * @return void
+     * @return \Illuminate\Http\JsonResponse
      */
     public function post_labor_cost(Request $request)
     {
@@ -230,9 +230,12 @@ class OrdersController extends Controller
             $OrderProductDynamicDataDetail->taxes = $labor_costs['taxes'];
             $OrderProductDynamicDataDetail->profit_margin = $labor_costs['profit_margin'];
             $OrderProductDynamicDataDetail->subtotal = $labor_costs['subtotal'];
+            $OrderProductDynamicDataDetail->price = $labor_costs['price'];
             $OrderProductDynamicDataDetail->created_by = Auth::id();
 
             $OrderProductDynamicDataDetail->save();
+
+            OrderService::updateTotal($order_id);
             return response()->json(['ok' => $OrderProductDynamicDataDetail->hashId]);
         }
         return response()->json(['fail' => 'Error']);
@@ -249,10 +252,13 @@ class OrdersController extends Controller
     public function delete_dynamic_detail_row(Request $request, string $opdd_id)
     {
         $order_product_dynamic_id = OrderProductDynamicDetails::keyFromHashId($opdd_id);
-        $order_product_dynamic_row = OrderProductDynamicDetails::find($order_product_dynamic_id);
+        $order_product_dynamic_row = OrderProductDynamicDetails::with('order_product_dynamic')->find($order_product_dynamic_id);
         if ($order_product_dynamic_row) {
-            if ($order_product_dynamic_row->delete())
+            if ($order_product_dynamic_row->delete()){
+                OrderService::updateTotal($order_product_dynamic_row->order_product_dynamic->order_id);
                 return response()->json(['ok' => 'El registro se elimino correctamente']);
+            }
+
             else
                 return response()->json(['fail' => 'El registro no se pude eliminar']);
         }
@@ -270,10 +276,13 @@ class OrdersController extends Controller
     public function delete_product_detail_row(Request $request, string $opd_id)
     {
         $order_product_detail_id = OrderProductDetail::keyFromHashId($opd_id);
-        $order_product_row = OrderProductDetail::find($order_product_detail_id);
+        $order_product_row = OrderProductDetail::with('order')->find($order_product_detail_id);
         if ($order_product_row) {
-            if ($order_product_row->delete())
+            if ($order_product_row->delete()){
+                OrderService::updateTotal($order_product_row->order->id);
                 return response()->json(['ok' => 'El registro se elimino correctamente']);
+            }
+
             else
                 return response()->json(['fail' => 'El registro no se pude eliminar']);
         }
@@ -326,10 +335,12 @@ class OrdersController extends Controller
             $OrderProductDynamicDataDetail->taxes = $mfg_overhead_costs['taxes'];
             $OrderProductDynamicDataDetail->profit_margin = $mfg_overhead_costs['profit_margin'];
             $OrderProductDynamicDataDetail->subtotal = $mfg_overhead_costs['subtotal'];
+            $OrderProductDynamicDataDetail->price = $mfg_overhead_costs['price'];
             $OrderProductDynamicDataDetail->created_by = Auth::id();
 
             $OrderProductDynamicDataDetail->save();
 
+            OrderService::updateTotal($order_id);
             return response()->json(['ok' => $OrderProductDynamicDataDetail->hashId]);
         }
         return response()->json(['fail' => 'Error']);
@@ -383,9 +394,12 @@ class OrdersController extends Controller
             $OrderProductDynamicDataDetail->profit_margin = $allInput['materialProfitMargin'] / 100;
             $OrderProductDynamicDataDetail->profit_margin_subtotal = $material_costs['profit_margin'];
             $OrderProductDynamicDataDetail->subtotal = $material_costs['subtotal'];
+            $OrderProductDynamicDataDetail->price = $material_costs['price'];
             $OrderProductDynamicDataDetail->created_by = Auth::id();
 
             $OrderProductDynamicDataDetail->save();
+
+            OrderService::updateTotal($order_id);
             return response()->json(['ok' => $OrderProductDynamicDataDetail->hashId]);
         }
         return response()->json(['fail' => 'Error']);
@@ -457,6 +471,7 @@ class OrdersController extends Controller
                 'catalog_product_id' => $catalog_product_id,
                 'quantity' => $quantity
             ]);
+            OrderService::updateTotal($order_id);
         } catch (\Exception $e) {
             return response()->json(['fail' => $e->getMessage()]);
         }

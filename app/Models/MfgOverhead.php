@@ -24,11 +24,12 @@ class MfgOverhead extends BaseModel
         $cost = $quantity * $this->value;
         $taxes =  $totalTax * $cost;
         return [
-            'uom' => $cost,
+            'uom' => $this->value,
             'cost' => $cost,
             'taxes' => $taxes,
             'profit_margin' => 0,
-            'subtotal' => ($cost + $taxes)
+            'subtotal' => $cost,
+            'price' => ($cost + $taxes)
         ];
 
     }

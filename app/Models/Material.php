@@ -49,13 +49,16 @@ class Material extends BaseModel
         $cost = $quantity * $this->invt_uom_cost;
         $profit_margin = $profit_margin / 100;
         $profit_margin_total = $cost * $profit_margin;
-        $taxes =  $totalTax * $cost;
+        $subtotal = ($cost + $profit_margin_total);
+        $taxes =  $totalTax * $subtotal;
+        $price = $subtotal + $taxes;
         return [
-            'uom' => $cost,
+            'uom' => $this->invt_uom_cost,
             'cost' => $cost,
             'taxes' => $taxes,
             'profit_margin' => $profit_margin_total,
-            'subtotal' => ($cost + $taxes + $profit_margin_total)
+            'subtotal' => $subtotal,
+            'price' => $price
         ];
 
     }

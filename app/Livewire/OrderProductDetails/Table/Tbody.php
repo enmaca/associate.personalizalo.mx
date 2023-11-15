@@ -96,7 +96,8 @@ class Tbody extends Component
                 'subtotal',
                 'created_by'])->get();
 
-        $this->dispatch('order-product-details.table.tbody::updated', tfoot: $table->toHtml('tfoot'));
+        $price = Order::select('price')->findOrFail($order_id)->price;
+        $this->dispatch('order-product-details.table.tbody::updated', tfoot: $table->toHtml('tfoot'), price: $price );
         return $table->toHtml('tbody');
     }
 }

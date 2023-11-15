@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MfgOverhead;
+use App\Support\Services\OrderService;
 use Enmaca\LaravelUxmal\Components\Form\Input\Checkbox;
 use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputCheckboxOptions;
 use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextAreaOptions;
@@ -14,6 +16,7 @@ class Test extends Controller
     public function test()
     {
 
+        /*
         $uxmal = Checkbox::Options(new InputCheckboxOptions(
             name: 'deliveryNeeded',
             label: 'Se recogera en tienda',
@@ -28,6 +31,11 @@ class Test extends Controller
         return view('uxmal::simple-default', [
             'uxmal_data' => $uxmal->toArray()
         ])->extends('uxmal::layout.simple');
+        */
+
+        //dd($data = MfgOverhead::with('taxes')->findOrFail(1)->toArray());
+
+        OrderService::updateTotal(6);
     }
 
 }

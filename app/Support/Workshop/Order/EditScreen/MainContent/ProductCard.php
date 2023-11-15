@@ -52,7 +52,7 @@ class ProductCard extends CardBlock
                         'tbhContent' => 'Cantidad',
                     ],
                     'price' => [
-                        'tbhContent' => 'Costo'
+                        'tbhContent' => 'Precio'
                     ],
                     'taxes' => [
                         'tbhContent' => 'Impuestos'

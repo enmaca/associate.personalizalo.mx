@@ -59,8 +59,8 @@ class DynamicCard extends CardBlock
                     'quantity' => [
                         'tbhContent' => 'Cantidad',
                     ],
-                    'cost' => [
-                        'tbhContent' => 'Costo'
+                    'price' => [
+                        'tbhContent' => 'Precio'
                     ],
                     'taxes' => [
                         'tbhContent' => 'Impuestos'
@@ -96,9 +96,6 @@ class DynamicCard extends CardBlock
                     'related.name' => [
                         'html' => '<span class="justify-end">Totales</span>'
                     ],
-                    'cost' => [
-                        'operation' => 'sum'
-                    ],
                     'taxes' => [
                         'operation' => 'sum'
                     ],
@@ -106,6 +103,9 @@ class DynamicCard extends CardBlock
                         'operation' => 'average'
                     ],
                     'subtotal' => [
+                        'operation' => 'sum'
+                    ],
+                    'price' => [
                         'operation' => 'sum'
                     ]
                 ]
