@@ -151,11 +151,16 @@ document.addEventListener('livewire:init', () => {
                 break;
             case 'addressbook.form.default-form':
                 break;
+            case 'order-payment-data.form':
+                break;
         }
     });
 })
-
 document.addEventListener("DOMContentLoaded", function () {
+
+});
+
+document.addEventListener('livewire:initialized', () => {
     uxmal.init(document);
 
     /********************************
@@ -366,7 +371,7 @@ document.addEventListener("DOMContentLoaded", function () {
         productDynamicDetailsTableFooterData = data.tfoot;
         currentPrice = data.price;
         currentPriceDiv2 = data.price / 2;
-        checkAdvancePayment50();
+        checkPayment();
     });
 
     // livewire:order-product-dynamic-details.table.tbody:request:succeed
@@ -424,9 +429,11 @@ document.addEventListener("DOMContentLoaded", function () {
     //// Listen To Event When Inserted Record on Table OrderProductDetails workshop.js Dispatch ===>
     Livewire.on('order-product-details.table.tbody::updated', (data) => {
         productDetailsTableFooterData = data.tfoot;
-        currentPrice = data.price;
-        currentPriceDiv2 = data.price / 2;
-        checkAdvancePayment50();
+        const order_payment_amount = uxmal.Inputs.get('orderPaymentAmountId').element;
+
+        currentPrice = data.price - order_payment_amount.value;
+        currentPriceDiv2 = (data.price - order_payment_amount.value) / 2;
+        checkPayment();
     });
 
     //// Event livewire:order-product-details.table.tbody:request:succeed
@@ -457,8 +464,16 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    const checkAdvancePayment50 = () => {
+    const checkPayment = () => {
+        const order_payment_status = uxmal.Inputs.get('orderPaymentStatusId').element;
         const advance_payment_50 = uxmal.Inputs.get('advance_payment_50Id').element;
+
+        console.log(order_payment_status.value === 'completed');
+        if(order_payment_status.value === 'completed'){
+            updateOrderAmount('0.00');
+        }
+
+
         if(advance_payment_50.checked) {
             updateOrderAmount(currentPriceDiv2);
         } else {
@@ -467,7 +482,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     uxmal.Inputs.on('advance_payment_50Id', 'change', (event) => {
-        checkAdvancePayment50();
+        checkPayment();
     });
 
 
@@ -476,4 +491,28 @@ document.addEventListener("DOMContentLoaded", function () {
     const updateOrderAmount = (price) => {
         uxmal.Inputs.setValue('amountId', price);
     };
+
+    document.getElementById("addPaymentFormButtonId").onclick = function() {
+        uxmal.Cards.setLoading('orderCard', true);
+        uxmal.Forms.submit('addPaymentForm', {
+            order_id: window.order_id,
+            customer_id: window.customer_id
+        }, () => {
+            Livewire.dispatch('order-payment-data.form::reload');
+            uxmal.Cards.setLoading('orderCard', false);
+        }, (elementName, data) => {
+            uxmal.sweetAlert(data.fail, 'warning');
+            uxmal.Cards.setLoading('orderCard', false);
+        }, (elementName, error) => {
+            uxmal.sweetAlert(error.message, 'danger');
+            uxmal.Cards.setLoading('orderCard', false);
+        });
+    };
+
+    document.addEventListener('livewire:order-payment-data.form:request:succeed', (event) => {
+        setTimeout(() => {
+            uxmal.Forms.init(document.querySelector('[data-uxmal-card-name="paymentCard"]'));
+            checkPayment();
+        }, 500);
+    });
 });

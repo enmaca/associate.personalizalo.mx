@@ -43,7 +43,8 @@ class SelectPaymentMethods extends SelectTomSelectBlock
                 'tomselect.placeholder' => 'Seleccionar...',
                 'tomselect.load-url' => route('payment_method_search_tomselect', [ 'customer_id' => $customer_hashId]),
                 'tomselect.options' => $items,
-                'tomselect.allow-empty-option' => true
+                'tomselect.allow-empty-option' => false,
+                'tomselect.require' => true,
             ]
         ]);
     }

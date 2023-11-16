@@ -19,6 +19,7 @@ use App\Models\OrderPayment;
 use App\Models\OrderProductDetail;
 use App\Models\OrderProductDynamic;
 use App\Models\OrderProductDynamicDetails;
+use App\Models\PaymentDetails;
 use App\Models\PaymentMethod;
 use App\Models\PrintVariationsGroup;
 use App\Models\PrintVariationsGroupDetails;
@@ -28,6 +29,7 @@ use App\Support\Services\OrderService;
 use App\Support\Workshop\Order\EditScreen;
 use Carbon\Carbon;
 use Deligoez\LaravelModelHashId\Exceptions\UnknownHashIdConfigParameterException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use \Illuminate\Support\Facades\View;
@@ -187,7 +189,7 @@ class OrdersController extends Controller
      *      [laborCostSubtotal] => $18.13
      *      [order_id] => ord_XXXXX
      *      [customer_id] => cus_XXXXX
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function post_labor_cost(Request $request)
     {
@@ -244,8 +246,8 @@ class OrdersController extends Controller
     /**
      * @param Request $request
      * @param string $opdd_id
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Deligoez\LaravelModelHashId\Exceptions\UnknownHashIdConfigParameterException
+     * @return JsonResponse
+     * @throws UnknownHashIdConfigParameterException
      *
      * http://127.0.0.1:8000/orders/dynamic_detail/ord_4WmvDA86E98xo
      */
@@ -254,12 +256,10 @@ class OrdersController extends Controller
         $order_product_dynamic_id = OrderProductDynamicDetails::keyFromHashId($opdd_id);
         $order_product_dynamic_row = OrderProductDynamicDetails::with('order_product_dynamic')->find($order_product_dynamic_id);
         if ($order_product_dynamic_row) {
-            if ($order_product_dynamic_row->delete()){
+            if ($order_product_dynamic_row->delete()) {
                 OrderService::updateTotal($order_product_dynamic_row->order_product_dynamic->order_id);
                 return response()->json(['ok' => 'El registro se elimino correctamente']);
-            }
-
-            else
+            } else
                 return response()->json(['fail' => 'El registro no se pude eliminar']);
         }
         return response()->json(['warning' => 'El registro no se encontro']);
@@ -268,8 +268,8 @@ class OrdersController extends Controller
     /**
      * @param Request $request
      * @param string $opd_id
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Deligoez\LaravelModelHashId\Exceptions\UnknownHashIdConfigParameterException
+     * @return JsonResponse
+     * @throws UnknownHashIdConfigParameterException
      *
      * http://127.0.0.1:8000/orders/dynamic_detail/ord_4WmvDA86E98xo
      */
@@ -278,12 +278,10 @@ class OrdersController extends Controller
         $order_product_detail_id = OrderProductDetail::keyFromHashId($opd_id);
         $order_product_row = OrderProductDetail::with('order')->find($order_product_detail_id);
         if ($order_product_row) {
-            if ($order_product_row->delete()){
+            if ($order_product_row->delete()) {
                 OrderService::updateTotal($order_product_row->order->id);
                 return response()->json(['ok' => 'El registro se elimino correctamente']);
-            }
-
-            else
+            } else
                 return response()->json(['fail' => 'El registro no se pude eliminar']);
         }
         return response()->json(['warning' => 'El registro no se encontro']);
@@ -291,8 +289,8 @@ class OrdersController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Deligoez\LaravelModelHashId\Exceptions\UnknownHashIdConfigParameterException
+     * @return JsonResponse
+     * @throws UnknownHashIdConfigParameterException
      *
      * "_token" => "hB1ZwcBKBk90zRJXzawKb7xite6Bo5fYOiAXIcas"
      * "mfgOverheadQuantity" => "1"
@@ -348,8 +346,8 @@ class OrdersController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Deligoez\LaravelModelHashId\Exceptions\UnknownHashIdConfigParameterException"_token" => "1flibMbJXOJMDvzSMkun2rFjEjBSrndlz3RkmggP"
+     * @return JsonResponse
+     * @throws UnknownHashIdConfigParameterException"_token" => "1flibMbJXOJMDvzSMkun2rFjEjBSrndlz3RkmggP"
      *
      * POST Payload
      *      "materialId" => "mat_KnY2dZk6MEoWx"
@@ -407,7 +405,7 @@ class OrdersController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      *
      * POST Payload
      *      "_token" => "Ss6Muw7QVC0mk7NqASK5ZXFvsgcx0I8ZZ7fJvajv"
@@ -555,6 +553,29 @@ class OrdersController extends Controller
             return response()->json(['ok' => 'La direccion de entrega se actualizo correctamente']);
         } else
             return response()->json(['fail' => 'Error al Actualizar la direccion de entrega']);
+    }
+
+    public function put_payment(Request $request)
+    {
+        $allInput = $request->all();
+
+        if (empty($allInput['paymentMethod']))
+            return response()->json(['fail' => 'Error se tiene que seleccionar el methodo de pago.']);
+
+        $payment_method_id = PaymentMethod::keyFromHashId($allInput['paymentMethod']);
+
+        $PaymentDetails = new PaymentDetails();
+        $PaymentDetails->payment_method_id = $payment_method_id;
+        $PaymentDetails->customer_id = Customer::keyFromHashId($allInput['customer_id']);
+        $PaymentDetails->order_id = Order::keyFromHashId($allInput['order_id']);
+        $PaymentDetails->amount = $allInput['amount'];
+        $PaymentDetails->created_by = Auth::id();
+        $PaymentDetails->save();
+
+        if (OrderService::updateTotal($PaymentDetails->order_id)) {
+            return response()->json(['ok' => 'Se ingreso el pago correctamente.']);
+        } else
+            return response()->json(['fail' => 'Error al ingresar el pago.']);
     }
 
     /**

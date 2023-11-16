@@ -10,6 +10,7 @@ use App\Models\OrderProductDetail;
 use App\Models\OrderProductDetailsDigitalArt;
 use App\Models\OrderProductDynamic;
 use App\Models\OrderProductDynamicDetails;
+use App\Models\PaymentDetails;
 use App\Models\PrintVariationsGroupDetails;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
@@ -214,7 +215,7 @@ class OrderService
         $profit = 0;
         $price = 0;
         $cost = 0;
-        foreach ($order_product_details as $order_product_detail){
+        foreach ($order_product_details as $order_product_detail) {
             $subtotal += $order_product_detail->subtotal;
             $taxes += $order_product_detail->taxes;
             $profit += $order_product_detail->profit;
@@ -222,19 +223,37 @@ class OrderService
             $cost += $order_product_detail->cost;
         }
         $order_product_dynamict_details = OrderProductDynamic::with('items')->where('order_id', $order_id)->first();
-        foreach( $order_product_dynamict_details->items as $item){
-            $subtotal += $item->subtotal;
-            $taxes += $item->taxes;
-            $profit += $item->profit_margin_subtotal;
-            $price += $item->price;
-            $cost += $item->cost;
-        }
+        if (!empty($order_product_dynamict_details->items))
+            foreach ($order_product_dynamict_details->items as $item) {
+                $subtotal += $item->subtotal;
+                $taxes += $item->taxes;
+                $profit += $item->profit_margin_subtotal;
+                $price += $item->price;
+                $cost += $item->cost;
+            }
         $order->subtotal = $subtotal;
         $order->taxes = $taxes;
         $order->profit = $profit;
         $order->price = $price;
         $order->cost = $cost;
         $order->save();
+
+        $payment_details = PaymentDetails::where('order_id', $order_id)->get();
+
+        $payment_amount = 0;
+        foreach ($payment_details as $payment_detail)
+            $payment_amount += $payment_detail->amount ?? 0;
+
+        if ($payment_amount >= $order->price)
+            $order->payment_status = 'completed';
+        else if ($payment_amount == 0)
+            $order->payment_status = 'pending';
+        else
+            $order->payment_status = 'partial';
+
+        $order->payment_amount = $payment_amount;
+        $order->save();
+
         return $order->toArray();
     }
 

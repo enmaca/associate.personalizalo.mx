@@ -103,6 +103,7 @@ class ModalSearchByMobile extends ModalBlock
         $modal = Modal::Options(
             new ModalOptions(
                 name: 'customerSearchByMobile',
+                size: 'xl',
                 title: 'Buscar/Crear Cliente',
                 body: $form,
                 saveBtnLabel: 'Crear Pedido',
