@@ -265,6 +265,28 @@ class OrdersController extends Controller
         return response()->json(['warning' => 'El registro no se encontro']);
     }
 
+
+    public function post_dynamic_detail_row(Request $request, $hashed_id)
+    {
+        $order_id = Order::keyFromHashId($hashed_id);
+
+        $allInput = $request->all();
+        $order_product_dynamic_id = new OrderProductDynamic();
+        $order_product_dynamic_id->description = $allInput['orderProductDynamicDetailsDescription'];
+        $order_product_dynamic_id->order_id = $order_id;
+        $order_product_dynamic_id->created_by = Auth::id();
+        $order_product_dynamic_id->save();
+
+        if ($order_product_dynamic_id->hashId)
+            return response()->json([
+                'ok' => 'El registro se elimino correctamente',
+                'result' => $order_product_dynamic_id->hashId
+            ]);
+        else return response()->json(['fail' => 'El producto dinamico no se pudo agregar']);
+
+    }
+
+
     /**
      * @param Request $request
      * @param string $opd_id
@@ -302,6 +324,9 @@ class OrdersController extends Controller
     public function post_mfg_overhead(Request $request)
     {
         $allInput = $request->all();
+        $opd_id = null;
+        if (!empty($allInput['opd_id']))
+            $opd_id = OrderProductDynamic::keyFromHashId($allInput['opd_id']);
 
         if (!empty($allInput['mfgOverheadId']))
             $mfg_overhead_cost_id = MfgOverhead::keyFromHashId($allInput['mfgOverheadId']);
@@ -316,16 +341,16 @@ class OrdersController extends Controller
             $mfg_overhead_data = MfgOverhead::with('taxes')->findOrFail($mfg_overhead_cost_id);
             $mfg_overhead_costs = $mfg_overhead_data->calculateCosts($allInput['mfgOverheadQuantity']);
 
-            $OrderProductDynamicData = OrderProductDynamic::where('order_id', $order_id)->first();
-
-            if (empty($OrderProductDynamicData)) {
+            if (empty($opd_id)) {
                 $OrderProductDynamicData = new OrderProductDynamic();
                 $OrderProductDynamicData->order_id = $order_id;
                 $OrderProductDynamicData->save();
+                $opd_id = $OrderProductDynamicData->id;
             }
+
             $OrderProductDynamicDataDetail = new OrderProductDynamicDetails();
 
-            $OrderProductDynamicDataDetail->order_product_dynamic_id = $OrderProductDynamicData->id;
+            $OrderProductDynamicDataDetail->order_product_dynamic_id = $opd_id;
             $OrderProductDynamicDataDetail->reference_type = 'mfg_overhead';
             $OrderProductDynamicDataDetail->reference_id = $mfg_overhead_cost_id;
             $OrderProductDynamicDataDetail->quantity = $allInput['mfgOverheadQuantity'];
@@ -357,7 +382,8 @@ class OrdersController extends Controller
      *      "order_id" => "ord_679zRAz0JErYv"
      *      "customer_id" => "cus_B95oKZdvQJMPv"
      */
-    public function post_material(Request $request)
+    public
+    function post_material(Request $request)
     {
         $allInput = $request->all();
 
@@ -416,7 +442,8 @@ class OrdersController extends Controller
      *      "order_id" => "ord_eV7yYZn5OEWvX"
      *      "customer_id" => "cus_WJ2v5Z2xQDO9Y"
      */
-    public function post_product(Request $request)
+    public
+    function post_product(Request $request)
     {
         $allInput = $request->all();
         $digital_art_category_id = null;
@@ -478,7 +505,8 @@ class OrdersController extends Controller
     }
 
 
-    public function put_order(Request $request, string $hash_id = null)
+    public
+    function put_order(Request $request, string $hash_id = null)
     {
         $validatedData = $request->validate([
             'delivery_date' => 'date',
@@ -495,12 +523,13 @@ class OrdersController extends Controller
             return response()->json(['fail' => 'sepa la verga que paso']);
     }
 
-    // http://127.0.0.1:8000/orderdelivery_data
+// http://127.0.0.1:8000/orderdelivery_data
 
     /**
      * @throws UnknownHashIdConfigParameterException
      */
-    public function post_delivery_data(Request $request, string $hash_id = null)
+    public
+    function post_delivery_data(Request $request, string $hash_id = null)
     {
         $allInput = $request->all();
         /**
@@ -555,7 +584,8 @@ class OrdersController extends Controller
             return response()->json(['fail' => 'Error al Actualizar la direccion de entrega']);
     }
 
-    public function put_payment(Request $request)
+    public
+    function put_payment(Request $request)
     {
         $allInput = $request->all();
 
@@ -582,7 +612,8 @@ class OrdersController extends Controller
      * @param Request $request
      * @return mixed
      */
-    public function test(Request $request)
+    public
+    function test(Request $request)
     {
         $allInput = $request->all();
         if (!empty($allInput['customerId'])) {

@@ -4,12 +4,20 @@ namespace App\Support\Workshop\Order\EditScreen\MainContent;
 
 use App\Support\Workshop\LaborCost\SelectByName as SelectByNameLaborCost;
 use App\Support\Workshop\Material\SelectByNameSkuDesc as SelectByNameSkuDescMaterial;
+use App\Support\Workshop\MfgArea\SelectByName as SelectByNameMfgArea;
+use App\Support\Workshop\MfgDevices\SelectByName as SelectByNameMfgDevices;
 use App\Support\Workshop\MfgOverHead\SelectByName as SelectByNameMfgOverHead;
+use App\Support\Workshop\OrderProductDynamicDetails\SelectDynamicProducts;
 use App\Support\Workshop\OrderProductDynamicDetails\TbHandler\ProfitMargin as ProfitMarginTbHandler;
 use Enmaca\LaravelUxmal\Abstract\CardBlock;
+use Enmaca\LaravelUxmal\Components\Form\Button;
+use Enmaca\LaravelUxmal\Components\Form\Input;
+use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
+use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputHiddenOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 use Enmaca\LaravelUxmal\UxmalComponent;
 use Exception;
+use OpenSpout\Common\Entity\Row;
 
 class DynamicCard extends CardBlock
 {
@@ -19,10 +27,45 @@ class DynamicCard extends CardBlock
      */
     public function build(): void
     {
+        $this->NewBodyRow(row_options: new RowOptions(
+            replaceAttributes: [
+                'class' => 'row align-items-end'
+            ]
+        ));
+
+        $this->BodyRow()->addElement(Input::Options(new InputHiddenOptions(
+            name: 'orderProductDynamic'
+        )));
+
+        $this->BodyRow()->addElementInRow(
+            element: SelectDynamicProducts::Object(
+                values: $this->GetValues()
+            ),
+            row_options: new RowOptions(
+                replaceAttributes: [
+                    'class' => 'col-xxl-9 mb-3'
+                ]
+            ));
+
+        $this->BodyRow()->addElementInRow(
+            element: Button::Options(new ButtonOptions(
+                label: 'Crear Nuevo Producto',
+                name: 'createNewDynamicProductButton',
+                style: 'secondary',
+                width: 'w-lg'
+            )),
+            row_options: new RowOptions(
+                replaceAttributes: [
+                    'class' => 'col-xxl-3 mb-3'
+                ]
+            ));
+
         $this->NewBodyRow();
 
         $this->BodyRow()->addElementInRow(
-            element: SelectByNameSkuDescMaterial::Object(['options' => ['event-change-handler' => 'onChangeSelectedMaterialByNameSkuDesc']]),
+            element: SelectByNameSkuDescMaterial::Object(
+                values: $this->GetValues()
+            ),
             row_options: new RowOptions(
                 replaceAttributes: [
                     'class' => 'col-xxl-6 mb-3'
@@ -30,7 +73,9 @@ class DynamicCard extends CardBlock
             ));
 
         $this->BodyRow()->addElementInRow(
-            element: SelectByNameLaborCost::Object(['options' => ['event-change-handler' => 'onChangeSelectedLaborCostByName']]),
+            element: SelectByNameLaborCost::Object(
+                values: $this->GetValues()
+            ),
             row_options: new RowOptions(
                 replaceAttributes: [
                     'class' => 'col-xxl-6 mb-3'
@@ -38,14 +83,47 @@ class DynamicCard extends CardBlock
             ));
 
         $this->BodyRow()->addElementInRow(
-            element: SelectByNameMfgOverHead::Object(['options' => ['event-change-handler' => 'onChangeSelectedMfgOverHeadByName']]),
+            element: SelectByNameMfgOverHead::Object(
+                values: $this->GetValues()
+            ),
             row_options: new RowOptions(
                 replaceAttributes: [
                     'class' => 'col-xxl-6 mb-3'
                 ]
             ));
 
-        $this->Footer()->addElementInRow(element: UxmalComponent::Make(type: 'ui.table', attributes: [
+
+        $this->NewBodyRow();
+
+        $this->BodyRow()->addElementInRow(
+            element: SelectByNameMfgArea::Object(
+                values: $this->GetValues()
+            ),
+            row_options: new RowOptions(
+                replaceAttributes: [
+                    'class' => 'col-xxl-6 mb-3'
+                ]
+            ));
+
+        $this->BodyRow()->addElementInRow(
+            element: SelectByNameMfgDevices::Object(
+                values: $this->GetValues()
+            ),
+            row_options: new RowOptions(
+                replaceAttributes: [
+                    'class' => 'col-xxl-6 mb-3'
+                ]
+            ));
+
+        $footer = $this->Footer()->addRow(new RowOptions(
+            replaceAttributes: [
+                'class' => 'row d-none',
+                'workshop-order-product-dynamic-details-description' => true
+            ],
+            content: '<div class="col-12"><h4 id="orderDynamicDetailsDescriptionId"></h4></div>'
+        ));
+
+        $footer->addElementInRow(element: UxmalComponent::Make(type: 'ui.table', attributes: [
             'options' => [
                 'table.name' => 'orderProductDynamicDetails',
                 'table.columns' => [

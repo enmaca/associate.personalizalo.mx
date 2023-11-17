@@ -2,6 +2,12 @@
 
 namespace App\Support\Workshop\Order;
 
+use App\Support\Workshop\LaborCost\ModalAddToOrder as LaborCostModalAddToOrder;
+use App\Support\Workshop\Material\ModalAddToOrder as MaterialModalAddToOrder;
+use App\Support\Workshop\MfgOverHead\ModalAddToOrder as MfgOverHeadModalAddToOrder;
+use App\Support\Workshop\OrderProductDynamicDetails\OPDDModalCreateNew;
+use App\Support\Workshop\Products\ModalSelectProductWithDigitalArt;
+
 use Enmaca\LaravelUxmal\Abstract\ScreenBlock;
 
 class EditScreen extends ScreenBlock
@@ -13,9 +19,10 @@ class EditScreen extends ScreenBlock
         /**
          * Add Modals
          */
-        $this->addModal(\App\Support\Workshop\Material\ModalAddToOrder::Modal());
-        $this->addModal(\App\Support\Workshop\LaborCost\ModalAddToOrder::Modal());
-        $this->addModal(\App\Support\Workshop\MfgOverHead\ModalAddToOrder::Modal());
-        $this->addModal(\App\Support\Workshop\Products\ModalSelectProductWithDigitalArt::Modal());
+        $this->addModal(OPDDModalCreateNew::Modal(values: $this->GetValues()));
+        $this->addModal(MaterialModalAddToOrder::Modal(values: $this->GetValues()));
+        $this->addModal(LaborCostModalAddToOrder::Modal(values: $this->GetValues()));
+        $this->addModal(MfgOverHeadModalAddToOrder::Modal(values: $this->GetValues()));
+        $this->addModal(ModalSelectProductWithDigitalArt::Modal(values: $this->GetValues()));
     }
 }

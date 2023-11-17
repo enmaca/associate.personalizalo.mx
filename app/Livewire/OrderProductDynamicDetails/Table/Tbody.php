@@ -3,6 +3,7 @@
 namespace App\Livewire\OrderProductDynamicDetails\Table;
 
 use App\Models\Order;
+use App\Models\OrderProductDynamic;
 use App\Support\Services\OrderService;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -17,6 +18,8 @@ class Tbody extends Component
 
     public $appended;
 
+    public $opd_id = null;
+
     public function mount($table_name, $table_columns, $table_footer, $appended){
         $this->table_name = $table_name;
         $this->table_columns = $table_columns;
@@ -25,9 +28,10 @@ class Tbody extends Component
     }
 
     #[On('order-product-dynamic-details.table.tbody::reload')]
-    public function reload(): void
+    public function reload($opd_id): void
     {
         $this->increment++;
+        $this->opd_id = $opd_id;
     }
 
 
@@ -43,11 +47,13 @@ class Tbody extends Component
 
         $order_id = Order::keyFromHashId($this->appended['values']['order_id']);
 
+        $opd_id = null;
+        if( isset($this->opd_id))
+            $opd_id = OrderProductDynamic::keyFromHashId($this->opd_id);
+
         $table->DataQuery()
             ->with(['related', 'createdby'])
-            ->whereHas('order_product_dynamic', function ($query) use ($order_id) {
-                $query->where('order_id', $order_id);
-            })
+            ->where('order_product_dynamic_id', $opd_id)
             ->select([
                 'id',
                 'order_product_dynamic_id',
@@ -64,6 +70,7 @@ class Tbody extends Component
         $price = Order::select('price')->findOrFail($order_id)->price;
         $this->dispatch('order-product-dynamic-details.table.tbody::updated', tfoot: $table->toHtml('tfoot'), price: $price );
         $this->dispatch('order-payment-data.form::reload');
+        //dd($table->toHtml('tbody'));
         return $table->toHtml('tbody');
 
     }

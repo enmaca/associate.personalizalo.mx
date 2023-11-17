@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends BaseModel
 {
@@ -28,22 +30,27 @@ class Order extends BaseModel
         $newOrder->save();
         return $newOrder;
     }
-    public function details(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function products(): HasMany
     {
         return $this->HasMany(OrderProductDetail::class, 'order_id', 'id');
     }
 
-    public function customer(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function dynamic_products(): HasMany
+    {
+        return $this->HasMany(OrderProductDynamic::class, 'order_id', 'id');
+    }
+
+    public function customer(): BelongsTo
     {
         return $this->BelongsTo(Customer::class, 'customer_id', 'id');
     }
 
-    public function payments(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function payments(): BelongsTo
     {
         return $this->BelongsTo(OrderPayment::class, 'order_id', 'id');
     }
 
-    public function address(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function address(): BelongsTo
     {
         return $this->BelongsTo(AddressBook::class, 'address_book_id', 'id');
     }

@@ -81,17 +81,6 @@ class MainContent extends ContentBlock
                 'card.name' => 'clientCard'
             ]));
 
-        $orderCardObj->Body()->addElement(MainContent\MfgCard::Object(
-            values: $this->GetValues(),
-            options: [
-                'card.header' => 'Datos de Manufactura',
-                'card.body' => null,
-                'card.footer' => null,
-                'card.style' => 'success',
-                'card.name' => 'deliveryCard'
-            ]));
-
-
         $orderCardObj->Body()->addElement(MainContent\ProductCard::Object(
             values: $this->GetValues(),
             options: [
@@ -105,7 +94,7 @@ class MainContent extends ContentBlock
         $orderCardObj->Body()->addElement(MainContent\DynamicCard::Object(
             values: $this->GetValues(),
             options: [
-                'card.header' => 'Costos Directos',
+                'card.header' => 'Productos Dinámicos',
                 'card.body' => null,
                 'card.footer' => null,
                 'card.style' => 'warning',

@@ -2,6 +2,7 @@
 
 namespace App\Support\Workshop\MfgDevices;
 
+use App\Models\MfgArea;
 use App\Models\MfgDevice;
 use App\Support\Workshop\BaseTomSelect;
 
@@ -17,5 +18,31 @@ class SelectByName extends BaseTomSelect
         'tomselect.allow-empty-option' => true,
         'tomselect.event-change-handler' => 'onChangeSelectedMfgDeviceByName'
     ];
+
+    public function searchByMfgArea(string $mfgAreaHashId): array
+    {
+        $mfg_area_id = MfgArea::keyFromHashId($mfgAreaHashId);
+        $rows = MfgDevice::query()
+            ->where('mfg_area_id', $mfg_area_id)
+            ->select([
+                'id',
+                'name'
+            ])
+            ->get();
+
+        $items = [];
+
+        foreach ( $rows as $row ){
+            $items[] = [
+                'value' => $row->hashId,
+                'label' => "{$row->name}"
+            ];
+        }
+
+        return [
+            'incomplete_results' => false,
+            'items' => $items
+        ];
+    }
 
 }
