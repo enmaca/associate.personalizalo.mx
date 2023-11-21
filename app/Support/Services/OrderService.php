@@ -2,6 +2,7 @@
 
 namespace App\Support\Services;
 
+use App\Events\OrderPaymentDataUpdated as OrderPaymentDataUpdatedEvent;
 use App\Models\DigitalArt;
 use App\Models\MaterialVariationsGroup;
 use App\Models\MaterialVariationsGroupDetails;
@@ -206,9 +207,17 @@ class OrderService
     }
 
 
-    public static function updateTotal($order_id): array
+    public static function updateCostPrices($order_id): array
     {
         $order = Order::findOrFail($order_id);
+        $product_count = 0;
+        $product_payment_data = [
+            'price' => 0,
+            'taxes' => 0,
+            'subtotal' => 0,
+            'cost' => 0,
+            'profit' => 0
+        ];
         $order_product_details = OrderProductDetail::where('order_id', $order_id)->get();
         $subtotal = 0;
         $taxes = 0;
@@ -216,21 +225,64 @@ class OrderService
         $price = 0;
         $cost = 0;
         foreach ($order_product_details as $order_product_detail) {
+            $product_count++;
             $subtotal += $order_product_detail->subtotal;
             $taxes += $order_product_detail->taxes;
             $profit += $order_product_detail->profit;
             $price += $order_product_detail->price;
             $cost += $order_product_detail->cost;
+            $product_payment_data['price'] += $order_product_detail->price;
+            $product_payment_data['taxes'] += $order_product_detail->taxes;
+            $product_payment_data['subtotal'] += $order_product_detail->subtotal;
+            $product_payment_data['cost'] += $order_product_detail->cost;
+            $product_payment_data['profit'] += $order_product_detail->profit;
         }
-        $order_product_dynamict_details = OrderProductDynamic::with('items')->where('order_id', $order_id)->first();
-        if (!empty($order_product_dynamict_details->items))
-            foreach ($order_product_dynamict_details->items as $item) {
-                $subtotal += $item->subtotal;
-                $taxes += $item->taxes;
-                $profit += $item->profit_margin_subtotal;
-                $price += $item->price;
-                $cost += $item->cost;
+
+
+        $opd_data = OrderProductDynamic::with('items')->where('order_id', $order_id)->get();
+        $dynamic_products_count = 0;
+        $dynamic_products_payment_data = [
+            'price' => 0,
+            'taxes' => 0,
+            'subtotal' => 0,
+            'cost' => 0,
+            'profit' => 0
+        ];
+        if (!empty($opd_data))
+            foreach ($opd_data as $opdd) {
+                $dynamic_products_count++;
+                $opdd_subtotal = 0;
+                $opdd_taxes = 0;
+                $opdd_profit = 0;
+                $opdd_price = 0;
+                $opdd_cost = 0;
+
+                foreach ($opdd->items as $item) {
+                    $opdd_subtotal += $item->subtotal;
+                    $opdd_taxes += $item->taxes;
+                    $opdd_profit += $item->profit_margin_subtotal;
+                    $opdd_price += $item->price;
+                    $opdd_cost += $item->cost;
+                }
+                $opdd->subtotal = $opdd_subtotal;
+                $opdd->taxes = $opdd_taxes;
+                $opdd->profit = $opdd_profit;
+                $opdd->price = $opdd_price;
+                $opdd->estimated_cost = $opdd_cost;
+                $opdd->save();
+
+                $subtotal += $opdd_subtotal;
+                $taxes += $opdd_taxes;
+                $profit += $opdd_profit;
+                $price += $opdd_price;
+                $cost += $opdd_cost;
+                $dynamic_products_payment_data['price'] += $opdd_price;
+                $dynamic_products_payment_data['taxes'] += $opdd_taxes;
+                $dynamic_products_payment_data['subtotal'] += $opdd_subtotal;
+                $dynamic_products_payment_data['cost'] += $opdd_cost;
+                $dynamic_products_payment_data['profit'] += $opdd_profit;
             }
+
         $order->subtotal = $subtotal;
         $order->taxes = $taxes;
         $order->profit = $profit;
@@ -244,7 +296,7 @@ class OrderService
         foreach ($payment_details as $payment_detail)
             $payment_amount += $payment_detail->amount ?? 0;
 
-        if ($payment_amount >= $order->price)
+        if ($payment_amount >= $order->price || abs($payment_amount - $order->price) < 0.1)
             $order->payment_status = 'completed';
         else if ($payment_amount == 0)
             $order->payment_status = 'pending';
@@ -254,6 +306,21 @@ class OrderService
         $order->payment_amount = $payment_amount;
         $order->save();
 
+        OrderPaymentDataUpdatedEvent::dispatch($order->hashId, [
+            'order' => [
+                'price' => $order->price,
+                'payment_amount' => $order->payment_amount,
+                'payment_status' => $order->payment_status
+            ],
+            'products' => [
+                'count' => $product_count,
+                'payment_data' => $product_payment_data
+            ],
+            'dynamic_products' => [
+                'count' => $dynamic_products_count,
+                'payment_data' => $dynamic_products_payment_data
+            ]
+        ]);
         return $order->toArray();
     }
 

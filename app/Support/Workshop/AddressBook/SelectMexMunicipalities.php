@@ -17,7 +17,32 @@ class SelectMexMunicipalities extends SelectTomSelectBlock
      */
     public function build(): void
     {
-        $items = [];
+        $zip_code = $this->GetValue('zip_code');
+        if($zip_code){
+            $districts = MexDistricts::query()
+                ->with('municipalities')
+                ->where('postal_code', $zip_code)
+                ->select([
+                    'id',
+                    'name',
+                    'municipality_id'
+                ])
+                ->get();
+
+            $items[''] = 'Selecciona la colonia...';
+
+            foreach ($districts as $district)
+                $items[$district->municipalities->hashId] = $district->municipalities->name.(!empty($district->municipalities->city_name) ? ' ('.$district->municipalities->city_name.')' : '');
+
+        } else {
+            $items = [];
+        }
+
+        if( is_int($this->GetValue('municipality_id')) )
+            $municipality_hashid = MexMunicipalities::select('id')->findOrFail($this->GetValue('municipality_id'))->hashId;
+        else if (is_string($this->GetValue('municipality_id')))
+            $municipality_hashid = $this->GetValues('municipality_id');
+
         $this->_content = UxmalComponent::Make('form.select.tomselect', [
             'options' => [
                 'tomselect.label' => 'Ciudad (MX)',
@@ -25,8 +50,9 @@ class SelectMexMunicipalities extends SelectTomSelectBlock
                 'tomselect.placeholder' => 'Selecciona la ciudad...',
                 'tomselect.load-url' => '/address_book/mex_municipality/search_tomselect',
                 'tomselect.options' => $items,
+                'tomselect.value' => $municipality_hashid ?? false,
                 'tomselect.required' => true
-            ] + $this->attributes['options']
+            ]
         ]);
     }
 

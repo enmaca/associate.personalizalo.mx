@@ -16,8 +16,30 @@ class SelectMexDistricts extends SelectTomSelectBlock
      */
     public function build(): void
     {
-        $items = [];
-        $this->attributes['options'] ??= [];
+        $zip_code = $this->GetValue('zip_code');
+        if($zip_code){
+            $districts = MexDistricts::query()
+                ->where('postal_code', $zip_code)
+                ->select([
+                    'id',
+                    'name',
+                    'postal_code'
+                ])
+                ->get();
+
+            $items[''] = 'Selecciona la colonia...';
+
+            foreach ($districts as $district)
+                $items[$district->hashId] =  $district->name;
+
+        } else {
+            $items = [];
+        }
+
+        if( is_int($this->GetValue('district_id')) )
+            $district_hashid = MexDistricts::select('id')->findOrFail($this->GetValue('district_id'))->hashId;
+        else if (is_string($this->GetValue('district_id')))
+            $district_hashid = $this->GetValues('district_id');
 
         $this->_content = UxmalComponent::Make('form.select.tomselect', [
             'options' => [
@@ -26,8 +48,9 @@ class SelectMexDistricts extends SelectTomSelectBlock
                     'tomselect.placeholder' => 'Selecciona la colonia...',
                     'tomselect.load-url' => '/address_book/mex_district/search_tomselect',
                     'tomselect.options' => $items,
+                    'tomselect.value' => $district_hashid ?? false,
                     'tomselect.required' => true,
-                ] + $this->attributes['options']
+                ]
         ]);
     }
 

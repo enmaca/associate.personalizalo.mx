@@ -20,7 +20,8 @@ class Tbody extends Component
 
     public $opd_id = null;
 
-    public function mount($table_name, $table_columns, $table_footer, $appended){
+    public function mount($table_name, $table_columns, $table_footer, $appended)
+    {
         $this->table_name = $table_name;
         $this->table_columns = $table_columns;
         $this->table_footer = $table_footer;
@@ -48,7 +49,7 @@ class Tbody extends Component
         $order_id = Order::keyFromHashId($this->appended['values']['order_id']);
 
         $opd_id = null;
-        if( isset($this->opd_id))
+        if (isset($this->opd_id))
             $opd_id = OrderProductDynamic::keyFromHashId($this->opd_id);
 
         $table->DataQuery()
@@ -68,7 +69,10 @@ class Tbody extends Component
                 'created_by'])->get();
 
         $price = Order::select('price')->findOrFail($order_id)->price;
-        $this->dispatch('order-product-dynamic-details.table.tbody::updated', tfoot: $table->toHtml('tfoot'), price: $price );
+        $opp_description = '';
+        if (isset($opd_id))
+            $opp_description = OrderProductDynamic::select('description')->findOrFail($opd_id)->description;
+        $this->dispatch('order-product-dynamic-details.table.tbody::updated', tfoot: $table->toHtml('tfoot'), price: $price, opp_description: $opp_description);
         $this->dispatch('order-payment-data.form::reload');
         //dd($table->toHtml('tbody'));
         return $table->toHtml('tbody');

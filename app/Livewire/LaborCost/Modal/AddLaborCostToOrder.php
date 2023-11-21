@@ -21,10 +21,12 @@ class AddLaborCostToOrder extends Component
 {
     public $content;
     public $increment;
+    public $order_hashId;
 
-    public function mount(): void
+    public function mount(string $order_hashId): void
     {
         $this->content = 'Initial::Content';
+        $this->order_hashId = $order_hashId;
     }
 
     /**
@@ -51,7 +53,7 @@ class AddLaborCostToOrder extends Component
         $form = UxmalComponent::Make('form', [
             'options' => [
                 'form.id' => $__formId,
-                'form.action' => route('orders_post_labor_cost')
+                'form.action' => route('api_post_orders_labor_cost', $this->order_hashId)
             ]
         ]);
 

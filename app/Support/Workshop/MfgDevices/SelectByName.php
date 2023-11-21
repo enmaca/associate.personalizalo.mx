@@ -19,25 +19,32 @@ class SelectByName extends BaseTomSelect
         'tomselect.event-change-handler' => 'onChangeSelectedMfgDeviceByName'
     ];
 
-    public function searchByMfgArea(string $mfgAreaHashId): array
+    public function searchByMfgArea(string $mfgAreaHashId = ''): array
     {
-        $mfg_area_id = MfgArea::keyFromHashId($mfgAreaHashId);
-        $rows = MfgDevice::query()
-            ->where('mfg_area_id', $mfg_area_id)
-            ->select([
-                'id',
-                'name'
-            ])
-            ->get();
+        if (!empty($mfgAreaHashId)) {
+            $mfg_area_id = MfgArea::keyFromHashId($mfgAreaHashId);
+            $rows = MfgDevice::query()
+                ->where('mfg_area_id', $mfg_area_id)
+                ->select([
+                    'id',
+                    'name'
+                ])
+                ->get();
+        }
 
         $items = [];
+        $items[] = [
+            'value' => '',
+            'label' => $this->PlaceHolder
+        ];
 
-        foreach ( $rows as $row ){
-            $items[] = [
-                'value' => $row->hashId,
-                'label' => "{$row->name}"
-            ];
-        }
+        if (isset($rows))
+            foreach ($rows as $row) {
+                $items[] = [
+                    'value' => $row->hashId,
+                    'label' => "{$row->name}"
+                ];
+            }
 
         return [
             'incomplete_results' => false,

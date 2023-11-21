@@ -12,8 +12,12 @@ use App\Support\Workshop\OrderProductDynamicDetails\TbHandler\ProfitMargin as Pr
 use Enmaca\LaravelUxmal\Abstract\CardBlock;
 use Enmaca\LaravelUxmal\Components\Form\Button;
 use Enmaca\LaravelUxmal\Components\Form\Input;
+use Enmaca\LaravelUxmal\Components\Ui\Dropzone;
 use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
+use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputCheckboxOptions;
 use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputHiddenOptions;
+use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextAreaOptions;
+use Enmaca\LaravelUxmal\Support\Options\Ui\DropzoneOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 use Enmaca\LaravelUxmal\UxmalComponent;
 use Exception;
@@ -33,10 +37,6 @@ class DynamicCard extends CardBlock
             ]
         ));
 
-        $this->BodyRow()->addElement(Input::Options(new InputHiddenOptions(
-            name: 'orderProductDynamic'
-        )));
-
         $this->BodyRow()->addElementInRow(
             element: SelectDynamicProducts::Object(
                 values: $this->GetValues()
@@ -51,8 +51,8 @@ class DynamicCard extends CardBlock
             element: Button::Options(new ButtonOptions(
                 label: 'Crear Nuevo Producto',
                 name: 'createNewDynamicProductButton',
-                style: 'secondary',
-                width: 'w-lg'
+                style: 'warning',
+                width: 'w-sm'
             )),
             row_options: new RowOptions(
                 replaceAttributes: [
@@ -60,7 +60,11 @@ class DynamicCard extends CardBlock
                 ]
             ));
 
-        $this->NewBodyRow();
+        $this->NewBodyRow(row_options: new RowOptions(
+            replaceAttributes: [
+                'class' => 'row align-items-end'
+            ]
+        ));
 
         $this->BodyRow()->addElementInRow(
             element: SelectByNameSkuDescMaterial::Object(
@@ -92,8 +96,91 @@ class DynamicCard extends CardBlock
                 ]
             ));
 
+        $this->NewBodyRow();
+
+        $this->BodyRow()->addElementInRow(element: Input::Options(new InputCheckboxOptions(
+            name: 'mfgMediaIdNeeded',
+            label: 'Necesita Diseño',
+            type: 'switch',
+            direction: 'right',
+            checked: false
+        )), row_options: new RowOptions(
+            replaceAttributes: [
+                'class' => 'col-3 mb-3'
+            ]
+        ));
+
+        $this->NewBodyRow(row_options: new RowOptions(
+            replaceAttributes: [
+                'class' => 'row align-items-end d-none',
+                'workshop-opd-mfg-media-instructions' => true
+            ]
+        ));
+
+        $this->BodyRow()->addElementInRow(
+            element: Dropzone::Options(new DropzoneOptions(
+                name: 'dropzone',
+                url: '#',
+                enablePreview: true,
+                removeLabelButton: 'Borrar',
+                method: 'POST',
+                uploadMessage: 'Archivos de referencia por el cliente maximo (1MB).',
+                maxFilesize: '1MB',
+                dictFileTooBig: 'El archivo es demasiado grande ({{filesize}}MB). Tamaño máximo de archivo: {{maxFilesize}}MB.',
+                acceptedFiles: 'image/*',
+                dictInvalidFileType: 'No se puede subir este tipo de archivo.'
+            )),
+            row_options: new RowOptions(
+                replaceAttributes: [
+                    'class' => 'col-12 mb-3'
+                ]
+            ));
+
+        $buttonSaveInstructions = Button::Options(new ButtonOptions(
+            label: 'Guardar Instrucciones',
+            name: 'updateMfgMediaInstructionsButton',
+            style: 'warning',
+            size: 'sm',
+            width: 'w-xs',
+            appendAttributes: [
+                'class' => 'ms-4',
+            ]
+        ));
+
+        $this->BodyRow()->addElementInRow(
+            element: Input::Options(new InputTextAreaOptions(
+                    label: 'Instrucciones de diseño'.$buttonSaveInstructions->toHtml(),
+                    name: 'customerInstructions',
+                    placeholder: 'Instrucciones de diseño',
+                )
+            ),
+            row_options: new RowOptions(
+                replaceAttributes: [
+                    'class' => 'col-12 mb-3'
+                ]
+            ));
 
         $this->NewBodyRow();
+
+        $this->BodyRow()->addElementInRow(
+            element: Input::Options(new InputCheckboxOptions(
+                name: 'mfgStatus',
+                label: 'Necesita Fabricación',
+                type: 'switch',
+                direction: 'right',
+                checked: false
+            )), row_options: new RowOptions(
+            replaceAttributes: [
+                'class' => 'col-12'
+            ]
+        ));
+
+        $this->NewBodyRow(row_options: new RowOptions(
+            replaceAttributes: [
+                'class' => 'row align-items-end d-none',
+                'workshop-opd-mfg-status' => true
+            ]
+        ));
 
         $this->BodyRow()->addElementInRow(
             element: SelectByNameMfgArea::Object(
@@ -117,12 +204,21 @@ class DynamicCard extends CardBlock
 
         $footer = $this->Footer()->addRow(new RowOptions(
             replaceAttributes: [
-                'class' => 'row d-none',
+                'class' => 'row',
                 'workshop-order-product-dynamic-details-description' => true
             ],
-            content: '<div class="col-12"><h4 id="orderDynamicDetailsDescriptionId"></h4></div>'
+            content: '<div class="col-12"><h5 id="orderDynamicDetailsDescriptionId"></h5></div>'
         ));
 
+        $deleteButton = new ButtonOptions(
+            name: 'deleteOPDD'.bin2hex(random_bytes(3)),
+            style: 'danger',
+            type: 'icon',
+            appendAttributes: [
+                'data-workshop-opd-delete' => true
+            ],
+            remixIcon: 'delete-bin-5-line'
+        );
         $footer->addElementInRow(element: UxmalComponent::Make(type: 'ui.table', attributes: [
             'options' => [
                 'table.name' => 'orderProductDynamicDetails',
@@ -156,16 +252,10 @@ class DynamicCard extends CardBlock
                     'actions' => [
                         'tbhContent' => null,
                         'buttons' => [
-                            [
-                                'button.type' => 'icon',
-                                'button.style' => 'danger',
-                                'button.onclick' => 'removeOPDD(this)',
-                                'button.name' => 'deleteOPPD',
-                                'button.remix-icon' => 'delete-bin-5-line'
-                            ],
+                            $deleteButton->toArray()
+                            ]
                         ]
-                    ]
-                ],
+                    ],
                 'table.data.livewire' => 'order-product-dynamic-details.table.tbody',
                 'table.data.livewire.append-data' => [
                     'values' => $this->GetValues()

@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ShipmentStatusEnum;
+use App\Support\Enums\ShipmentStatusEnum;
 use App\Models\AddressBook;
 use App\Models\Customer;
 use App\Models\DigitalArt;
 use App\Models\DigitalArtCategory;
 use App\Models\LaborCost;
 use App\Models\MaterialVariationsGroup;
+use App\Models\Media;
 use App\Models\MexDistricts;
 use App\Models\MexMunicipalities;
 use App\Models\MexState;
 use App\Models\MfgArea;
+use App\Models\MfgDevice;
 use App\Models\MfgOverhead;
 use App\Models\Order;
 use App\Models\OrderPayment;
@@ -27,15 +29,16 @@ use App\Models\Product;
 use App\Models\Material;
 use App\Support\Services\OrderService;
 use App\Support\Workshop\Order\EditScreen;
-use Carbon\Carbon;
+use App\Support\Workshop\OrderProductDynamicDetails\SelectDynamicProducts;
 use Deligoez\LaravelModelHashId\Exceptions\UnknownHashIdConfigParameterException;
+use Enmaca\LaravelUxmal\Support\Helpers\UploadS3Helper;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use \Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rules\Enum;
 
 class OrdersController extends Controller
 {
@@ -106,6 +109,11 @@ class OrdersController extends Controller
         $customer_data = null;
         $order_data = null;
 
+
+        //TODO logic to handle edition.
+        $allInput['orderId'] = 425;
+        unset($allInput['customerId']);
+
         if (isset($allInput['customerId'])) {
             $customer_data = Customer::findByHashId($allInput['customerId']);
 
@@ -118,7 +126,10 @@ class OrdersController extends Controller
                 $customer_data->save();
             }
         } else if (isset($allInput['orderId'])) {
-            $order_data = Order::findOrFail(Order::keyFromHashId($allInput['orderId']));
+            //$order_id = Order::keyFromHashId($allInput['orderId'];
+            $order_id = 425;
+            $order_data = Order::findOrFail($order_id);
+            $customer_data = Customer::findOrFail( $order_data->customer_id);
         }
 
         if (empty($order_data))
@@ -133,7 +144,8 @@ class OrdersController extends Controller
             'customer_mobile' => $customer_data->mobile,
             'customer_email' => $customer_data->email,
             'order_id' => $order_data->hashId,
-            'order_code' => $order_data->code
+            'order_code' => $order_data->code,
+            'order_address_book_id' => $order_data->address_book_id
         ]);
 
         //dump($edit_screen);
@@ -183,87 +195,64 @@ class OrdersController extends Controller
     }
 
     /**
-     * @param Request $request
-     *      [laborCostId] => lab_XXXXXX
-     *      [laborCostQuantity] => 15
-     *      [laborCostSubtotal] => $18.13
-     *      [order_id] => ord_XXXXX
-     *      [customer_id] => cus_XXXXX
-     * @return JsonResponse
+     * @throws UnknownHashIdConfigParameterException
      */
-    public function post_labor_cost(Request $request)
+    public
+    function post_delivery_data(Request $request, string $hash_id = null)
     {
         $allInput = $request->all();
+        /**
+         * "recipientDataSameAsCustomer" => "1"
+         * "recipientName" => null
+         * "recipientLastName" => null
+         * "recipientMobile" => null
+         * "address1" => "Rodi 410"
+         * "address2" => null
+         * "zipCode" => "66636"
+         * "mexDistrict" => null
+         * "mexMunicipalities" => "mex_OyRPzQjp4ZM7k"
+         * "mexState" => "mex_L8kmREqGAGOX3"
+         * "order_id" => "ord_OyRPzQjWKEM7k"
+         * "customer_id" => "cus_WJ2v5Z2xQDO9Y"
+         */
 
-        if (!empty($allInput['laborCostId']))
-            $catalog_labor_cost_id = LaborCost::keyFromHashId($allInput['laborCostId']);
+        if (empty($allInput['mexDistrict']) || empty(MexDistricts::keyFromHashId($allInput['mexDistrict'])))
+            return response()->json(['fail' => 'La colonia necesita ser seleccionada']);
 
-        if (!empty($allInput['order_id']))
-            $order_id = Order::keyFromHashId($allInput['order_id']);
-
-        if (!empty($allInput['customer_id']))
-            $customer_id = Customer::keyFromHashId($allInput['customer_id']);
-
-        if (!empty($catalog_labor_cost_id) && !empty($order_id) && !empty($customer_id)) {
-            $labor_cost_data = LaborCost::with('taxes')->findOrFail($catalog_labor_cost_id);
-            $labor_costs = $labor_cost_data->calculateCosts($allInput['laborCostQuantity']);
-            /**
-             * $labor_costs
-             * 'uom' => $costByMinute,
-             * 'cost' => $cost,
-             * 'taxes' => $taxes,
-             * 'profit_margin' => 0,
-             * 'subtotal' => ($cost + $taxes)
-             */
-            $OrderProductDynamicData = OrderProductDynamic::where('order_id', $order_id)->first();
-
-            if (empty($OrderProductDynamicData)) {
-                $OrderProductDynamicData = new OrderProductDynamic();
-                $OrderProductDynamicData->order_id = $order_id;
-                $OrderProductDynamicData->save();
-            }
-            $OrderProductDynamicDataDetail = new OrderProductDynamicDetails();
-
-            $OrderProductDynamicDataDetail->order_product_dynamic_id = $OrderProductDynamicData->id;
-            $OrderProductDynamicDataDetail->reference_type = 'catalog_labor_costs';
-            $OrderProductDynamicDataDetail->reference_id = $catalog_labor_cost_id;
-            $OrderProductDynamicDataDetail->quantity = $allInput['laborCostQuantity'];
-            $OrderProductDynamicDataDetail->cost = $labor_costs['cost'];
-            $OrderProductDynamicDataDetail->taxes = $labor_costs['taxes'];
-            $OrderProductDynamicDataDetail->profit_margin = $labor_costs['profit_margin'];
-            $OrderProductDynamicDataDetail->subtotal = $labor_costs['subtotal'];
-            $OrderProductDynamicDataDetail->price = $labor_costs['price'];
-            $OrderProductDynamicDataDetail->created_by = Auth::id();
-
-            $OrderProductDynamicDataDetail->save();
-
-            OrderService::updateTotal($order_id);
-            return response()->json(['ok' => $OrderProductDynamicDataDetail->hashId]);
+        $order_record = Order::with(['address'])->findOrFail(Order::keyFromHashId($allInput['order_id']));
+        if (empty($order_record->address)) {
+            $address_record = new AddressBook();
+        } else {
+            $address_record = $order_record->address;
         }
-        return response()->json(['fail' => 'Error']);
+
+        if (empty($allInput['recipientDataSameAsCustomer'])) {
+            $address_record->recipient_name = $allInput['recipientName'];
+            $address_record->recipient_last_name = $allInput['recipientLastName'];
+            $address_record->recipient_mobile = $allInput['recipientMobile'];
+        } else {
+            $address_record->recipient_data_same_as_customer = 1;
+        }
+
+        $address_record->customer_id = Customer::keyFromHashId($allInput['customer_id']);
+        $address_record->address_1 = $allInput['address1'];
+        $address_record->address_2 = $allInput['address2'];
+        $address_record->zip_code = $allInput['zipCode'];
+        $address_record->district_id = MexDistricts::keyFromHashId($allInput['mexDistrict']);
+        $address_record->municipality_id = MexMunicipalities::keyFromHashId($allInput['mexMunicipalities']);
+        $address_record->state_id = MexState::keyFromHashId($allInput['mexState']);
+        $address_record->directions = $allInput['directions'];
+        $address_record->save();
+
+        if ($address_record->save()) {
+            $order_record->address_book_id = $address_record->id;
+            $order_record->shipment_status = 'pending';
+            $order_record->save();
+            return response()->json(['ok' => 'La direccion de entrega se actualizo correctamente']);
+        } else
+            return response()->json(['fail' => 'Error al Actualizar la direccion de entrega']);
     }
 
-    /**
-     * @param Request $request
-     * @param string $opdd_id
-     * @return JsonResponse
-     * @throws UnknownHashIdConfigParameterException
-     *
-     * http://127.0.0.1:8000/orders/dynamic_detail/ord_4WmvDA86E98xo
-     */
-    public function delete_dynamic_detail_row(Request $request, string $opdd_id)
-    {
-        $order_product_dynamic_id = OrderProductDynamicDetails::keyFromHashId($opdd_id);
-        $order_product_dynamic_row = OrderProductDynamicDetails::with('order_product_dynamic')->find($order_product_dynamic_id);
-        if ($order_product_dynamic_row) {
-            if ($order_product_dynamic_row->delete()) {
-                OrderService::updateTotal($order_product_dynamic_row->order_product_dynamic->order_id);
-                return response()->json(['ok' => 'El registro se elimino correctamente']);
-            } else
-                return response()->json(['fail' => 'El registro no se pude eliminar']);
-        }
-        return response()->json(['warning' => 'El registro no se encontro']);
-    }
 
 
     public function post_dynamic_detail_row(Request $request, $hashed_id)
@@ -279,155 +268,16 @@ class OrdersController extends Controller
 
         if ($order_product_dynamic_id->hashId)
             return response()->json([
-                'ok' => 'El registro se elimino correctamente',
-                'result' => $order_product_dynamic_id->hashId
+                'ok' => 'El producto dinámico se agregó correctamente',
+                'result' => [
+                    'id' => $order_product_dynamic_id->hashId,
+                    'description' => $order_product_dynamic_id->description
+                ]
             ]);
-        else return response()->json(['fail' => 'El producto dinamico no se pudo agregar']);
+        else return response()->json(['fail' => 'El producto dinámico no se pudo agregar']);
 
     }
 
-
-    /**
-     * @param Request $request
-     * @param string $opd_id
-     * @return JsonResponse
-     * @throws UnknownHashIdConfigParameterException
-     *
-     * http://127.0.0.1:8000/orders/dynamic_detail/ord_4WmvDA86E98xo
-     */
-    public function delete_product_detail_row(Request $request, string $opd_id)
-    {
-        $order_product_detail_id = OrderProductDetail::keyFromHashId($opd_id);
-        $order_product_row = OrderProductDetail::with('order')->find($order_product_detail_id);
-        if ($order_product_row) {
-            if ($order_product_row->delete()) {
-                OrderService::updateTotal($order_product_row->order->id);
-                return response()->json(['ok' => 'El registro se elimino correctamente']);
-            } else
-                return response()->json(['fail' => 'El registro no se pude eliminar']);
-        }
-        return response()->json(['warning' => 'El registro no se encontro']);
-    }
-
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     * @throws UnknownHashIdConfigParameterException
-     *
-     * "_token" => "hB1ZwcBKBk90zRJXzawKb7xite6Bo5fYOiAXIcas"
-     * "mfgOverheadQuantity" => "1"
-     * "mfgOverheadSubtotal" => "$1.16"
-     * "order_id" => "ord_4WmvDE83DQ98x"
-     * "customer_id" => "cus_WJ2v5Z2xQDO9Y"
-     * ]
-     */
-    public function post_mfg_overhead(Request $request)
-    {
-        $allInput = $request->all();
-        $opd_id = null;
-        if (!empty($allInput['opd_id']))
-            $opd_id = OrderProductDynamic::keyFromHashId($allInput['opd_id']);
-
-        if (!empty($allInput['mfgOverheadId']))
-            $mfg_overhead_cost_id = MfgOverhead::keyFromHashId($allInput['mfgOverheadId']);
-
-        if (!empty($allInput['order_id']))
-            $order_id = Order::keyFromHashId($allInput['order_id']);
-
-        if (!empty($allInput['customer_id']))
-            $customer_id = Customer::keyFromHashId($allInput['customer_id']);
-
-        if (!empty($mfg_overhead_cost_id) && !empty($order_id) && !empty($customer_id)) {
-            $mfg_overhead_data = MfgOverhead::with('taxes')->findOrFail($mfg_overhead_cost_id);
-            $mfg_overhead_costs = $mfg_overhead_data->calculateCosts($allInput['mfgOverheadQuantity']);
-
-            if (empty($opd_id)) {
-                $OrderProductDynamicData = new OrderProductDynamic();
-                $OrderProductDynamicData->order_id = $order_id;
-                $OrderProductDynamicData->save();
-                $opd_id = $OrderProductDynamicData->id;
-            }
-
-            $OrderProductDynamicDataDetail = new OrderProductDynamicDetails();
-
-            $OrderProductDynamicDataDetail->order_product_dynamic_id = $opd_id;
-            $OrderProductDynamicDataDetail->reference_type = 'mfg_overhead';
-            $OrderProductDynamicDataDetail->reference_id = $mfg_overhead_cost_id;
-            $OrderProductDynamicDataDetail->quantity = $allInput['mfgOverheadQuantity'];
-            $OrderProductDynamicDataDetail->cost = $mfg_overhead_costs['cost'];
-            $OrderProductDynamicDataDetail->taxes = $mfg_overhead_costs['taxes'];
-            $OrderProductDynamicDataDetail->profit_margin = $mfg_overhead_costs['profit_margin'];
-            $OrderProductDynamicDataDetail->subtotal = $mfg_overhead_costs['subtotal'];
-            $OrderProductDynamicDataDetail->price = $mfg_overhead_costs['price'];
-            $OrderProductDynamicDataDetail->created_by = Auth::id();
-
-            $OrderProductDynamicDataDetail->save();
-
-            OrderService::updateTotal($order_id);
-            return response()->json(['ok' => $OrderProductDynamicDataDetail->hashId]);
-        }
-        return response()->json(['fail' => 'Error']);
-    }
-
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     * @throws UnknownHashIdConfigParameterException"_token" => "1flibMbJXOJMDvzSMkun2rFjEjBSrndlz3RkmggP"
-     *
-     * POST Payload
-     *      "materialId" => "mat_KnY2dZk6MEoWx"
-     *      "materialQuantity" => "1"
-     *      "materialProfitMargin" => "35"
-     *      "materialSubtotal" => "$33.99"
-     *      "order_id" => "ord_679zRAz0JErYv"
-     *      "customer_id" => "cus_B95oKZdvQJMPv"
-     */
-    public
-    function post_material(Request $request)
-    {
-        $allInput = $request->all();
-
-        if (!empty($allInput['materialId']))
-            $material_id = Material::keyFromHashId($allInput['materialId']);
-
-        if (!empty($allInput['order_id']))
-            $order_id = Order::keyFromHashId($allInput['order_id']);
-
-        if (!empty($allInput['customer_id']))
-            $customer_id = Customer::keyFromHashId($allInput['customer_id']);
-
-        if (!empty($material_id) && !empty($order_id) && !empty($customer_id)) {
-            $material_data = Material::with('taxes')->findOrFail($material_id);
-            $material_costs = $material_data->calculateCosts($allInput['materialQuantity'], $allInput['materialProfitMargin']);
-
-            $OrderProductDynamicData = OrderProductDynamic::where('order_id', $order_id)->first();
-
-            if (empty($OrderProductDynamicData)) {
-                $OrderProductDynamicData = new OrderProductDynamic();
-                $OrderProductDynamicData->order_id = $order_id;
-                $OrderProductDynamicData->save();
-            }
-            $OrderProductDynamicDataDetail = new OrderProductDynamicDetails();
-
-            $OrderProductDynamicDataDetail->order_product_dynamic_id = $OrderProductDynamicData->id;
-            $OrderProductDynamicDataDetail->reference_type = 'catalog_materials';
-            $OrderProductDynamicDataDetail->reference_id = $material_id;
-            $OrderProductDynamicDataDetail->quantity = $allInput['materialQuantity'];
-            $OrderProductDynamicDataDetail->cost = $material_costs['cost'];
-            $OrderProductDynamicDataDetail->taxes = $material_costs['taxes'];
-            $OrderProductDynamicDataDetail->profit_margin = $allInput['materialProfitMargin'] / 100;
-            $OrderProductDynamicDataDetail->profit_margin_subtotal = $material_costs['profit_margin'];
-            $OrderProductDynamicDataDetail->subtotal = $material_costs['subtotal'];
-            $OrderProductDynamicDataDetail->price = $material_costs['price'];
-            $OrderProductDynamicDataDetail->created_by = Auth::id();
-
-            $OrderProductDynamicDataDetail->save();
-
-            OrderService::updateTotal($order_id);
-            return response()->json(['ok' => $OrderProductDynamicDataDetail->hashId]);
-        }
-        return response()->json(['fail' => 'Error']);
-    }
 
     /**
      * @param Request $request
@@ -496,7 +346,7 @@ class OrdersController extends Controller
                 'catalog_product_id' => $catalog_product_id,
                 'quantity' => $quantity
             ]);
-            OrderService::updateTotal($order_id);
+            OrderService::updateCostPrices($order_id);
         } catch (\Exception $e) {
             return response()->json(['fail' => $e->getMessage()]);
         }
@@ -505,84 +355,7 @@ class OrdersController extends Controller
     }
 
 
-    public
-    function put_order(Request $request, string $hash_id = null)
-    {
-        $validatedData = $request->validate([
-            'delivery_date' => 'date',
-            'shipment_status' => ['string', new Enum(ShipmentStatusEnum::class)],
-        ]);
 
-        $order_record = Order::findOrFail(Order::keyFromHashId($hash_id));
-        $order_record->fill($validatedData);
-
-        $result = $order_record->save();
-        if ($result)
-            return response()->json(['ok' => $result]);
-        else
-            return response()->json(['fail' => 'sepa la verga que paso']);
-    }
-
-// http://127.0.0.1:8000/orderdelivery_data
-
-    /**
-     * @throws UnknownHashIdConfigParameterException
-     */
-    public
-    function post_delivery_data(Request $request, string $hash_id = null)
-    {
-        $allInput = $request->all();
-        /**
-         * "recipientDataSameAsCustomer" => "1"
-         * "recipientName" => null
-         * "recipientLastName" => null
-         * "recipientMobile" => null
-         * "address1" => "Rodi 410"
-         * "address2" => null
-         * "zipCode" => "66636"
-         * "mexDistrict" => null
-         * "mexMunicipalities" => "mex_OyRPzQjp4ZM7k"
-         * "mexState" => "mex_L8kmREqGAGOX3"
-         * "order_id" => "ord_OyRPzQjWKEM7k"
-         * "customer_id" => "cus_WJ2v5Z2xQDO9Y"
-         */
-
-        if (empty($allInput['mexDistrict']) || empty(MexDistricts::keyFromHashId($allInput['mexDistrict'])))
-            return response()->json(['fail' => 'La colonia necesita ser seleccionada']);
-
-        $order_record = Order::with(['address'])->findOrFail(Order::keyFromHashId($allInput['order_id']));
-        if (empty($order_record->address)) {
-            $address_record = new AddressBook();
-        } else {
-            $address_record = $order_record->address;
-        }
-
-        if (empty($allInput['recipientDataSameAsCustomer'])) {
-            $address_record->recipient_name = $allInput['recipientName'];
-            $address_record->recipient_last_name = $allInput['recipientLastName'];
-            $address_record->recipient_mobile = $allInput['recipientMobile'];
-        } else {
-            $address_record->recipient_data_same_as_customer = 1;
-        }
-
-        $address_record->customer_id = Customer::keyFromHashId($allInput['customer_id']);
-        $address_record->address_1 = $allInput['address1'];
-        $address_record->address_2 = $allInput['address2'];
-        $address_record->zip_code = $allInput['zipCode'];
-        $address_record->district_id = MexDistricts::keyFromHashId($allInput['mexDistrict']);
-        $address_record->municipality_id = MexMunicipalities::keyFromHashId($allInput['mexMunicipalities']);
-        $address_record->state_id = MexState::keyFromHashId($allInput['mexState']);
-        $address_record->directions = $allInput['directions'];
-        $address_record->save();
-
-        if ($address_record->save()) {
-            $order_record->address_book_id = $address_record->id;
-            $order_record->shipment_status = 'pending';
-            $order_record->save();
-            return response()->json(['ok' => 'La direccion de entrega se actualizo correctamente']);
-        } else
-            return response()->json(['fail' => 'Error al Actualizar la direccion de entrega']);
-    }
 
     public
     function put_payment(Request $request)
@@ -590,7 +363,7 @@ class OrdersController extends Controller
         $allInput = $request->all();
 
         if (empty($allInput['paymentMethod']))
-            return response()->json(['fail' => 'Error se tiene que seleccionar el methodo de pago.']);
+            return response()->json(['fail' => 'Se necesita seleccionar el methodo de pago.']);
 
         $payment_method_id = PaymentMethod::keyFromHashId($allInput['paymentMethod']);
 
@@ -602,11 +375,13 @@ class OrdersController extends Controller
         $PaymentDetails->created_by = Auth::id();
         $PaymentDetails->save();
 
-        if (OrderService::updateTotal($PaymentDetails->order_id)) {
+        if (OrderService::updateCostPrices($PaymentDetails->order_id)) {
             return response()->json(['ok' => 'Se ingreso el pago correctamente.']);
         } else
             return response()->json(['fail' => 'Error al ingresar el pago.']);
     }
+
+
 
     /**
      * @param Request $request
@@ -621,4 +396,5 @@ class OrdersController extends Controller
 
         }
     }
+
 }

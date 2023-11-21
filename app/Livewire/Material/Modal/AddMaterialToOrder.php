@@ -19,10 +19,12 @@ class AddMaterialToOrder extends Component
 {
     public $content;
     public $increment = 0;
+    public $order_hashId;
 
-    public function mount()
+    public function mount( $order_hashId ): void
     {
         $this->content = 'Initial::Content';
+        $this->order_hashId = $order_hashId;
     }
 
     /**
@@ -46,7 +48,7 @@ class AddMaterialToOrder extends Component
         $form = UxmalComponent::Make('form', [
             'options' => [
                 'form.id' => $__formId,
-                'form.action' => route('orders_post_material')
+                'form.action' => route('api_post_orders_material', $this->order_hashId)
             ]
         ]);
 

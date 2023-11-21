@@ -22,6 +22,10 @@ class DefaultForm extends FormBlock
          * Direccion
          * class="card-body bg-light border-bottom border-top bg-opacity-25"
          */
+        $address = $this->GetValue('address');
+
+        if( !is_array($address) )
+            $address = [];
 
         $this->NewContentRow(row_options: new RowOptions(
             replaceAttributes: [
@@ -45,7 +49,7 @@ class DefaultForm extends FormBlock
                     type: 'switch',
                     value: 'not_needed',
                     direction: 'right',
-                    checked: $this->GetValue(str::snake('shipmentStatus')) ?? false
+                    checked: $this->GetValue(str::snake('shipmentStatus')) == 'not_needed'
                 )),
             row_options: new RowOptions(
                 replaceAttributes: [
@@ -54,7 +58,7 @@ class DefaultForm extends FormBlock
             ));
 
         $dataWorkshopShipmentDataExtraClass = '';
-        if ($this->GetValue(str::snake('shipmentStatus')) == 'not_needed' )
+        if ($this->GetValue(str::snake('shipmentStatus')) == 'not_needed')
             $dataWorkshopShipmentDataExtraClass = ' d-none';
 
         $dataWorkshopShipmentDataRow = $this->NewContentRow(row_options: new RowOptions(
@@ -63,7 +67,7 @@ class DefaultForm extends FormBlock
                 'data-workshop-shipment-data' => true
             ]
         ));
-
+dump($address);
         $dataWorkshopShipmentDataRow->addElementInRow(
             element: Checkbox::Options(new InputCheckboxOptions(
                 name: 'recipientDataSameAsCustomer',
@@ -72,7 +76,7 @@ class DefaultForm extends FormBlock
                 type: 'switch',
                 value: '1',
                 direction: 'right',
-                checked: $this->GetValue(str::snake('recipientDataSameAsCustomer'))
+                //checked: $address[str::snake('recipientDataSameAsCustomer')]
             )),
             row_options: new RowOptions(
                 replaceAttributes: [
@@ -91,7 +95,7 @@ class DefaultForm extends FormBlock
             element: Input::Options(new InputTextOptions(
                 label: 'Nombre (Destinatario)',
                 name: 'recipientName',
-                value: $this->GetValue(str::snake('recipientName'))
+                value: $address[str::snake('recipientName')]  ?? ''
             )),
             row_options: new RowOptions(
                 replaceAttributes: [
@@ -104,7 +108,7 @@ class DefaultForm extends FormBlock
             element: Input::Options(new InputTextOptions(
                 label: 'Apellido (Destinatario)',
                 name: 'recipientLastName',
-                value: $this->GetValue(str::snake('recipientLastName'))
+                value: $address[str::snake('recipientLastName')] ?? ''
             )),
             row_options: new RowOptions(
                 replaceAttributes: [
@@ -117,7 +121,7 @@ class DefaultForm extends FormBlock
             element: Input::Options(new InputTextOptions(
                 label: 'Celular (Destinatario)',
                 name: 'recipientMobile',
-                value: $this->GetValue(str::snake('recipientMobile'))
+                value: $address[str::snake('recipientMobile')] ?? ''
             )),
             row_options: new RowOptions(
                 replaceAttributes: [
@@ -132,7 +136,7 @@ class DefaultForm extends FormBlock
             element: Input::Options(new InputTextOptions(
                 label: 'Calle y Número',
                 name: 'address1',
-                value: $this->GetValue('address_1'),
+                value: $address['address_1'] ?? '',
                 required: true
             )),
             row_options: new RowOptions(
@@ -146,7 +150,7 @@ class DefaultForm extends FormBlock
             element: Input::Options(new InputTextOptions(
                 label: 'Entre Calles',
                 name: 'address2',
-                value: $this->GetValue('address_2')
+                value: $address['address_2'] ?? ''
             )),
             row_options: new RowOptions(
                 replaceAttributes: [
@@ -159,7 +163,7 @@ class DefaultForm extends FormBlock
             element: Input::Options(new InputTextOptions(
                 label: 'Código Postal',
                 name: 'zipCode',
-                value: $this->GetValue(str::snake('zipCode')),
+                value: $address[str::snake('zipCode')] ?? '',
                 required: true
             )),
             row_options: new RowOptions(
@@ -173,7 +177,7 @@ class DefaultForm extends FormBlock
             element: Input::Options(new InputTextAreaOptions(
                 label: 'Indicaciones de Entrega',
                 name: 'directions',
-                value: $this->GetValue(str::snake('deliveryInstructions')),
+                value: $address['directions'] ?? '',
                 rows: 3
             )),
             row_options: new RowOptions(
@@ -185,8 +189,7 @@ class DefaultForm extends FormBlock
 
         $row_selects = $dataWorkshopShipmentDataRow->addRow();
 
-        $row_selects->addElementInRow(
-            element: SelectMexDistricts::Object(),
+        $row_selects->addElementInRow(element: SelectMexDistricts::Object(values: $address ?? []),
             row_options: new RowOptions(
                 replaceAttributes: [
                     'wire:ignore' => true,
@@ -194,7 +197,7 @@ class DefaultForm extends FormBlock
                 ])
         );
 
-        $row_selects->addElementInRow(element: SelectMexMunicipalities::Object(),
+        $row_selects->addElementInRow(element: SelectMexMunicipalities::Object(values: $address ?? []),
             row_options: new RowOptions(
                 replaceAttributes: [
                     'wire:ignore' => true,
@@ -203,7 +206,7 @@ class DefaultForm extends FormBlock
         );
 
 
-        $row_selects->addElementInRow(element: SelectMexStates::Object(),
+        $row_selects->addElementInRow(element: SelectMexStates::Object(values: $address ?? []),
             row_options: new RowOptions(
                 replaceAttributes: [
                     'wire:ignore' => true,

@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Support\Enums\ShipmentStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
 
 class Order extends BaseModel
 {
@@ -30,6 +33,7 @@ class Order extends BaseModel
         $newOrder->save();
         return $newOrder;
     }
+
     public function products(): HasMany
     {
         return $this->HasMany(OrderProductDetail::class, 'order_id', 'id');
@@ -55,4 +59,11 @@ class Order extends BaseModel
         return $this->BelongsTo(AddressBook::class, 'address_book_id', 'id');
     }
 
+    public static function getValidationRules(): array
+    {
+        return $validateRules = [
+            'delivery_date' => 'date',
+            'shipment_status' => Rule::in(ShipmentStatusEnum::getValues())
+        ];
+    }
 }

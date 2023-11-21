@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Enmaca\LaravelUxmal\Components\Ui\Row;
+use Enmaca\LaravelUxmal\Support\Helpers\BuildRoutesHelper;
+use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
@@ -17,6 +20,9 @@ class Controller extends BaseController
 
     public $menu = [];
 
+    /**
+     * @throws \Exception
+     */
     public function __construct()
     {
         $menu = [
@@ -118,6 +124,11 @@ class Controller extends BaseController
             ],
         ];
         View::share('menu', $menu);
+        View::share('uxmalBody', Row::Options(new RowOptions(
+            replaceAttributes: [
+                'data-uxmal-routes' => json_encode(BuildRoutesHelper::build()),
+                'class' => ['d-none']
+            ]))->toHtml());
     }
 
     public function lang($locale)

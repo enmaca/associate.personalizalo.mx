@@ -34,7 +34,7 @@ class PaymentCard extends CardBlock
             element: Button::Options(new ButtonOptions(
                 label: 'Agregar Pago',
                 name: 'addPaymentFormButton',
-                style: 'info'
+                style: 'dark'
             )),
             row_options: new RowOptions(
                 replaceAttributes: [

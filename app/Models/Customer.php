@@ -10,6 +10,7 @@ class Customer extends BaseModel
 
     protected $table = 'customers';
 
+
     public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Order::class, 'customer_id', 'id');

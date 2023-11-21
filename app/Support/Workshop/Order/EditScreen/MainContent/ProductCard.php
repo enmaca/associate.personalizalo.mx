@@ -5,6 +5,7 @@ namespace App\Support\Workshop\Order\EditScreen\MainContent;
 use App\Support\Workshop\OrderProductDetails\TbHandler\MfgStatus as MfgStatusTbHandler;
 use App\Support\Workshop\Products\SelectByName as SelectByNameProducts;
 use Enmaca\LaravelUxmal\Abstract\CardBlock;
+use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 use Enmaca\LaravelUxmal\UxmalComponent;
 
@@ -32,6 +33,15 @@ class ProductCard extends CardBlock
                 ]
             ));
 
+        $deleteButton = new ButtonOptions(
+            name: 'deleteOPrD'.bin2hex(random_bytes(3)),
+            style: 'danger',
+            type: 'icon',
+            appendAttributes: [
+                'data-workshop-oprd-delete' => true
+            ],
+            remixIcon: 'delete-bin-5-line'
+        );
         $this->Footer()->addElementInRow(element: UxmalComponent::Make(type: 'ui.table', attributes: [
             'options' => [
                 'table.name' => 'orderProductDetails',
@@ -66,13 +76,7 @@ class ProductCard extends CardBlock
                     'actions' => [
                         'tbhContent' => null,
                         'buttons' => [
-                            [
-                                'button.type' => 'icon',
-                                'button.style' => 'danger',
-                                'button.name' => 'deleteOPD',
-                                'button.onclick' => 'removeOPD(this)',
-                                'button.remix-icon' => 'delete-bin-5-line'
-                            ],
+                            $deleteButton->toArray()
                         ]
                     ]
                 ],

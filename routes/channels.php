@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Order;
+use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -13,6 +15,7 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+Broadcast::channel('order.{hashed_id}', function ( User $user, $hashed_id) {
+    return ['order_id' => $hashed_id, 'name' => $user->name, 'ably-capability' => ["subscribe", "history", "channel-metadata", "presence"]];
+    //return false;
 });

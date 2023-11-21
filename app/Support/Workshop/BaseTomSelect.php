@@ -11,6 +11,8 @@ class BaseTomSelect extends SelectTomSelectBlock
     protected string $Model;
     protected array $Options;
 
+    protected string $PlaceHolder = 'Seleccionar...';
+
     /**
      * @return void
      * @throws \Exception
@@ -21,40 +23,49 @@ class BaseTomSelect extends SelectTomSelectBlock
 
         $items = [];
 
-        foreach( $rows as $row )
+        foreach ($rows as $row)
             $items[$row->hashId] = "{$row->name}";
 
 
         $options = $this->Options + [
-            'tomselect.options' => $items,
+                'tomselect.options' => $items,
             ];
 
         $this->_content = UxmalComponent::Make('form.select.tomselect', [
             'options' => $options
         ]);
     }
+
     /**
      * @param string $query
      * @return array
      */
-    public function search(string $query): array
+    public function search(mixed $query): array
     {
-        $rows = $this->Model::query()
-            ->where('name', 'like', "%{$query}%")
-            ->select([
-                'id',
-                'name'
-            ])
-            ->get();
+        if (!empty($query)) {
+            $rows = $this->Model::query()
+                ->where('name', 'like', "%{$query}%")
+                ->select([
+                    'id',
+                    'name'
+                ])
+                ->get();
+        } else {
+            $rows = $this->Model::orderBy('created_at', 'desc')->take(25)->get();
+        }
 
         $items = [];
-
-        foreach ( $rows as $row ){
-            $items[] = [
-                'value' => $row->hashId,
-                'label' => "{$row->name}"
-            ];
-        }
+        $items[] =[
+            'value' => '',
+            'label' => $this->PlaceHolder
+        ];
+        if (isset($rows))
+            foreach ($rows as $row) {
+                $items[] = [
+                    'value' => $row->hashId,
+                    'label' => "{$row->name}"
+                ];
+            }
 
         return [
             'incomplete_results' => false,

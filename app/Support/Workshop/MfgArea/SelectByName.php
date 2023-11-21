@@ -8,6 +8,8 @@ class SelectByName extends \App\Support\Workshop\BaseTomSelect
 {
     protected string $Model = MfgArea::class;
 
+    protected string $PlaceHolder = 'Seleccionar...';
+
     protected array $Options = [
         'tomselect.label' => 'Area de manufactura',
         'tomselect.name' => 'mfgAreaSelected',

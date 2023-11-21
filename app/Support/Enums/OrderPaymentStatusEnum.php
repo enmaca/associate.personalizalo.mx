@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums;
+namespace App\Support\Enums;
 
 //'pending','partial','completed'
 enum OrderPaymentStatusEnum: string

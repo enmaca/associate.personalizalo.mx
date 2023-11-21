@@ -9,12 +9,37 @@ use App\Support\Workshop\OrderProductDynamicDetails\OPDDModalCreateNew;
 use App\Support\Workshop\Products\ModalSelectProductWithDigitalArt;
 
 use Enmaca\LaravelUxmal\Abstract\ScreenBlock;
+use Enmaca\LaravelUxmal\Components\Form\Button;
+use Enmaca\LaravelUxmal\Components\Ui\Row;
+use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
+use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
+use Illuminate\Support\Facades\View;
 
 class EditScreen extends ScreenBlock
 {
 
     public function build(): void
     {
+
+        $orderCode = 'Pedido ' . $this->GetValue('order_code');
+        $validateButton = Button::Options(new ButtonOptions(
+            label: 'Validar Pedido',
+            name: 'validateOrderButton',
+            style: 'success'
+        ))->toHtml();
+
+        $Header =<<<HTML
+<div class="text-start w-75 ps-5"><h3>{$orderCode}</h3></div>
+<div class="text-end w-25 pe-5">{$validateButton}</div>
+HTML;
+
+        $this->SetTopBarHeader(Row::Options(new RowOptions(
+            replaceAttributes: [
+                'class' => 'd-flex align-items-center w-100'
+            ],
+            content: $Header
+        ))->toHtml());
+
         $this->SetMainContent(EditScreen\MainContent::Object(values: $this->GetValues()));
         /**
          * Add Modals

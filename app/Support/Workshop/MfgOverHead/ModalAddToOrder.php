@@ -3,11 +3,11 @@
 namespace App\Support\Workshop\MfgOverHead;
 
 use Enmaca\LaravelUxmal\Abstract\ModalBlock;
-use Enmaca\LaravelUxmal\Components\Form\Button;
+use Enmaca\LaravelUxmal\Components\Livewire;
 use Enmaca\LaravelUxmal\Components\Ui\Modal;
 use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
+use Enmaca\LaravelUxmal\Support\Options\LivewireOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\ModalOptions;
-use Enmaca\LaravelUxmal\UxmalComponent;
 use Exception;
 
 class ModalAddToOrder extends ModalBlock
@@ -18,17 +18,16 @@ class ModalAddToOrder extends ModalBlock
      */
     public function build(): void
     {
-        $aggregate = [];
-        if( isset($this->attributes['options']['saveBtn.onclick']) )
-            $aggregate['modal.saveBtn.onclick'] = $this->attributes['options']['saveBtn.onclick'];
-
         $modal = Modal::Options(new ModalOptions(
             name: 'selectedMfgOverHeadToAddToOrder',
             size: 'normal',
             title: 'Costos Indirectos',
-            body: UxmalComponent::Make('livewire', [
-                'path' => 'mfg-over-head.modal.add-mfg-overhead-to-order'
-            ]),
+            body: Livewire::Options(new LivewireOptions(
+                path: 'mfg-over-head.modal.add-mfg-overhead-to-order',
+                appendData: [
+                    'order_hashId' => $this->GetValue('order_id')
+                ]
+            )),
             saveBtnLabel: 'Agregar al Pedido',
             saveBtnOnClick: $this->GetOption('saveBtn.onclick') ?? null
         ));

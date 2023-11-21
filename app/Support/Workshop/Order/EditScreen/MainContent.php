@@ -26,10 +26,7 @@ class MainContent extends ContentBlock
                 'data-uxmal-order-data' => json_encode([
                     'customer_id' => $this->GetValue('customer_id'),
                     'order_id' => $this->GetValue('order_id')
-                ]),
-                'class' => [
-                    'row gy-4' => true
-                ]
+                ])
             ]));
 
         $DateButton = UxmalComponent::Make('livewire', [
@@ -41,70 +38,82 @@ class MainContent extends ContentBlock
             ]
         ])->toHtml();
 
-        $orderCardObj = $this->ContentRow()->addElement(CardComponent::Options(
-            new CardOptions(
-                name: 'orderCard',
-                header: 'Pedido ' . $this->GetValue('order_code'),
-                headerRight: $DateButton,
-                body: null,
-                footer: null
-            )
-        ));
 
-        $orderCardObj->Footer()->addElementInRow(
-            element: Button::Options(new ButtonOptions(
-                label: 'Validar Pedido',
-                name: 'validateOrderButton',
-                style: 'success'
-            )),
-            row_options: new RowOptions(
-                replaceAttributes: [
-                    'class' => 'col-12 text-end'
-                ]
-            ));
-
-        $orderCardObj->Body()->addElement(FlatpickrComponent::Options(new InputFlatpickrOptions(
+        $this->ContentRow()->addElement(FlatpickrComponent::Options(new InputFlatpickrOptions(
             name: 'deliveryDate',
-            label: 'flatpickr',
+            label: '',
             appendAttributes: ['style' => 'display: none'],
             dateFormat: "d M, Y",
             positionElement: '#orderDeliveryDateButtonId'
         )));
 
-        $orderCardObj->Body()->addElement(MainContent\ClientCard::Object(
+        $this->ContentRow()->addElement(MainContent\ClientCard::Object(
             values: $this->GetValues(),
             options: [
                 'card.header' => 'Datos Cliente/Entrega',
+                'card.header.right' => $DateButton,
                 'card.body' => null,
                 'card.footer' => null,
                 'card.style' => 'primary',
                 'card.name' => 'clientCard'
             ]));
 
-        $orderCardObj->Body()->addElement(MainContent\ProductCard::Object(
+
+
+        $productCardPriceButton = Button::Options(new ButtonOptions(
+            label: '---',
+            name: 'productCardPriceButton',
+            style: 'info',
+            size: 'sm'
+        ));
+
+        $this->ContentRow()->addElement(MainContent\ProductCard::Object(
             values: $this->GetValues(),
             options: [
                 'card.header' => 'Productos',
+                'card.header.right' => $productCardPriceButton->toHtml(),
                 'card.body' => null,
                 'card.footer' => null,
                 'card.style' => 'info',
                 'card.name' => 'productCard'
             ]));
 
-        $orderCardObj->Body()->addElement(MainContent\DynamicCard::Object(
+        $dynamicCardPriceButton = Button::Options(new ButtonOptions(
+            label: '---',
+            name: 'dynamicCardPriceButton',
+            style: 'warning',
+            size: 'sm'
+        ));
+
+        $this->ContentRow()->addElement(MainContent\DynamicCard::Object(
             values: $this->GetValues(),
             options: [
                 'card.header' => 'Productos Dinámicos',
+                'card.header.right' => $dynamicCardPriceButton->toHtml(),
                 'card.body' => null,
                 'card.footer' => null,
                 'card.style' => 'warning',
                 'card.name' => 'dynamicCard'
             ]));
 
-        $orderCardObj->Body()->addElement(MainContent\PaymentCard::Object(
+        $paymentCardPayedAmountButton = Button::Options(new ButtonOptions(
+            label: '---',
+            name: 'paymentCardPayedAmountButton',
+            style: 'dark',
+            size: 'sm'
+        ));
+
+        $paymentCardTotalPriceButton = Button::Options(new ButtonOptions(
+            label: '---',
+            name: 'paymentCardTotalPriceButton',
+            style: 'light',
+            size: 'sm'
+        ));
+        $this->ContentRow()->addElement(MainContent\PaymentCard::Object(
             values: $this->GetValues(),
             options: [
                 'card.header' => 'Información de Pago',
+                'card.header.right' => $paymentCardPayedAmountButton->toHtml().'&nbsp;'.$paymentCardTotalPriceButton->toHtml(),
                 'card.body' => null,
                 'card.footer' => null,
                 'card.style' => 'dark',

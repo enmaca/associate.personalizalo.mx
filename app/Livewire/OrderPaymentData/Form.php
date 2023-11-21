@@ -84,6 +84,12 @@ class Form extends Component
 
         $form_row->addElement(
             element: Input::Options(new InputHiddenOptions(
+                name: 'orderPrice',
+                value: $order_data['price']
+            )));
+
+        $form_row->addElement(
+            element: Input::Options(new InputHiddenOptions(
                 name: 'orderPaymentStatus',
                 value: $order_data['payment_status']
             )));
@@ -93,6 +99,7 @@ class Form extends Component
                 label: '<div class="d-flex" style="align-content: center"><div class="col-6">Monto </div><div class="col-6">' . $AdvancePaymentCheckbox . '</div></div>',
                 name: 'amount',
                 placeholder: 'Monto',
+                value: round(($order_data['price'] - $order_data['payment_amount']), 2),
                 required: true,
                 labelAppendAttributes: ['style' => ['width: 100%']],
                 readonly: true

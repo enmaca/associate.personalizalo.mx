@@ -22,10 +22,12 @@ class AddMfgOverheadToOrder extends Component
 
     public $increment = 0;
     public $content;
+    public string $order_hashId;
 
-    public function mount(): void
+    public function mount(string $order_hashId): void
     {
         $this->content = 'Initial::Content';
+        $this->order_hashId = $order_hashId;
     }
 
     /**
@@ -49,7 +51,7 @@ class AddMfgOverheadToOrder extends Component
         $form = UxmalComponent::Make('form', [
             'options' => [
                 'form.id' => $__formId,
-                'form.action' => route('orders_post_mfg_overhead')
+                'form.action' => route('api_post_orders_mfgoverhead', $this->order_hashId),
             ]
         ]);
 

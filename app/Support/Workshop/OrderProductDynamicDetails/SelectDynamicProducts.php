@@ -19,18 +19,18 @@ class SelectDynamicProducts extends SelectTomSelectBlock
     {
         $hashed_order_id = $this->GetValue('order_id');
         $order_id = Order::keyFromHashId($hashed_order_id);
-        $customers = OrderProductDynamic::where('order_id', $order_id)->take(25)->get();
+        $opd_data = OrderProductDynamic::where('order_id', $order_id)->get();
         $items = [];
 
-        foreach( $customers as $customer )
-            $items[$customer->hashId] = "{$customer->name} {$customer->last_name} [{$customer->mobile}] ({$customer->email})";
+        foreach ($opd_data as $opd)
+            $items[$opd->hashId] = "{$opd->description}";
 
         $this->_content = UxmalComponent::Make('form.select.tomselect', [
             'options' => [
                 'tomselect.label' => 'Productos dinamicos',
-                'tomselect.name' => 'orderProductDynamicDetails',
+                'tomselect.name' => 'cardOrderDynamicProductSelect',
                 'tomselect.placeholder' => 'Buscar por Descripcion...',
-                'tomselect.load-url' => '/order/search_dynamic_products_tomselect?context=default',
+                'tomselect.load-url' => '/orders/' . $hashed_order_id . '/search_dynamic_products?context=default',
                 'tomselect.options' => $items,
                 'tomselect.allow-empty-option' => true
             ]
@@ -41,10 +41,13 @@ class SelectDynamicProducts extends SelectTomSelectBlock
      * @param string $query
      * @return array
      */
-    public function search(string $query): array
+    public function search(string $query = ''): array
     {
         $order_id = $this->GetValue('order_id');
-        $opdd = OrderProductDynamic::where('order_id', $order_id)
+        if (is_string($order_id))
+            $order_id = Order::keyFromHashId($order_id);
+
+        $opd_data = OrderProductDynamic::where('order_id', $order_id)
             ->select([
                 'id',
                 'description',
@@ -54,11 +57,10 @@ class SelectDynamicProducts extends SelectTomSelectBlock
 
         $items = [];
 
-        foreach ($opdd as $_opdd) {
-            $price = round($_opdd->price, 2);
+        foreach ($opd_data as $opd) {
             $items[] = [
-                'value' => $_opdd->hashId,
-                'label' => "{$_opdd->description} (\${$price})"
+                'value' => $opd->hashId,
+                'label' => "{$opd->description}"
             ];
         }
 

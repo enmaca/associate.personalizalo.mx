@@ -3,6 +3,7 @@
 namespace App\Support\Workshop\AddressBook;
 
 use App\Models\MexDistricts;
+use App\Models\MexMunicipalities;
 use App\Models\MexState;
 use Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock;
 use Enmaca\LaravelUxmal\UxmalComponent;
@@ -17,7 +18,33 @@ class SelectMexStates extends SelectTomSelectBlock
      */
     public function build(): void
     {
-        $items = [];
+
+        $zip_code = $this->GetValue('zip_code');
+        if($zip_code){
+            $districts = MexDistricts::query()
+                ->with('municipalities.state')
+                ->where('postal_code', $zip_code)
+                ->select([
+                    'id',
+                    'name',
+                    'municipality_id'
+                ])
+                ->get();
+
+            $items[''] = 'Selecciona la colonia...';
+
+            foreach ($districts as $district)
+                $items[$district->municipalities->state->hashId] = $district->municipalities->state->name;
+
+        } else {
+            $items = [];
+        }
+
+        if( is_int($this->GetValue('state_id')) )
+            $state_hashid = MexState::select('id')->findOrFail($this->GetValue('state_id'))->hashId;
+        else if (is_string($this->GetValue('state_id')))
+            $state_hashid = $this->GetValues('state_id');
+
         $this->_content = UxmalComponent::Make('form.select.tomselect', [
             'options' => [
                     'tomselect.label' => 'Estado (MX)',
@@ -25,8 +52,9 @@ class SelectMexStates extends SelectTomSelectBlock
                     'tomselect.placeholder' => 'Seleciona el estado...',
                     'tomselect.load-url' => '/address_book/mex_state/search_tomselect',
                     'tomselect.options' => $items,
-                    'tomselect.required' => true
-                ] + $this->attributes['options']
+                    'tomselect.required' => true,
+                    'tomselect.value' => $state_hashid ?? false,
+                ]
         ]);
     }
 

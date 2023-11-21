@@ -29,30 +29,43 @@ use Illuminate\Support\Facades\Route;
 Route::get('/login', Login::class)->name('login');
 Route::get('/logout', [SystemController::class, 'logout'])->name('logout');
 
-Route::get('/test', [
-    Test::class,
-    'test'])->name('test');
-Route::post('/test/tomselect_load', [
-    Test::class,
-    'tomselect_load'])->name('test_tomselect_load');
+Route::controller(Test::class)->group(function () {
+    Route::get('/test', 'test')->name('test');
+    Route::post('/test/tomselect_load', 'tomselect_load')->name('test_tomselect_load');
+    Route::post('/test/dropzone', 'dropzone')->name('test_dropzone');
+    Route::get('/test/signed-url', 'signed_url')->name('test_signed_url');
+});
 
 Route::group(['middleware' => 'auth'], function () {
     Route::redirect('/', '/orders', 301);
 
     Route::controller(OrdersController::class)->group(function () {
         Route::get('/orders', 'root')->name('orders_root');
-        Route::put('/orders/{hashed_id}', 'put_order')->name('put_order');
+
+
         Route::post('/orders', 'create')->name('orders_create');
         Route::get('/orders/{hashed_id}', 'edit')->name('orders_edit');
-        Route::post('/orders/laborcost', 'post_labor_cost')->name('orders_post_labor_cost');
-        Route::delete('/orders/dynamic_detail/{opdd_id}', 'delete_dynamic_detail_row')->name('order_delete_product_dynamic_detail');
+
+        /**
+         * Order Product Dynamic
+         */
+
+
+        /**
+         * Order Product Dynamic Detail
+         */
+
+
+
         Route::post('/orders/{hashed_id}/dynamic_detail', 'post_dynamic_detail_row')->name('order_post_product_dynamic_detail');
-        Route::delete('/orders/product_detail/{opd_id}', 'delete_product_detail_row')->name('order_delete_product_detail_detail');
-        Route::post('/orders/mfgoverhead', 'post_mfg_overhead')->name('orders_post_mfg_overhead');
-        Route::post('/orders/material', 'post_material')->name('orders_post_material');
+
+
+
+
         Route::post('/orders/product', 'post_product')->name('orders_post_product');
         Route::post('/orders/delivery_data', 'post_delivery_data')->name('orders_post_delivery_data');
         Route::post('/orders/put_payment', 'put_payment')->name('orders_put_payment');
+        Route::post('/orders/{hashed_id}/search_dynamic_products', 'search_dynamic_products')->name('search_order_dynamic_products');
     });
 
     Route::controller(ManufacturingController::class)->group(function () {

@@ -3,8 +3,10 @@
 namespace App\Support\Workshop\LaborCost;
 
 use Enmaca\LaravelUxmal\Abstract\ModalBlock;
+use Enmaca\LaravelUxmal\Components\Livewire;
 use Enmaca\LaravelUxmal\Components\Ui\Modal;
 use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
+use Enmaca\LaravelUxmal\Support\Options\LivewireOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\ModalOptions;
 use Enmaca\LaravelUxmal\UxmalComponent;
 use Exception;
@@ -21,9 +23,12 @@ class ModalAddToOrder extends ModalBlock
             name: 'selectedLaborCostToAddToOrder',
             size: 'normal',
             title: 'Agregar Mano de Obra',
-            body: UxmalComponent::Make('livewire', [
-                'path' => 'labor_cost.modal.add-labor-cost-to-order'
-            ]),
+            body: Livewire::Options(new LivewireOptions(
+                path: 'labor_cost.modal.add-labor-cost-to-order',
+                appendData: [
+                    'order_hashId' => $this->GetValue('order_id')
+                ]
+            )),
             saveBtnLabel: 'Agregar al Pedido',
             saveBtnOnClick: $this->GetOption('saveBtn.onclick') ?? null
         ));

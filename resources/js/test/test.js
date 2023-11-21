@@ -1,80 +1,59 @@
-import {
-    UxmalSelect,
-    UxmalInput,
-    UxmalForm,
-} from "laravel-uxmal-npm";
+import {Uxmal, UxmalCSRF} from 'laravel-uxmal-npm';
+import 'laravel-uxmal-npm/dist/esm/uxmal.css';
 
-const uxmalInput = new UxmalInput();
-const uxmalSelect = new UxmalSelect();
-const uxmalForm = new UxmalForm();
+const uxmal = new Uxmal();
+
+uxmal.alert('Welcome to Uxmal!');
 
 document.addEventListener("DOMContentLoaded", function () {
-    uxmalInput.init();
-    uxmalSelect.init();
-    uxmalForm.init();
+    uxmal.init(document);
 
-    uxmalSelect.get('mexDistrictId').tomselect2.controlInput = null;
+    let mockAddedFiles = [];
 
-    const recipientDataDivEl = document.querySelector('[data-workshop-recipient-data]');
+    document.getElementById('addId').onclick = () => {
+        //http://127.0.0.1:8000/api/orders/product_dynamic/ord_B95oKAdVmEJMP
+        const api_get_order_product_dynamic_url = uxmal.buildRoute('api_get_order_product_dynamic', 'ord_B95oKAdVmEJMP');
+        fetch(api_get_order_product_dynamic_url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': UxmalCSRF()
+            }
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        }).then(data => {
+            if (data.ok) {
+                console.log(data);
+                // Update the dropzone url
+                const DropzoneObj = uxmal.Dropzones.get('dropzone').dropzone
+                DropzoneObj.options.url = '/orders/dynamic_detail/ord_B95oKAdVmEJMP/media';
+                DropzoneObj.options.headers = {
+                    'X-CSRF-TOKEN': UxmalCSRF()
+                };
+                if (data.result.media.length > 0) {
+                    uxmal.Dropzones.addVirtualFiles('dropzone', data.result.media);
+                }
 
-    const updRecipientDataState = () => {
-        const userDataSelectors = ['recipientNameId', 'recipientLastNameId', 'recipientMobileId' ];
-        if( uxmalInput.get('recipientDataSameAsCustomerId').element.checked ){
-            recipientDataDivEl.classList.remove('d-none');
-            uxmalInput.for(userDataSelectors, (item) => {
-                item.setAttribute('required', '');
-            });
-        } else {
-            recipientDataDivEl.classList.add('d-none');
-            uxmalInput.for(userDataSelectors, (item) => {
-                item.removeAttribute('required');
-            });
-        }
-    };
-    //uxmalSelect.get('mexMunicipalitiesId').tomselect2.lock();
-    //uxmalSelect.get('mexStateId').tomselect2.lock();
+                // Set and load mfgAreaSelectedId.
 
-    uxmalInput.on('recipientDataSameAsCustomerId', 'change', (event) => {
-        updRecipientDataState();
-    });
-
-    uxmalInput.on('zipCodeId', 'change', (event) => {
-        console.log(event.target);
-        const mexDistrictIdEl = uxmalSelect.get('mexDistrictId').tomselect2;
-        mexDistrictIdEl.clear(true);
-        mexDistrictIdEl.clearOptions();
-        mexDistrictIdEl.load('zipcode::' + event.target.value);
-        mexDistrictIdEl.on('load', function () {
-            const keys = Object.keys(this.options);
-            this.setValue(keys.length === 2 ? keys[1] : '');
+                // Set and load mfgDevicesSelectedId.
+            } else if (data.fail) {
+                uxmal.alert(data.fail, 'danger');
+            } else if (data.warning) {
+                uxmal.alert(data.warning, 'warning');
+            }
+        }).catch(error => {
+            uxmal.alert(error.message, 'danger');
         });
+    }
 
-        const mexMunicipalitiesIdEl = uxmalSelect.get('mexMunicipalitiesId').tomselect2;
-        mexMunicipalitiesIdEl.clear(true);
-        mexMunicipalitiesIdEl.clearOptions();
-        mexMunicipalitiesIdEl.load('zipcode::' + event.target.value);
-        mexMunicipalitiesIdEl.on('load', function () {
-            const keys = Object.keys(this.options);
-            this.setValue(keys.length === 2 ? keys[1] : '');
-        });
-
-        const mexStateIdEl = uxmalSelect.get('mexStateId').tomselect2;
-        mexStateIdEl.clear(true);
-        mexStateIdEl.clearOptions();
-        mexStateIdEl.load('zipcode::' + event.target.value);
-        mexStateIdEl.on('load', function () {
-            const keys = Object.keys(this.options);
-            this.setValue(keys.length === 2 ? keys[1] : '');
-        });
-    });
-
-
-    /**
-     * Initial State Dom
-     */
-    updRecipientDataState();
-    uxmalForm.on('deliveryData', 'change', function(event){
-       console.log(event.target);
-    });
+    document.getElementById('removeId').onclick = () => {
+        uxmal.Dropzones.removeAllFiles('dropzone');
+    }
 });
-
+setTimeout(() => {
+    uxmal.alert(uxmal.buildRoute('order_delete_product_detail_detail', 'opdd_hashed_id'), 'success');
+}, 1000);
