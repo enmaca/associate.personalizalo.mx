@@ -33,6 +33,7 @@ Route::controller(OrdersApiController::class)->group(function () {
     Route::post('/orders/{order_hashid}/opd/laborcost', 'post_orders_opdd_labor_cost')->name('api_post_orders_labor_cost');
     Route::post('/orders/{order_hashid}/opd/mfgoverhead', 'post_orders_opdd_mfgoverhead')->name('api_post_orders_mfgoverhead');
     Route::post('/orders/{order_hashid}/opd/{opd_hashid}/media', 'post_order_product_dynamic_hashid_media')->name('api_post_order_product_dynamic_media');
+    Route::post('/orders/{order_hashid}/opd/search', 'post_order_product_dynamic_search')->name('api_post_order_product_dynamic_search');
     Route::get('/orders/{order_hashid}/opd/{opd_hashid}', 'get_order_product_dynamic')->name('api_get_order_product_dynamic');
     Route::put('/orders/{order_hashid}/opd/{opd_hashid}', 'put_order_product_dynamic')->name('api_put_order_product_dynamic');
 

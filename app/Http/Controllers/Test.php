@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use Enmaca\LaravelUxmal\Components\Livewire;
+use Enmaca\LaravelUxmal\Components\Ui\Card;
 use Enmaca\LaravelUxmal\Components\Ui\Dropzone;
 use Enmaca\LaravelUxmal\Components\Form\Button;
+use Enmaca\LaravelUxmal\Components\Ui\Modal;
 use Enmaca\LaravelUxmal\Support\Helpers\BuildRoutesHelper;
 use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
 use Enmaca\LaravelUxmal\Support\Options\LivewireOptions;
+use Enmaca\LaravelUxmal\Support\Options\Ui\CardOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\DropzoneOptions;
+use Enmaca\LaravelUxmal\Support\Options\Ui\ModalOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 use Enmaca\LaravelUxmal\UxmalComponent;
 use Illuminate\Support\Facades\Route;
@@ -26,18 +30,16 @@ class Test extends Controller
     {
 
 
-        $deleteButton = new ButtonOptions(
-            name: 'delete'.bin2hex(random_bytes(3)),
-            style: 'danger',
-            type: 'icon',
-            appendAttributes: [
-                'data-workshop-opd-delete' => true
-            ],
-            remixIcon: 'delete-bin-5-line'
-        );
+        $uxmal = Card::Options(CardOptions::Make()
+            ->name('clientCard')
+            ->header('Datos Cliente/Entrega')
+            ->headerRight('Hola')
+            ->body(null)
+            ->footer(null)
+            ->style('primary'));
 
-        dd($deleteButton->toArray());
 
+        //dd(CardOptions::Make()->name('clientCard')->header('Datos Cliente/Entrega')->headerRight('Hola')->body(null)->footer(null)->style('primary'));
         View::startPush('scripts', '<script src="' . Vite::asset('resources/js/test/test.js', 'workshop') . '" type="module"></script>');
 
 

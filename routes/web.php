@@ -65,7 +65,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/orders/product', 'post_product')->name('orders_post_product');
         Route::post('/orders/delivery_data', 'post_delivery_data')->name('orders_post_delivery_data');
         Route::post('/orders/put_payment', 'put_payment')->name('orders_put_payment');
-        Route::post('/orders/{hashed_id}/search_dynamic_products', 'search_dynamic_products')->name('search_order_dynamic_products');
+
     });
 
     Route::controller(ManufacturingController::class)->group(function () {

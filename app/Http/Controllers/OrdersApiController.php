@@ -454,11 +454,19 @@ class OrdersApiController extends Controller
     }
 
 
+    /**
+     * @param Request $request
+     * @param $hashed_id
+     * @return JsonResponse
+     */
     public
-    function search_dynamic_products(Request $request, $hashed_id)
+    function post_order_product_dynamic_search(Request $request, $order_hashid)
     {
         $allInput = $request->all();
-        $searchObj = new SelectDynamicProducts(['values' => ['order_id' => $hashed_id]]);
+
+        $searchObj = new SelectDynamicProducts(
+            values: ['order_id' => $order_hashid]
+        );
         return response()->json($searchObj->search());
     }
 
