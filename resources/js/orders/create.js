@@ -64,6 +64,7 @@ document.addEventListener('livewire:initialized', () => {
     //// Save Delivery Data
     // TODO: uxmalButton helpers
     document.getElementById('addressBookSubmitId').addEventListener('click', () => {
+        uxmal.Cards.setLoading('clientCard', true);
         if (uxmal.Inputs.get('shipmentStatusId').element.checked) {
             const data = {
                 shipment_status: 'not_needed'
@@ -73,6 +74,9 @@ document.addEventListener('livewire:initialized', () => {
                 Livewire.dispatch('addressbook.form.default-form::reload');
                 uxmal.Forms.get('deliveryData').element.reset();
                 uxmal.alert(data.ok, 'success');
+                uxmal.Cards.setLoading('clientCard', true);
+            }, (data) => {
+            }, (error) => {
             });
         } else {
             /// SubmitDeliveryData::Form => Livewire::Update::AddressBookForm::DefaultForm

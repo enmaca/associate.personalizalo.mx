@@ -2,7 +2,7 @@
 
 namespace App\Support\Workshop\MfgOverHead;
 
-use Enmaca\LaravelUxmal\Abstract\ModalBlock;
+use Enmaca\LaravelUxmal\Block\ModalBlock;
 use Enmaca\LaravelUxmal\Components\Livewire;
 use Enmaca\LaravelUxmal\Components\Ui\Modal;
 use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;

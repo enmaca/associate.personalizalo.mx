@@ -3,7 +3,7 @@
 namespace App\Support\Workshop\Material;
 
 use App\Models\Material;
-use Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock;
+use Enmaca\LaravelUxmal\Block\SelectTomSelectBlock;
 use Enmaca\LaravelUxmal\UxmalComponent;
 
 class SelectByNameSkuDesc extends SelectTomSelectBlock

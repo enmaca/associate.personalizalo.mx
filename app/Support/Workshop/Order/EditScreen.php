@@ -8,7 +8,7 @@ use App\Support\Workshop\MfgOverHead\ModalAddToOrder as MfgOverHeadModalAddToOrd
 use App\Support\Workshop\OrderProductDynamicDetails\OPDDModalCreateNew;
 use App\Support\Workshop\Products\ModalSelectProductWithDigitalArt;
 
-use Enmaca\LaravelUxmal\Abstract\ScreenBlock;
+use Enmaca\LaravelUxmal\Block\ScreenBlock;
 use Enmaca\LaravelUxmal\Components\Form\Button;
 use Enmaca\LaravelUxmal\Components\Ui\Row;
 use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
@@ -18,13 +18,15 @@ use Illuminate\Support\Facades\View;
 class EditScreen extends ScreenBlock
 {
 
+    /**
+     * @throws \Exception
+     */
     public function build(): void
     {
-
         $orderCode = 'Pedido ' . $this->GetValue('order_code');
         $validateButton = Button::Options(new ButtonOptions(
-            label: 'Validar Pedido',
             name: 'validateOrderButton',
+            label: 'Validar Pedido',
             style: 'success'
         ))->toHtml();
 

@@ -2,13 +2,9 @@
 
 namespace App\Support\Workshop\Order\EditScreen\MainContent;
 
-use App\Support\Workshop\PaymentMethods\SelectPaymentMethods;
-use Enmaca\LaravelUxmal\Abstract\CardBlock;
+use Enmaca\LaravelUxmal\Block\CardBlock;
 use Enmaca\LaravelUxmal\Components\Form\Button;
-use Enmaca\LaravelUxmal\Components\Form\Input;
 use Enmaca\LaravelUxmal\Components\Livewire;
-use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputCheckboxOptions;
-use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextOptions;
 use Enmaca\LaravelUxmal\Support\Options\LivewireOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;

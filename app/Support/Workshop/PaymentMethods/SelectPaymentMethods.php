@@ -4,7 +4,7 @@ namespace App\Support\Workshop\PaymentMethods;
 
 use App\Models\Customer;
 use App\Models\PaymentMethod;
-use Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock;
+use Enmaca\LaravelUxmal\Block\SelectTomSelectBlock;
 use Enmaca\LaravelUxmal\UxmalComponent;
 use Exception;
 

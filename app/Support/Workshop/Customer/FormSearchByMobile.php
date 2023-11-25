@@ -2,7 +2,7 @@
 
 namespace App\Support\Workshop\Customer;
 
-use Enmaca\LaravelUxmal\Abstract\FormBlock;
+use Enmaca\LaravelUxmal\Block\FormBlock;
 use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextOptions;
 use Illuminate\Support\Str;
 

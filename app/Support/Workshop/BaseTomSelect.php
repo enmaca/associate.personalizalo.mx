@@ -2,7 +2,7 @@
 
 namespace App\Support\Workshop;
 
-use Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock;
+use Enmaca\LaravelUxmal\Block\SelectTomSelectBlock;
 use Enmaca\LaravelUxmal\UxmalComponent;
 
 class BaseTomSelect extends SelectTomSelectBlock

@@ -4,7 +4,7 @@ namespace App\Support\Workshop\AddressBook;
 
 use App\Models\MexDistricts;
 use App\Models\MexMunicipalities;
-use Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock;
+use Enmaca\LaravelUxmal\Block\SelectTomSelectBlock;
 use Enmaca\LaravelUxmal\UxmalComponent;
 use Exception;
 

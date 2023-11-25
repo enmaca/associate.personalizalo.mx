@@ -2,7 +2,7 @@
 
 namespace App\Support\Workshop\AddressBook;
 
-use Enmaca\LaravelUxmal\Abstract\FormBlock;
+use Enmaca\LaravelUxmal\Block\FormBlock;
 use Enmaca\LaravelUxmal\Components\Form\Input;
 use Enmaca\LaravelUxmal\Components\Form\Input\Checkbox;
 use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputCheckboxOptions;
@@ -67,7 +67,7 @@ class DefaultForm extends FormBlock
                 'data-workshop-shipment-data' => true
             ]
         ));
-dump($address);
+
         $dataWorkshopShipmentDataRow->addElementInRow(
             element: Checkbox::Options(new InputCheckboxOptions(
                 name: 'recipientDataSameAsCustomer',

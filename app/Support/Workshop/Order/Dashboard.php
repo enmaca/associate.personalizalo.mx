@@ -1,7 +1,7 @@
 <?php
 namespace App\Support\Workshop\Order;
 
-use Enmaca\LaravelUxmal\Abstract\ScreenBlock;
+use Enmaca\LaravelUxmal\Block\ScreenBlock;
 
 class Dashboard extends ScreenBlock
 {

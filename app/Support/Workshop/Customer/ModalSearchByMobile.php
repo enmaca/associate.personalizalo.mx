@@ -2,7 +2,7 @@
 
 namespace App\Support\Workshop\Customer;
 
-use Enmaca\LaravelUxmal\Abstract\ModalBlock;
+use Enmaca\LaravelUxmal\Block\ModalBlock;
 use Enmaca\LaravelUxmal\Components\Form\Input;
 use Enmaca\LaravelUxmal\Components\Ui\Modal;
 use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;

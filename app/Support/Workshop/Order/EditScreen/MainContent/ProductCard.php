@@ -4,7 +4,7 @@ namespace App\Support\Workshop\Order\EditScreen\MainContent;
 
 use App\Support\Workshop\OrderProductDetails\TbHandler\MfgStatus as MfgStatusTbHandler;
 use App\Support\Workshop\Products\SelectByName as SelectByNameProducts;
-use Enmaca\LaravelUxmal\Abstract\CardBlock;
+use Enmaca\LaravelUxmal\Block\CardBlock;
 use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 use Enmaca\LaravelUxmal\UxmalComponent;

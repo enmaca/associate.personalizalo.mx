@@ -2,7 +2,7 @@
 
 namespace App\Support\Workshop\Order\EditScreen\MainContent;
 
-use Enmaca\LaravelUxmal\Abstract\CardBlock;
+use Enmaca\LaravelUxmal\Block\CardBlock;
 use Enmaca\LaravelUxmal\Components\Form\Button;
 use Enmaca\LaravelUxmal\Components\Form\Input;
 use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;

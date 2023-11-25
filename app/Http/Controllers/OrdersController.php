@@ -52,7 +52,7 @@ class OrdersController extends Controller
         /**
          * Create Predefined Modal with context 'createorder'
          */
-        $client_modal = \App\Support\Workshop\Customer\ModalSearchByMobile::Object(['context' => 'createorder']);
+        $client_modal = \App\Support\Workshop\Customer\ModalSearchByMobile::Object(context:'createorder');
 
         /**
          * Create Predefined ListJS with Conext 'orderhome'
@@ -89,7 +89,6 @@ class OrdersController extends Controller
         View::startPush('scripts', '<script src="' . Vite::asset('resources/js/orders/root.js', 'workshop') . '" type="module"></script>');
         View::startPush('livewire:initialized', Vite::content('resources/js/orders/root_livewire.js', 'workshop'));
 
-        dump($root_screen->toArray());
         /**
          * Set View
          */
@@ -137,7 +136,7 @@ class OrdersController extends Controller
 
         // $payment_methods_array
 
-        $edit_screen = EditScreen::Object(values: [
+        $edit_screen = EditScreen::Object(  values: [
             'customer_id' => $customer_data->hashId,
             'customer_name' => $customer_data->name,
             'customer_last_name' => $customer_data->last_name,

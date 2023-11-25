@@ -2,7 +2,7 @@
 
 namespace App\Support\Workshop\Order\EditScreen;
 
-use Enmaca\LaravelUxmal\Abstract\ContentBlock;
+use Enmaca\LaravelUxmal\Block\ContentBlock;
 use Enmaca\LaravelUxmal\Components\Form\Button;
 use Enmaca\LaravelUxmal\Components\Form\Input\Checkbox;
 use Enmaca\LaravelUxmal\Components\Form\Input\Flatpickr as FlatpickrComponent;
@@ -49,20 +49,18 @@ class MainContent extends ContentBlock
 
         $this->ContentRow()->addElement(MainContent\ClientCard::Object(
             values: $this->GetValues(),
-            options: [
-                'card.header' => 'Datos Cliente/Entrega',
-                'card.header.right' => $DateButton,
-                'card.body' => null,
-                'card.footer' => null,
-                'card.style' => 'primary',
-                'card.name' => 'clientCard'
-            ]));
+            options: CardOptions::Make()
+                ->name('clientCard')
+                ->header('Datos Cliente/Entrega')
+                ->headerRight($DateButton)
+                ->style('primary')->toArray()
+        ));
 
 
 
         $productCardPriceButton = Button::Options(new ButtonOptions(
-            label: '---',
             name: 'productCardPriceButton',
+            label: '---',
             style: 'info',
             size: 'sm'
         ));
@@ -79,8 +77,8 @@ class MainContent extends ContentBlock
             ]));
 
         $dynamicCardPriceButton = Button::Options(new ButtonOptions(
-            label: '---',
             name: 'dynamicCardPriceButton',
+            label: '---',
             style: 'warning',
             size: 'sm'
         ));
@@ -97,15 +95,15 @@ class MainContent extends ContentBlock
             ]));
 
         $paymentCardPayedAmountButton = Button::Options(new ButtonOptions(
-            label: '---',
             name: 'paymentCardPayedAmountButton',
+            label: '---',
             style: 'dark',
             size: 'sm'
         ));
 
         $paymentCardTotalPriceButton = Button::Options(new ButtonOptions(
-            label: '---',
             name: 'paymentCardTotalPriceButton',
+            label: '---',
             style: 'light',
             size: 'sm'
         ));
@@ -113,7 +111,7 @@ class MainContent extends ContentBlock
             values: $this->GetValues(),
             options: [
                 'card.header' => 'Información de Pago',
-                'card.header.right' => $paymentCardPayedAmountButton->toHtml().'&nbsp;'.$paymentCardTotalPriceButton->toHtml(),
+                'card.header.right' => $paymentCardPayedAmountButton->toHtml() . '&nbsp;' . $paymentCardTotalPriceButton->toHtml(),
                 'card.body' => null,
                 'card.footer' => null,
                 'card.style' => 'dark',

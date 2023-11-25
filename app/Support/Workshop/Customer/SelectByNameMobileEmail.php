@@ -3,7 +3,7 @@
 namespace App\Support\Workshop\Customer;
 
 use App\Models\Customer;
-use Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock;
+use Enmaca\LaravelUxmal\Block\SelectTomSelectBlock;
 use Enmaca\LaravelUxmal\UxmalComponent;
 use Exception;
 

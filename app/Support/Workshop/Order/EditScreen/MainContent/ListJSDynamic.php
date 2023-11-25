@@ -2,7 +2,7 @@
 
 namespace App\Support\Workshop\Order\EditScreen\MainContent;
 
-class ListJSDynamic extends \Enmaca\LaravelUxmal\Abstract\ListJs
+class ListJSDynamic extends \Enmaca\LaravelUxmal\Block\ListJs
 {
     public function build(): void
     {

@@ -2,13 +2,12 @@
 
 namespace App\Support\Workshop\LaborCost;
 
-use Enmaca\LaravelUxmal\Abstract\ModalBlock;
+use Enmaca\LaravelUxmal\Block\ModalBlock;
 use Enmaca\LaravelUxmal\Components\Livewire;
 use Enmaca\LaravelUxmal\Components\Ui\Modal;
 use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
 use Enmaca\LaravelUxmal\Support\Options\LivewireOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\ModalOptions;
-use Enmaca\LaravelUxmal\UxmalComponent;
 use Exception;
 
 class ModalAddToOrder extends ModalBlock

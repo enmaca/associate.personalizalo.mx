@@ -4,7 +4,7 @@ namespace App\Support\Workshop\System\Uom;
 
 use App\Models\UnitOfMeasure;
 use App\Support\Workshop\Order\TbHandler\OrderIdCheckbox;
-use Enmaca\LaravelUxmal\Abstract\ListJs;
+use Enmaca\LaravelUxmal\Block\ListJs;
 
 class ListJsUomHome extends ListJs
 {

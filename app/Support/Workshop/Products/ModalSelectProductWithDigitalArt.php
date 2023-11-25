@@ -2,8 +2,7 @@
 
 namespace App\Support\Workshop\Products;
 
-use Enmaca\LaravelUxmal\Abstract\ModalBlock;
-use Enmaca\LaravelUxmal\Components\Form\Button;
+use Enmaca\LaravelUxmal\Block\ModalBlock;
 use Enmaca\LaravelUxmal\Components\Ui\Modal;
 use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\ModalOptions;

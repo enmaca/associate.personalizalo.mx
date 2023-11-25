@@ -3,8 +3,9 @@
 namespace App\Support\Workshop\Products;
 
 use App\Models\Product;
+use Enmaca\LaravelUxmal\Block\SelectTomSelectBlock;
 use Enmaca\LaravelUxmal\UxmalComponent;
-class SelectByName extends \Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock
+class SelectByName extends SelectTomSelectBlock
 {
 
     /**

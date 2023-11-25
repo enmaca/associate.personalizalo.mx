@@ -2,7 +2,7 @@
 
 namespace App\Support\Workshop\Order;
 
-class ListjsOrderHome extends \Enmaca\LaravelUxmal\Abstract\TableBlock
+class ListjsOrderHome extends \Enmaca\LaravelUxmal\Block\TableBlock
 {
     public function build(): void
     {

@@ -4,7 +4,7 @@ namespace App\Support\Workshop\OrderProductDynamicDetails;
 
 use App\Models\Order;
 use App\Models\OrderProductDynamic;
-use Enmaca\LaravelUxmal\Abstract\SelectTomSelectBlock;
+use Enmaca\LaravelUxmal\Block\SelectTomSelectBlock;
 use Enmaca\LaravelUxmal\UxmalComponent;
 use Exception;
 

@@ -2,7 +2,7 @@
 
 namespace App\Support\Workshop\Order\Dashboard;
 
-use Enmaca\LaravelUxmal\Abstract\ContentBlock;
+use Enmaca\LaravelUxmal\Block\ContentBlock;
 use \Enmaca\LaravelUxmal\Components\Form\Button;
 use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
