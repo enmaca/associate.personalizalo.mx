@@ -28,6 +28,9 @@ Route::controller(OrdersApiController::class)->group(function () {
     // Route::delete('/orders/product_detail/{opdd_hashed_id}', 'delete_product_detail_row')->name('order_delete_product_detail_detail');
     Route::delete('/orders/{order_hashid}/product/{oprd_hashid}', 'delete_order_product_detail')->name('api_delete_order_product_detail');
 
+    Route::put('/orders/{order_hashid}/delivery_data', 'put_order_delivery_data')->name('api_put_order_delivery_data');
+
+
     /** OrderProductDynamic */
     Route::post('/orders/{order_hashid}/opd/material', 'post_orders_opdd_material')->name('api_post_orders_material');
     Route::post('/orders/{order_hashid}/opd/laborcost', 'post_orders_opdd_labor_cost')->name('api_post_orders_labor_cost');

@@ -76,7 +76,7 @@ class DefaultForm extends FormBlock
                 type: 'switch',
                 value: '1',
                 direction: 'right',
-                //checked: $address[str::snake('recipientDataSameAsCustomer')]
+                checked: $address[str::snake('recipientDataSameAsCustomer')] ?? false
             )),
             row_options: new RowOptions(
                 replaceAttributes: [

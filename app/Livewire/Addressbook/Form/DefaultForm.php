@@ -10,6 +10,7 @@ use Illuminate\Foundation\Application;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Exception;
+
 class DefaultForm extends Component
 {
     public int $request_id = 0;
@@ -36,14 +37,18 @@ class DefaultForm extends Component
     {
         $order_id = Order::keyFromHashId($this->order_id);
         $order_data = Order::with('address')->find($order_id);
-        if( !empty($order_data->address))
+        if (!empty($order_data->address))
             $values = $order_data->toArray();
 
         $values['shipment_status'] = $order_data->shipment_status ?? '';
 
         $uxmal = AddressBookDefaultForm::Object(
             values: $values ?? [],
-            options: ['form.id' => 'deliveryData', 'form.action' => '/orders/delivery_data']
+            options: [
+                'form.id' => 'deliveryData',
+                'form.action' => route('api_put_order_delivery_data', $this->order_id),
+                'form.method' => 'put'
+            ]
         );
 
         return view('uxmal::livewire', ['data' => $uxmal->toArray()]);

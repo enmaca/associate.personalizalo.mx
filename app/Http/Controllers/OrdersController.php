@@ -193,66 +193,6 @@ class OrdersController extends Controller
         }
     }
 
-    /**
-     * @throws UnknownHashIdConfigParameterException
-     */
-    public
-    function post_delivery_data(Request $request, string $hash_id = null)
-    {
-        $allInput = $request->all();
-        /**
-         * "recipientDataSameAsCustomer" => "1"
-         * "recipientName" => null
-         * "recipientLastName" => null
-         * "recipientMobile" => null
-         * "address1" => "Rodi 410"
-         * "address2" => null
-         * "zipCode" => "66636"
-         * "mexDistrict" => null
-         * "mexMunicipalities" => "mex_OyRPzQjp4ZM7k"
-         * "mexState" => "mex_L8kmREqGAGOX3"
-         * "order_id" => "ord_OyRPzQjWKEM7k"
-         * "customer_id" => "cus_WJ2v5Z2xQDO9Y"
-         */
-
-        if (empty($allInput['mexDistrict']) || empty(MexDistricts::keyFromHashId($allInput['mexDistrict'])))
-            return response()->json(['fail' => 'La colonia necesita ser seleccionada']);
-
-        $order_record = Order::with(['address'])->findOrFail(Order::keyFromHashId($allInput['order_id']));
-        if (empty($order_record->address)) {
-            $address_record = new AddressBook();
-        } else {
-            $address_record = $order_record->address;
-        }
-
-        if (empty($allInput['recipientDataSameAsCustomer'])) {
-            $address_record->recipient_name = $allInput['recipientName'];
-            $address_record->recipient_last_name = $allInput['recipientLastName'];
-            $address_record->recipient_mobile = $allInput['recipientMobile'];
-        } else {
-            $address_record->recipient_data_same_as_customer = 1;
-        }
-
-        $address_record->customer_id = Customer::keyFromHashId($allInput['customer_id']);
-        $address_record->address_1 = $allInput['address1'];
-        $address_record->address_2 = $allInput['address2'];
-        $address_record->zip_code = $allInput['zipCode'];
-        $address_record->district_id = MexDistricts::keyFromHashId($allInput['mexDistrict']);
-        $address_record->municipality_id = MexMunicipalities::keyFromHashId($allInput['mexMunicipalities']);
-        $address_record->state_id = MexState::keyFromHashId($allInput['mexState']);
-        $address_record->directions = $allInput['directions'];
-        $address_record->save();
-
-        if ($address_record->save()) {
-            $order_record->address_book_id = $address_record->id;
-            $order_record->shipment_status = 'pending';
-            $order_record->save();
-            return response()->json(['ok' => 'La direccion de entrega se actualizo correctamente']);
-        } else
-            return response()->json(['fail' => 'Error al Actualizar la direccion de entrega']);
-    }
-
-
 
     public function post_dynamic_detail_row(Request $request, $hashed_id)
     {

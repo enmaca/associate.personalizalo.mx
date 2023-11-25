@@ -99,8 +99,8 @@ class ClientCard extends CardBlock
 
         $this->Footer()->addElementInRow(
             element: Button::Options(new ButtonOptions(
-                label: 'Guardar cambios',
                 name: 'addressBookSubmit',
+                label: 'Guardar cambios',
                 style: 'primary',
                 appendAttributes: ['class' => ['d-none' => true]]
             )),

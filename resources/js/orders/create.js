@@ -71,26 +71,33 @@ document.addEventListener('livewire:initialized', () => {
             };
             /// apiPutOrder => Livewire::Update::AddressBookForm::DefaultForm
             apiPutOrder(window.order_id, data, (data) => {
-                Livewire.dispatch('addressbook.form.default-form::reload');
                 uxmal.Forms.get('deliveryData').element.reset();
+                uxmal.Inputs.get('shipmentStatusId').element.checked = true;
                 uxmal.alert(data.ok, 'success');
-                uxmal.Cards.setLoading('clientCard', true);
+                uxmal.Cards.setLoading('clientCard', false);
             }, (data) => {
+                uxmal.alert(data.fail, 'danger');
+                uxmal.Cards.setLoading('clientCard', false);
             }, (error) => {
+                uxmal.alert(data.warning, 'warning');
+                uxmal.Cards.setLoading('clientCard', false);
             });
         } else {
+            console.log('=========> ',uxmal.Inputs.get('recipientDataSameAsCustomerId').element.value);
             /// SubmitDeliveryData::Form => Livewire::Update::AddressBookForm::DefaultForm
             uxmal.Forms.submit('deliveryData', {
                 order_id: window.order_id,
-                customer_id: window.customer_id
+                customer_id: window.customer_id,
+                recipientDataSameAsCustomer : uxmal.Inputs.get('recipientDataSameAsCustomerId').element.checked ? 1 : 0
             }, (elementName, data) => {
                 Livewire.dispatch('addressbook.form.default-form::reload');
-                console.log(data);
                 uxmal.alert(data.ok, 'success');
             }, (elementName, data) => {
-                uxmal.alert(data.fail, 'warning');
+                uxmal.alert(data.fail, 'danger');
+                uxmal.Cards.setLoading('clientCard', false);
             }, (elementName, error) => {
-                uxmal.alert(error, 'danger');
+                uxmal.alert(error, 'warning');
+                uxmal.Cards.setLoading('clientCard', false);
             });
         }
     });
@@ -102,6 +109,7 @@ document.addEventListener('livewire:initialized', () => {
             uxmal.Forms.init(scope);
             uxmal.Inputs.init(scope);
             functions.initDeliveryAddressBook();
+            uxmal.Cards.setLoading('clientCard', false);
             document.getElementById('addressBookSubmitId').classList.add('d-none');
         }, 250);
     });
