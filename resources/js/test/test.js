@@ -12,3 +12,16 @@ document.addEventListener("DOMContentLoaded", function () {
         uxmal.Cards.setLoading('clientCard', false);
     }, 3000);
 });
+
+document.querySelectorAll('.uxmal-debug-container').forEach((elContainer) => {
+    const activator = elContainer.querySelector(':scope > .uxmal-block-debug');
+
+    activator.addEventListener('mouseover', (e) => {
+        elContainer.style.outline = '1px dashed ' + (activator.dataset.debugColor ?? 'red');
+        activator.querySelector('small').classList.remove('d-none');
+    });
+    activator.addEventListener('mouseout', (e) => {
+        elContainer.style.outline = null;
+        activator.querySelector('small').classList.add('d-none');
+    });
+});

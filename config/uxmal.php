@@ -6,6 +6,6 @@ return [
 
     'ide_formats' => [
         'phpstorm' => 'phpstorm://open?file=%s&line=%d',
-        'vscode' => 'vscode://file/%s:%d',
+        'vscode' => 'vscode://file%s:%d',
     ]
 ];
