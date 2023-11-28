@@ -1,6 +1,6 @@
-import {UxmalCSRF} from "laravel-uxmal-npm";
-import {generateRandomString} from "../workshop.js";
-import {uxmal} from "../workshop.js";
+import {UxmalCSRF} from "laravel-uxmal-npm/dist/esm/uxmal.js";
+import {generateRandomString} from "../../workshop.js";
+import {uxmal} from "../../workshop.js";
 export const createFunctions = function () {
 
     /**
@@ -128,8 +128,8 @@ export const createFunctions = function () {
         dynamicCardPriceButtonIdEl.textContent = data.dynamic_products.count + " Productos Dinámicos $" + parseFloat(data.dynamic_products.payment_data.price).toFixed(2);
         dynamicCardPriceButtonIdEl.classList.remove('d-none');
 
-        const order_payment_amount = uxmal.Inputs.get('orderPaymentAmountId').element.value;
-        const order_payment_price  = uxmal.Inputs.get('orderPriceId').element.value;
+        const order_payment_amount = parseFloat(uxmal.Inputs.get('orderPaymentAmountId').element.value).toFixed(2);
+        const order_payment_price  = parseFloat(uxmal.Inputs.get('orderPriceId').element.value).toFixed(2);
     }
 
     // checkPaymentData
@@ -147,7 +147,7 @@ export const createFunctions = function () {
 
     // paymentUpdateRemainingAmountToPay, function to set the remaining amount to pay
     const paymentUpdateRemainingAmountToPay = (price) => {
-        uxmal.Inputs.setValue('amountId', price);
+        uxmal.Inputs.setValue('amountId', parseFloat(price).toFixed(2));
     };
 
     const oPDUpdateForm = (opd_id) => {
@@ -159,8 +159,8 @@ export const createFunctions = function () {
         const mfgAreaSelectedIdEl = uxmal.Selects.get('mfgAreaSelectedId').tomselect2;
         mfgAreaSelectedIdEl.clear(true);
         mfgAreaSelectedIdEl.setValue('', true);
-        const api_get_order_product_dynamic_url = uxmal.buildRoute('api_get_order_product_dynamic', window.order_id, window.opd_id);
-        fetch(api_get_order_product_dynamic_url, {
+        const api_get_order_opd_url = uxmal.buildRoute('api_get_order_opd', window.order_id, window.opd_id);
+        fetch(api_get_order_opd_url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -175,7 +175,7 @@ export const createFunctions = function () {
             if (data.ok) {
                 // Update the dropzone url
                 const DropzoneObj = uxmal.Dropzones.get('dropzone').dropzone
-                DropzoneObj.options.url = uxmal.buildRoute('api_post_order_product_dynamic_media', window.order_id, window.opd_id);
+                DropzoneObj.options.url = uxmal.buildRoute('api_post_order_opd_media', window.order_id, window.opd_id);
                 DropzoneObj.options.headers = {
                     'X-CSRF-TOKEN': UxmalCSRF()
                 };
@@ -260,8 +260,8 @@ export const createFunctions = function () {
         document.querySelector('[workshop-opd-mfg-status]').classList.add('d-none');
 
         const DropzoneObj = uxmal.Dropzones.get('dropzone').dropzone
-        const api_post_order_product_dynamic_media_url = uxmal.buildRoute('api_post_order_product_dynamic_media', window.opd_id);
-        DropzoneObj.options.url = api_post_order_product_dynamic_media_url;
+        const api_post_order_opd_media_url = uxmal.buildRoute('api_post_order_opd_media', window.opd_id);
+        DropzoneObj.options.url = api_post_order_opd_media_url;
         DropzoneObj.options.headers = {
             'X-CSRF-TOKEN': UxmalCSRF()
         };
@@ -402,7 +402,6 @@ export const createFunctions = function () {
 
     return {
         initDeliveryAddressBook,
-
 
         /* Global Elements */
         ocardOrderDynamicProductSelectIdEl,

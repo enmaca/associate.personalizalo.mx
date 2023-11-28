@@ -23,8 +23,9 @@ class OPDDModalCreateNew extends ModalBlock
         $form = UxmalComponent::Make('form', [
             'options' => [
                 'form.id' => 'OrderProductDynamicDetailsCreateNewForm',
-                'form.action' => '/orders/' . $this->GetValue('order_id') . '/dynamic_detail',
-                'form.method' => 'POST'
+                'form.action' => route('api_post_order_opd', $this->GetValue('order_id')),
+                'form.method' => 'POST',
+                'autocomplete' => 'off'
             ]
         ]);
 

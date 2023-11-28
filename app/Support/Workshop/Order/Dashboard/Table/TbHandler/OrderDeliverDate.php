@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Support\Workshop\Order\TbHandler;
+namespace App\Support\Workshop\Order\Dashboard\Table\TbHandler;
 
-use Enmaca\LaravelUxmal\Support\Components\Ui\Table\Column as ColumTable;
+use Enmaca\LaravelUxmal\Support\Builders\Ui\Table\ColumnParseValue;
 
-class OrderDeliverDate extends ColumTable {
+class OrderDeliverDate extends ColumnParseValue {
 
     /**
      * @param $value

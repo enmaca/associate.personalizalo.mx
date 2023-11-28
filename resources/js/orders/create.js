@@ -1,6 +1,6 @@
 import {UxmalCSRF, UxmalSwiper} from "laravel-uxmal-npm";
 import {apiPutOrder, generateRandomString, apiPutOrderProductDynamic} from "../workshop.js";
-import {createFunctions} from "./create_functions.js";
+import {createFunctions} from "./create/functions.js";
 import {uxmal} from "../workshop.js";
 
 const uxmalSwiper = new UxmalSwiper();
@@ -48,7 +48,7 @@ document.addEventListener('livewire:initialized', () => {
      */
     Echo.private(`order.${window.order_id}`).subscribed(() => {
         console.log('Subscribed to Order Channel: ' + `order.${window.order_id}`);
-        fetch(uxmal.buildRoute('api_get_orders_event', window.order_id, 'order_payment_data'));
+        fetch(uxmal.buildRoute('api_get_order_event', window.order_id, 'order_payment_data'));
     })
         .listenToAll((eventName, event) => {
             console.log("Event ::  " + eventName + ", data is ::", event.data);
@@ -73,8 +73,14 @@ document.addEventListener('livewire:initialized', () => {
             apiPutOrder(window.order_id, data, (data) => {
                 uxmal.Forms.get('deliveryData').element.reset();
                 uxmal.Inputs.get('shipmentStatusId').element.checked = true;
+                uxmal.Selects.get('mexDistrictId').tomselect2.clear(true);
+                uxmal.Selects.get('mexDistrictId').tomselect2.clearOptions();
+                uxmal.Selects.get('mexMunicipalitiesId').tomselect2.clear(true);
+                uxmal.Selects.get('mexMunicipalitiesId').tomselect2.clearOptions();
+                uxmal.Selects.get('mexStateId').tomselect2.clear(true);
+                uxmal.Selects.get('mexStateId').tomselect2.clearOptions();
+                Livewire.dispatch('addressbook.form.default-form::reload');
                 uxmal.alert(data.ok, 'success');
-                uxmal.Cards.setLoading('clientCard', false);
             }, (data) => {
                 uxmal.alert(data.fail, 'danger');
                 uxmal.Cards.setLoading('clientCard', false);
@@ -484,7 +490,7 @@ document.addEventListener('livewire:initialized', () => {
         const opdd_id = targetElement.getAttribute('data-row-id');
         if( opdd_id ){
             uxmal.Cards.setLoading('dynamicCard', true);
-            const apiDeleteOrderProductDynamicDetailUrl = uxmal.buildRoute('api_delete_order_product_dynamic_detail', window.order_id, window.opd_id, opdd_id);
+            const apiDeleteOrderProductDynamicDetailUrl = uxmal.buildRoute('api_delete_order_opdd', window.order_id, window.opd_id, opdd_id);
             fetch(apiDeleteOrderProductDynamicDetailUrl, {
                 method: 'DELETE',
                 headers: {

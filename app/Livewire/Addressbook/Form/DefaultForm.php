@@ -37,13 +37,12 @@ class DefaultForm extends Component
     {
         $order_id = Order::keyFromHashId($this->order_id);
         $order_data = Order::with('address')->find($order_id);
-        if (!empty($order_data->address))
-            $values = $order_data->toArray();
 
-        $values['shipment_status'] = $order_data->shipment_status ?? '';
+        $addres_data = $order_data->toArray();
+        $addres_data['shipment_status'] = $order_data->shipment_status ?? '';
 
         $uxmal = AddressBookDefaultForm::Object(
-            values: $values ?? [],
+            values: $addres_data ?? [],
             options: [
                 'form.id' => 'deliveryData',
                 'form.action' => route('api_put_order_delivery_data', $this->order_id),

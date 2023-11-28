@@ -30,7 +30,7 @@ class SelectDynamicProducts extends SelectTomSelectBlock
                 'tomselect.label' => 'Productos dinamicos',
                 'tomselect.name' => 'cardOrderDynamicProductSelect',
                 'tomselect.placeholder' => 'Buscar por Descripcion...',
-                'tomselect.load-url' => '/orders/' . $hashed_order_id . '/search_dynamic_products?context=default',
+                'tomselect.load-url' => route('api_post_order_opd_search', $hashed_order_id) . '?context=default',
                 'tomselect.options' => $items,
                 'tomselect.allow-empty-option' => true
             ]

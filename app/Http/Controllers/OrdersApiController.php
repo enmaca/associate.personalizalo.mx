@@ -30,18 +30,64 @@ class OrdersApiController extends Controller
 {
 
 
+    /**
+     * @param Request $request
+     * @param string $order_hashid
+     * @param string $event_name
+     * @return JsonResponse
+     * @throws UnknownHashIdConfigParameterException
+     */
     public
-    function get_orders_event(Request $request, string $order_hashid, string $event_name )
+    function get_order_event(Request $request, string $order_hashid, string $event_name): JsonResponse
     {
-        switch( $event_name ){
+        switch ($event_name) {
             case 'order_payment_data':
             case 'order_payment_data_updated':
                 $order_id = Order::keyFromHashId($order_hashid);
                 OrderService::updateCostPrices($order_id);
         }
-        return response()->json(['ok' => null ]);
+        return response()->json(['ok' => null]);
     }
+
     /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws UnknownHashIdConfigParameterException
+     */
+    public
+    function post_order(Request $request): JsonResponse
+    {
+        $allInput = $request->all();
+        $customer_id = Customer::keyFromHashId($allInput['customerId']);
+        if (empty($customer_id) && !empty($allInput['customerMobile']) && !empty($allInput['customerName']) && !empty($allInput['customerLastName']) && !empty($allInput['customerEmail'])) {
+            $customer_data = new Customer();
+            $customer_data->mobile = $allInput['customerMobile'];
+            $customer_data->name = $allInput['customerName'];
+            $customer_data->last_name = $allInput['customerLastName'];
+            $customer_data->email = $allInput['customerEmail'];
+            $customer_data->save();
+            $customer_id = $customer_data->id;
+            if (empty($customer_id))
+                return response()->json(['fail' => 'El cliente no se encontro y no se pudo crear']);
+        }
+
+
+        $order_data = Order::CreateToCustomer($customer_id);
+
+        if ($order_data->hashId)
+            return response()->json([
+                'ok' => 'El pedido se creo correctamente',
+                'result' => [
+                    'order_id' => $order_data->hashId
+                ]
+            ]);
+        else return response()->json(['fail' => 'El pedido no se pudo crear']);
+    }
+
+    /**
+     * @param Request $request
+     * @param string|null $order_hashid
+     * @return JsonResponse
      * @throws UnknownHashIdConfigParameterException
      */
     public
@@ -90,7 +136,7 @@ class OrdersApiController extends Controller
      * @throws UnknownHashIdConfigParameterException
      */
     public
-    function get_order_product_dynamic(Request $request, $order_hashid, $opd_hashid): JsonResponse
+    function get_order_opd(Request $request, $order_hashid, $opd_hashid): JsonResponse
     {
         $opd_id = OrderProductDynamic::keyFromHashId($opd_hashid);
         $order_product_dynamic = OrderProductDynamic::with(['mfg_device.area', 'media'])->findOrFail($opd_id);
@@ -103,14 +149,14 @@ class OrdersApiController extends Controller
         $array2Return['mfg_status'] = $order_product_dynamic->mfg_status;
         $array2Return['mfg_media_instructions'] = $order_product_dynamic->mfg_media_instructions;
 
-        if( !empty( $order_product_dynamic->media ) ){
+        if (!empty($order_product_dynamic->media)) {
             $array2Return['media'] = [];
-            foreach( $order_product_dynamic->media as $media ){
+            foreach ($order_product_dynamic->media as $media) {
                 $mediaArray = $media->toArray();
                 unset($mediaArray['id']);
-                $array2Return['media'][] =[
-                    'hashId' => $media->hashId
-                ] + $mediaArray;
+                $array2Return['media'][] = [
+                        'hashId' => $media->hashId
+                    ] + $mediaArray;
             }
         }
 
@@ -127,7 +173,7 @@ class OrdersApiController extends Controller
      * @throws UnknownHashIdConfigParameterException
      */
     public
-    function put_order_product_dynamic(Request $request, $opd_hashid): JsonResponse
+    function put_order_opd(Request $request, $opd_hashid): JsonResponse
     {
         $allInput = $request->all();
         $opd_id = OrderProductDynamic::keyFromHashId($opd_hashid);
@@ -214,7 +260,7 @@ class OrdersApiController extends Controller
      * @throws \Exception
      */
     public
-    function post_order_product_dynamic_hashid_media(Request $request, string $order_hashid, string $opd_hashid): JsonResponse
+    function post_order_opd_media(Request $request, string $order_hashid, string $opd_hashid): JsonResponse
     {
         if (!$request->hasFile('file'))
             throw new \Exception('No se ha enviado ningún archivo');
@@ -258,19 +304,43 @@ class OrdersApiController extends Controller
 
     /**
      * @param Request $request
+     * @param string $order_hashid
      * @return JsonResponse
-     * @throws UnknownHashIdConfigParameterException"_token" => "1flibMbJXOJMDvzSMkun2rFjEjBSrndlz3RkmggP"
-     *
-     * POST Payload
-     *      "materialId" => "mat_KnY2dZk6MEoWx"
-     *      "materialQuantity" => "1"
-     *      "materialProfitMargin" => "35"
-     *      "materialSubtotal" => "$33.99"
-     *      "order_id" => "ord_679zRAz0JErYv"
-     *      "customer_id" => "cus_B95oKZdvQJMPv"
+     * @throws UnknownHashIdConfigParameterException
      */
     public
-    function post_orders_opdd_material(Request $request)
+    function post_order_opd(Request $request, string $order_hashid): JsonResponse
+    {
+        $order_id = Order::keyFromHashId($order_hashid);
+
+        $allInput = $request->all();
+        $order_product_dynamic_id = new OrderProductDynamic();
+        $order_product_dynamic_id->description = $allInput['orderProductDynamicDetailsDescription'];
+        $order_product_dynamic_id->order_id = $order_id;
+        $order_product_dynamic_id->created_by = Auth::id();
+        $order_product_dynamic_id->save();
+
+        if ($order_product_dynamic_id->hashId)
+            return response()->json([
+                'ok' => 'El producto dinámico se agregó correctamente',
+                'result' => [
+                    'id' => $order_product_dynamic_id->hashId,
+                    'description' => $order_product_dynamic_id->description
+                ]
+            ]);
+        else return response()->json(['fail' => 'El producto dinámico no se pudo agregar']);
+
+    }
+
+
+    /**
+     * @param Request $request
+     * @param string $order_hashid
+     * @return JsonResponse
+     * @throws UnknownHashIdConfigParameterException "_token" => "1flibMbJXOJMDvzSMkun2rFjEjBSrndlz3RkmggP"
+     */
+    public
+    function post_order_opd_material(Request $request, string $order_hashid): JsonResponse
     {
         $allInput = $request->all();
 
@@ -325,16 +395,12 @@ class OrdersApiController extends Controller
 
     /**
      * @param Request $request
-     *      [laborCostId] => lab_XXXXXX
-     *      [laborCostQuantity] => 15
-     *      [laborCostSubtotal] => $18.13
-     *      [order_id] => ord_XXXXX
-     *      [customer_id] => cus_XXXXX
+     * @param string $order_hashid
      * @return JsonResponse
      * @throws UnknownHashIdConfigParameterException
      */
     public
-    function post_orders_opdd_labor_cost(Request $request, string $order_hashid )
+    function post_order_opd_labor_cost(Request $request, string $order_hashid): JsonResponse
     {
         $allInput = $request->all();
 
@@ -403,7 +469,7 @@ class OrdersApiController extends Controller
      *
      */
     public
-    function post_orders_opdd_mfgoverhead(Request $request, string $order_hashid)
+    function post_order_opd_mfgoverhead(Request $request, string $order_hashid)
     {
         $allInput = $request->all();
         $opd_id = null;
@@ -488,7 +554,7 @@ class OrdersApiController extends Controller
      * @return JsonResponse
      * @throws UnknownHashIdConfigParameterException <a href="http://127.0.0.1:8000/orders/dynamic_detail/ord_4WmvDA86E98xo">http://127.0.0.1:8000/orders/dynamic_detail/ord_4WmvDA86E98xo</a>
      */
-    public function delete_order_product_dynamic_detail(Request $request, string $order_hashedId, string $opd_hashedId, string $opdd_hashedId)
+    public function delete_order_opdd(Request $request, string $order_hashedId, string $opd_hashedId, string $opdd_hashedId)
     {
         $order_product_dynamic_id = OrderProductDynamicDetails::keyFromHashId($opdd_hashedId);
         $order_product_dynamic_row = OrderProductDynamicDetails::with('order_product_dynamic')->find($order_product_dynamic_id);
@@ -509,7 +575,7 @@ class OrdersApiController extends Controller
      * @return JsonResponse
      */
     public
-    function post_order_product_dynamic_search(Request $request, $order_hashid)
+    function post_order_opd_search(Request $request, $order_hashid)
     {
         $allInput = $request->all();
 

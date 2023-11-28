@@ -20,7 +20,6 @@ use Enmaca\LaravelUxmal\Support\Options\Ui\DropzoneOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 use Enmaca\LaravelUxmal\UxmalComponent;
 use Exception;
-use OpenSpout\Common\Entity\Row;
 
 class DynamicCard extends CardBlock
 {
@@ -48,8 +47,8 @@ class DynamicCard extends CardBlock
 
         $this->BodyRow()->addElementInRow(
             element: Button::Options(new ButtonOptions(
-                label: 'Crear Nuevo Producto',
                 name: 'createNewDynamicProductButton',
+                label: 'Crear Nuevo Producto',
                 style: 'warning',
                 width: 'w-sm'
             )),

@@ -17,7 +17,6 @@ class CustomerController extends Controller
         $uxmal = new \Enmaca\LaravelUxmal\UxmalComponent();
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
-
         ])->extends('uxmal::layout.master');
     }
 

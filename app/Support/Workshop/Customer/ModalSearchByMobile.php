@@ -23,7 +23,7 @@ class ModalSearchByMobile extends ModalBlock
         $form = UxmalComponent::Make('form', [
             'options' => [
                 'form.id' => 'NewOrderFrom',
-                'form.action' => '/orders',
+                'form.action' => route('api_post_order'),
                 'form.method' => 'POST'
             ]
         ]);
@@ -103,11 +103,10 @@ class ModalSearchByMobile extends ModalBlock
         $modal = Modal::Options(
             new ModalOptions(
                 name: 'customerSearchByMobile',
-                size: 'xl',
+                size: 'large',
                 title: 'Buscar/Crear Cliente',
                 body: $form,
-                saveBtnLabel: 'Crear Pedido',
-                saveBtnOnClick: 'submitNewOrderFrom()'
+                saveBtnLabel: 'Crear Pedido'
             )
         );
 

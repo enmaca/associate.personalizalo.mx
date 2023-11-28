@@ -88,8 +88,8 @@ export const apiPutOrderProductDynamic = (order_id, opd_id, data, onsuccess_call
 }, onfail_callback = (data) => {
     uxmal.alert(data, 'danger');
 }) => {
-    const api_put_order_product_dynamic_url = uxmal.buildRoute('api_put_order_product_dynamic', order_id, opd_id);
-    fetch(api_put_order_product_dynamic_url, {
+    const api_put_order_opd_url = uxmal.buildRoute('api_put_order_opd', order_id, opd_id);
+    fetch(api_put_order_opd_url, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

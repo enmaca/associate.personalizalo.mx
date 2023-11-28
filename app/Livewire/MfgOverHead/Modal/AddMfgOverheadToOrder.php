@@ -51,7 +51,7 @@ class AddMfgOverheadToOrder extends Component
         $form = UxmalComponent::Make('form', [
             'options' => [
                 'form.id' => $__formId,
-                'form.action' => route('api_post_orders_mfgoverhead', $this->order_hashId),
+                'form.action' => route('api_post_order_opd_mfgoverhead', $this->order_hashId),
             ]
         ]);
 

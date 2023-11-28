@@ -30,7 +30,7 @@ class Controller extends BaseController
                 [
                     'icon' => 'cart',
                     'name' => 'Pedidos',
-                    'href' => route('orders_root')
+                    'href' => route('web_get_orders_dashboard')
                 ],
                 [
                     'icon' => 'box',
@@ -124,6 +124,7 @@ class Controller extends BaseController
             ],
         ];
         View::share('menu', $menu);
+
         View::share('uxmalBody', Row::Options(new RowOptions(
             replaceAttributes: [
                 'data-uxmal-routes' => json_encode(BuildRoutesHelper::build()),

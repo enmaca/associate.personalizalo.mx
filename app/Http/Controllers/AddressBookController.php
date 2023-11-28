@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class AddressBookController extends Controller
 {
-    public function search_tomselect_mex_district(Request $request)
+    public function search_tomselect_mex_district(Request $request): array
     {
         $search = json_decode($request->getContent(), true);
 
@@ -24,7 +24,7 @@ class AddressBookController extends Controller
         }
     }
 
-    public function search_tomselect_mex_municipality(Request $request)
+    public function search_tomselect_mex_municipality(Request $request): array
     {
         $search = json_decode($request->getContent(), true);
 

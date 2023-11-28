@@ -2,139 +2,54 @@
 
 namespace App\Http\Controllers;
 
-use App\Support\Enums\ShipmentStatusEnum;
-use App\Models\AddressBook;
 use App\Models\Customer;
 use App\Models\DigitalArt;
 use App\Models\DigitalArtCategory;
-use App\Models\LaborCost;
 use App\Models\MaterialVariationsGroup;
-use App\Models\Media;
-use App\Models\MexDistricts;
-use App\Models\MexMunicipalities;
-use App\Models\MexState;
-use App\Models\MfgArea;
-use App\Models\MfgDevice;
-use App\Models\MfgOverhead;
 use App\Models\Order;
-use App\Models\OrderPayment;
-use App\Models\OrderProductDetail;
-use App\Models\OrderProductDynamic;
-use App\Models\OrderProductDynamicDetails;
 use App\Models\PaymentDetails;
 use App\Models\PaymentMethod;
 use App\Models\PrintVariationsGroup;
 use App\Models\PrintVariationsGroupDetails;
 use App\Models\Product;
-use App\Models\Material;
 use App\Support\Services\OrderService;
 use App\Support\Workshop\Order\EditScreen;
-use App\Support\Workshop\OrderProductDynamicDetails\SelectDynamicProducts;
 use Deligoez\LaravelModelHashId\Exceptions\UnknownHashIdConfigParameterException;
-use Enmaca\LaravelUxmal\Support\Helpers\UploadS3Helper;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use \Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\Str;
 
 class OrdersController extends Controller
 {
-    public function root(Request $request)
+    public function get_orders_dashboard(Request $request): \Illuminate\Contracts\Foundation\Application|Factory|\Illuminate\Contracts\View\View|Application
     {
 
-        $root_screen = \App\Support\Workshop\Order\Dashboard::Object();
+        $dashboard = \App\Support\Workshop\Order\Dashboard::Object();
 
-        //$main_row = $uxmal->component('ui.row', []);
 
-        /**
-         * Create Predefined Modal with context 'createorder'
-         */
-        $client_modal = \App\Support\Workshop\Customer\ModalSearchByMobile::Object(context:'createorder');
+        View::startPush('scripts', '<script src="' . Vite::asset('resources/js/orders/dashboard.js', 'workshop') . '" type="module"></script>');
 
-        /**
-         * Create Predefined ListJS with Conext 'orderhome'
-         */
-        //$order_listjs = \App\Support\Workshop\Order\ListjsOrderHome::Object(['context' => 'orderhome']);
-
-        /**
-         * Set the top button to a listjs object from $modalStruct
-         */
-        //$order_listjs->setTopButtons($client_modal['button']);
-
-        /**
-         * Create the main Card of Page with ListJS in the Body
-         */
-
-        /*
-        $main_row->component('ui.card', [
-            'options' => [
-                'card.header' => 'Pedidos Pendientes',
-                'card.body' => $order_listjs->toArray(),
-                'card.footer' => '&nbsp;'
-            ]
-        ]);
-
-        /**
-         * Add Modal Button to Main Uxmal Struct
-         */
-        // $uxmal->addElement($client_modal['modal']);
-
-        /**
-         * PushOnce to scripts
-         */
-        View::startPush('scripts', '<script src="' . Vite::asset('resources/js/workshop.js', 'workshop') . '" type="module"></script>');
-        View::startPush('scripts', '<script src="' . Vite::asset('resources/js/orders/root.js', 'workshop') . '" type="module"></script>');
-        View::startPush('livewire:initialized', Vite::content('resources/js/orders/root_livewire.js', 'workshop'));
-
-        /**
-         * Set View
-         */
         return view('uxmal::master-default', [
-            'uxmal_data' => $root_screen->toArray()
+            'uxmal_data' => $dashboard->toArray()
         ])->extends('uxmal::layout.master');
     }
 
     /**
      * @param Request $request
-     * @return mixed
-     * @throws \Exception
+     * @param $order_hashid
+     * @return \Illuminate\Contracts\Foundation\Application|Factory|\Illuminate\Contracts\View\View|Application
+     * @throws UnknownHashIdConfigParameterException
      */
-    public function create(Request $request)
+    public function get_orders(Request $request, $order_hashid)
     {
-        $allInput = $request->all();
-        $customer_data = null;
-        $order_data = null;
-
-
-        //TODO logic to handle edition.
-        $allInput['orderId'] = 425;
-        unset($allInput['customerId']);
-
-        if (isset($allInput['customerId'])) {
-            $customer_data = Customer::findByHashId($allInput['customerId']);
-
-            if (empty($customer_data)) {
-                $customer_data = new Customer();
-                $customer_data->mobile = $allInput['customerMobile'];
-                $customer_data->name = $allInput['customerName'];
-                $customer_data->last_name = $allInput['customerLastName'];
-                $customer_data->email = $allInput['customerEmail'];
-                $customer_data->save();
-            }
-        } else if (isset($allInput['orderId'])) {
-            //$order_id = Order::keyFromHashId($allInput['orderId'];
-            $order_id = 425;
-            $order_data = Order::findOrFail($order_id);
-            $customer_data = Customer::findOrFail( $order_data->customer_id);
-        }
-
-        if (empty($order_data))
-            $order_data = Order::CreateToCustomer($customer_data->id);
-
-        // $payment_methods_array
+        $order_id = Order::keyFromHashId($order_hashid);
+        $order_data = Order::with(['customer', 'address'])->findOrFail($order_id);
+        $customer_data = Customer::findOrFail( $order_data->customer_id);
 
         $edit_screen = EditScreen::Object(  values: [
             'customer_id' => $customer_data->hashId,
@@ -147,8 +62,6 @@ class OrdersController extends Controller
             'order_address_book_id' => $order_data->address_book_id
         ]);
 
-        //dump($edit_screen);
-        //dd($edit_screen->toArray());
         View::startPush('scss', '<link rel="stylesheet" href="' . asset('enmaca/laravel-uxmal/assets/swiper.css') . '" type="text/css"/>'); //TODO: REVISAR COMO se va a manejar esto, si lo tiene que manejar laravel-uxmal. al renderizar un swiper o como en este caso es manual[livewire]
         View::startPush('scss', '<link rel="stylesheet" href="' . Vite::asset('resources/scss/orders/create.scss', 'workshop') . '" type="text/css"/>');
 
@@ -160,62 +73,7 @@ class OrdersController extends Controller
         ])->extends('uxmal::layout.master');
     }
 
-    public function edit(Request $request, $hashed_id)
-    {
-        $order_id = Hashids::decode($hashed_id);
-        if (!is_int($order_id[0]))
-            Abort(403, '{order_id} Malformed');
 
-        $order_data = Order::with(['details', 'customer', 'payments', 'address'])->findOrFail($order_id[0]);
-
-        $products_options = Product::pluck('name', 'id')->toArray();
-        $material_options = Material::pluck('name', 'id')->toArray();
-        $laborcost_options = LaborCost::pluck('name', 'id')->toArray();
-        $mfgoverhead_options = MfgOverhead::pluck('name', 'id')->toArray();
-        $mfgareas_options = MfgArea::pluck('name', 'id')->toArray();
-        switch ($order_data->status) {
-            case 'created':
-                return view('workshop.order.create', [
-                    'customer_id' => Hashids::encode($order_data->customer->id),
-                    'customer_name' => $order_data->customer->name,
-                    'customer_last_name' => $order_data->customer->last_name,
-                    'customer_mobile' => $order_data->customer->mobile,
-                    'customer_email' => $order_data->customer->email,
-                    'order_id' => Hashids::encode($order_data->id),
-                    'order_code' => $order_data->code,
-                    'product_options' => $products_options,
-                    'material_options' => $material_options,
-                    'laborcost_options' => $laborcost_options,
-                    'mfgoverhead_options' => $mfgoverhead_options,
-                    'mfgareas_options' => $mfgareas_options
-                ])->extends('uxmal::layout.master');
-                break;
-        }
-    }
-
-
-    public function post_dynamic_detail_row(Request $request, $hashed_id)
-    {
-        $order_id = Order::keyFromHashId($hashed_id);
-
-        $allInput = $request->all();
-        $order_product_dynamic_id = new OrderProductDynamic();
-        $order_product_dynamic_id->description = $allInput['orderProductDynamicDetailsDescription'];
-        $order_product_dynamic_id->order_id = $order_id;
-        $order_product_dynamic_id->created_by = Auth::id();
-        $order_product_dynamic_id->save();
-
-        if ($order_product_dynamic_id->hashId)
-            return response()->json([
-                'ok' => 'El producto dinámico se agregó correctamente',
-                'result' => [
-                    'id' => $order_product_dynamic_id->hashId,
-                    'description' => $order_product_dynamic_id->description
-                ]
-            ]);
-        else return response()->json(['fail' => 'El producto dinámico no se pudo agregar']);
-
-    }
 
 
     /**

@@ -28,8 +28,8 @@ class PaymentCard extends CardBlock
 
         $this->Footer()->addElementInRow(
             element: Button::Options(new ButtonOptions(
-                label: 'Agregar Pago',
                 name: 'addPaymentFormButton',
+                label: 'Agregar Pago',
                 style: 'dark'
             )),
             row_options: new RowOptions(

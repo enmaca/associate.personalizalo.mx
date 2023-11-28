@@ -40,27 +40,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::redirect('/', '/orders', 301);
 
     Route::controller(OrdersController::class)->group(function () {
-        Route::get('/orders', 'root')->name('orders_root');
-
-
-        Route::post('/orders', 'create')->name('orders_create');
-        Route::get('/orders/{hashed_id}', 'edit')->name('orders_edit');
-
-        /**
-         * Order Product Dynamic
-         */
-
-
-        /**
-         * Order Product Dynamic Detail
-         */
-
-
-
-        Route::post('/orders/{hashed_id}/dynamic_detail', 'post_dynamic_detail_row')->name('order_post_product_dynamic_detail');
-
-
-
+        Route::get('/orders/{order_hashid}', 'get_orders')->name('web_get_orders');
+        Route::get('/orders', 'get_orders_dashboard')->name('web_get_orders_dashboard');
 
         Route::post('/orders/product', 'post_product')->name('orders_post_product');
         Route::post('/orders/put_payment', 'put_payment')->name('orders_put_payment');

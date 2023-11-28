@@ -53,7 +53,7 @@ class AddLaborCostToOrder extends Component
         $form = UxmalComponent::Make('form', [
             'options' => [
                 'form.id' => $__formId,
-                'form.action' => route('api_post_orders_labor_cost', $this->order_hashId)
+                'form.action' => route('api_post_order_opd_labor_cost', $this->order_hashId)
             ]
         ]);
 

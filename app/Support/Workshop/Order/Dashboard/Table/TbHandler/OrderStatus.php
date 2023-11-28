@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Support\Workshop\Order\TbHandler;
-use App\Enums\OrderStatusEnum;
-use Enmaca\LaravelUxmal\Support\Components\Ui\Table\Column as ColumTable;
-class OrderStatus extends ColumTable {
+namespace App\Support\Workshop\Order\Dashboard\Table\TbHandler;
+use App\Support\Enums\OrderStatusEnum;
+use Enmaca\LaravelUxmal\Support\Builders\Ui\Table\ColumnParseValue;
+
+class OrderStatus extends ColumnParseValue {
     /**
      * @param array $attributes
      */
     public function __construct(array $attributes = [])
     {
-        $this->enumClass = OrderStatusEnum::class;
-        parent::__construct($attributes);
+        parent::__construct($attributes, OrderStatusEnum::class);
     }
 
     /**

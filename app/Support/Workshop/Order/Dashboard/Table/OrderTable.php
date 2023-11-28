@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Support\Workshop\Order;
+namespace App\Support\Workshop\Order\Dashboard\Table;
 
-class ListjsOrderHome extends \Enmaca\LaravelUxmal\Block\TableBlock
+use Enmaca\LaravelUxmal\Block\TableBlock;
+
+class OrderTable extends TableBlock
 {
     public function build(): void
     {
@@ -12,7 +14,7 @@ class ListjsOrderHome extends \Enmaca\LaravelUxmal\Block\TableBlock
                 'id' => [
                     'tbhContent' => 'checkbox-all',
                     'type' => 'primaryKey',
-                    'handler' => \App\Support\Workshop\Order\TbHandler\OrderIdCheckbox::class
+                    'handler' => \App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderIdCheckbox::class
                 ],
                 'code' => [
                     'tbhContent' => 'Código de pedido'
@@ -22,23 +24,23 @@ class ListjsOrderHome extends \Enmaca\LaravelUxmal\Block\TableBlock
                 ],
                 'status' => [
                     'tbhContent' => 'Estatus',
-                    'handler' => \App\Support\Workshop\Order\TbHandler\OrderStatus::class
+                    'handler' => \App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderStatus::class
                 ],
                 'delivery_date' => [
                     'tbhContent' => 'Fecha de entrega',
-                    'handler' => \App\Support\Workshop\Order\TbHandler\OrderDeliverDate::class
+                    'handler' => \App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderDeliverDate::class
                 ],
                 'shipment_status' => [
                     'tbhContent' => 'Estatus de envio',
-                    'handler' => \App\Support\Workshop\Order\TbHandler\OrderShipmentStatus::class
+                    'handler' => \App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderShipmentStatus::class
                 ],
                 'payment_status' => [
                     'tbhContent' => 'Estatus de pago',
-                    'handler' => \App\Support\Workshop\Order\TbHandler\OrderPaymentStatus::class
+                    'handler' => \App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderPaymentStatus::class
                 ],
                 'payment_ammount' => [
                     'tbhContent' => 'Pago',
-                    'handler' => \App\Support\Workshop\Order\TbHandler\OrderPaymentAmmount::class
+                    'handler' => \App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderPaymentAmmount::class
                 ]
             ],
             'table.data.model' => \App\Models\Order::class

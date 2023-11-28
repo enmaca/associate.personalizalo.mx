@@ -3,7 +3,6 @@
 namespace App\Livewire\OrderPaymentData;
 
 use App\Models\Order;
-use App\Models\PaymentDetails;
 use App\Support\Workshop\PaymentMethods\SelectPaymentMethods;
 use Enmaca\LaravelUxmal\Components\Form\Input;
 use Enmaca\LaravelUxmal\Components\Form as FormComponent;

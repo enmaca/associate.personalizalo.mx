@@ -87,7 +87,8 @@ class DefaultForm extends FormBlock
         $dataWorkShopShipmentDataRecipientData = $dataWorkshopShipmentDataRow->addRow(row_options: new RowOptions(
             name: 'recipientData',
             appendAttributes: [
-                'data-workshop-recipient-data' => true
+                'data-workshop-recipient-data' => true,
+                'class' => 'row'
             ]
         ));
 
