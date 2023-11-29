@@ -12,7 +12,11 @@ use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderStatus;
 use App\Support\Workshop\Order\EditScreen\MainContent\ClientCard;
 use Enmaca\LaravelUxmal\Components\Ui\Row;
 use Enmaca\LaravelUxmal\Components\Ui\Table;
+use Enmaca\LaravelUxmal\Support\Enums\BootstrapStylesEnum;
 use Enmaca\LaravelUxmal\Support\Enums\Form\Button\ButtonSizeEnum;
+use Enmaca\LaravelUxmal\Support\Enums\Form\Button\ButtonTypeEnum;
+use Enmaca\LaravelUxmal\Support\Enums\Form\Button\ButtonWidthSizeEnum;
+use Enmaca\LaravelUxmal\Support\Enums\Ui\Table\TableTypesEnum;
 use Enmaca\LaravelUxmal\Support\Helpers\BuildRoutesHelper;
 use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\CardOptions;
@@ -33,10 +37,14 @@ class Test extends Controller
     public function test()
     {
         $uxmal = new UxmalComponent();
-        $table = Table::Options(
-            TableOptions::Make()
-                ->name('ordersTable')
-                ->columns([
+
+        $uxmal->addElement(element: Table::Options(TableOptions::Make()
+            ->name('test')
+            ->type(TableTypesEnum::Listjs)
+            ->listJsPagination(10)
+            ->listJsEnableSearch(true)
+            ->columns(
+                [
                     'hashId' => [
                         'tbhContent' => 'checkbox-all',
                         'type' => 'primaryKey',
@@ -73,8 +81,8 @@ class Test extends Controller
                         'buttons' => [
                             ButtonOptions::Make()
                                 ->name('editOrder@@uniqueId@@')
-                                ->style('info')
-                                ->type('icon')
+                                ->style(BootstrapStylesEnum::Info)
+                                ->type(ButtonTypeEnum::Icon)
                                 ->size(ButtonSizeEnum::Small)
                                 ->appendAttributes([
                                     'data-workshop-order-edit' => true
@@ -82,8 +90,8 @@ class Test extends Controller
                                 ->remixIcon('edit-2-line'),
                             ButtonOptions::Make()
                                 ->name('changeStatusOrder@@uniqueId@@')
-                                ->style('secondary')
-                                ->type('icon')
+                                ->style(BootstrapStylesEnum::Secondary)
+                                ->type(ButtonTypeEnum::Icon)
                                 ->size(ButtonSizeEnum::Small)
                                 ->appendAttributes([
                                     'data-workshop-order-change' => true
@@ -91,76 +99,12 @@ class Test extends Controller
                                 ->remixIcon('article-line')
                         ]
                     ]
-
-                ])
-                ->dataModel(\App\Models\Order::class));
-
-
-
-
-
-        //$uxmal->addElement(element: $table);
-        $uxmal->addElement(element: Table::Options(TableOptions::Make()->name('test')->columns(
-            [
-                'hashId' => [
-                    'tbhContent' => 'checkbox-all',
-                    'type' => 'primaryKey',
-                    'handler' => OrderIdCheckbox::class
-                ],
-                'code' => [
-                    'tbhContent' => 'Código de pedido'
-                ],
-                'customer.name' => [
-                    'tbhContent' => 'Cliente',
-                ],
-                'status' => [
-                    'tbhContent' => 'Estatus',
-                    'handler' => OrderStatus::class
-                ],
-                'delivery_date' => [
-                    'tbhContent' => 'Fecha de entrega',
-                    'handler' => OrderDeliverDate::class
-                ],
-                'shipment_status' => [
-                    'tbhContent' => 'Estatus de envio',
-                    'handler' => OrderShipmentStatus::class
-                ],
-                'payment_status' => [
-                    'tbhContent' => 'Estatus de pago',
-                    'handler' => OrderPaymentStatus::class
-                ],
-                'payment_ammount' => [
-                    'tbhContent' => 'Pago',
-                    'handler' => OrderPaymentAmmount::class
-                ],
-                'actions' => [
-                    'tbhContent' => null,
-                    'buttons' => [
-                        ButtonOptions::Make()
-                            ->name('editOrder@@uniqueId@@')
-                            ->style('info')
-                            ->type('icon')
-                            ->size(ButtonSizeEnum::Small)
-                            ->appendAttributes([
-                                'data-workshop-order-edit' => true
-                            ])
-                            ->remixIcon('edit-2-line'),
-                        ButtonOptions::Make()
-                            ->name('changeStatusOrder@@uniqueId@@')
-                            ->style('secondary')
-                            ->type('icon')
-                            ->size(ButtonSizeEnum::Small)
-                            ->appendAttributes([
-                                'data-workshop-order-change' => true
-                            ])
-                            ->remixIcon('article-line')
-                    ]
                 ]
-            ]
-        )->dataModel(\App\Models\Order::class)));
+            )->dataModel(\App\Models\Order::class)));
 
         $uxmal->addScript(Vite::asset('resources/js/test/test.js', 'workshop'));
-        $uxmal->addStyle( Vite::asset('resources/css/test/test.css', 'workshop'));
+        $uxmal->addStyle(Vite::asset('resources/scss/workshop.scss', 'workshop'));
+        $uxmal->addStyle(asset('css/icons/remixicon.css'));
 
 
         return view('uxmal::simple-default', [
