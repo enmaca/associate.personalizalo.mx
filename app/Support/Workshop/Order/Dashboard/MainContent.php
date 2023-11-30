@@ -2,6 +2,7 @@
 
 namespace App\Support\Workshop\Order\Dashboard;
 
+use App\Models\Order;
 use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderDeliverDate;
 use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderIdCheckbox;
 use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderPaymentAmmount;
@@ -12,6 +13,9 @@ use Enmaca\LaravelUxmal\Block\ContentBlock;
 use \Enmaca\LaravelUxmal\Components\Form\Button;
 use Enmaca\LaravelUxmal\Components\Ui\Card;
 use Enmaca\LaravelUxmal\Components\Ui\Table;
+use Enmaca\LaravelUxmal\Support\Enums\BootstrapStylesEnum;
+use Enmaca\LaravelUxmal\Support\Enums\Form\Button\ButtonSizeEnum;
+use Enmaca\LaravelUxmal\Support\Enums\Form\Button\ButtonTypeEnum;
 use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\CardOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\TableOptions;
@@ -53,47 +57,64 @@ class MainContent extends ContentBlock
         $tableOrders = Table::Options(
             TableOptions::Make()
                 ->name('ordersTable')
-                ->columns([
-                    'hashId' => [
-                        'tbhContent' => 'checkbox-all',
-                        'type' => 'primaryKey',
-                      //  'handler' => OrderIdCheckbox::class
-                    ],
-                    'code' => [
-                        'tbhContent' => 'Código de pedido'
-                    ],
-                    'customer.name' => [
-                        'tbhContent' => 'Cliente',
-                    ],
-                    'status' => [
-                        'tbhContent' => 'Estatus',
-                      //  'handler' => OrderStatus::class
-                    ],
-                    'delivery_date' => [
-                        'tbhContent' => 'Fecha de entrega',
-                     //   'handler' => OrderDeliverDate::class
-                    ],
-                    'shipment_status' => [
-                        'tbhContent' => 'Estatus de envio',
-                     //   'handler' => OrderShipmentStatus::class
-                    ],
-                    'payment_status' => [
-                        'tbhContent' => 'Estatus de pago',
-                     //   'handler' => OrderPaymentStatus::class
-                    ],
-                    'payment_ammount' => [
-                        'tbhContent' => 'Pago',
-                    //    'handler' => OrderPaymentAmmount::class
-                    ],
-                    'actions' => [
-                        'tbhContent' => null,
-                        'buttons' => [
-                            $deleteButton->toArray()
+                ->columns(
+                    [
+                        'hashId' => [
+                            'tbhContent' => 'checkbox-all',
+                            'type' => 'primaryKey',
+                            'handler' => OrderIdCheckbox::class
+                        ],
+                        'code' => [
+                            'tbhContent' => 'Código de pedido'
+                        ],
+                        'customer.name' => [
+                            'tbhContent' => 'Cliente',
+                        ],
+                        'status' => [
+                            'tbhContent' => 'Estatus',
+                            'handler' => OrderStatus::class
+                        ],
+                        'delivery_date' => [
+                            'tbhContent' => 'Fecha de entrega',
+                            'handler' => OrderDeliverDate::class
+                        ],
+                        'shipment_status' => [
+                            'tbhContent' => 'Estatus de envio',
+                            'handler' => OrderShipmentStatus::class
+                        ],
+                        'payment_status' => [
+                            'tbhContent' => 'Estatus de pago',
+                            'handler' => OrderPaymentStatus::class
+                        ],
+                        'payment_ammount' => [
+                            'tbhContent' => 'Pago',
+                            'handler' => OrderPaymentAmmount::class
+                        ],
+                        'actions' => [
+                            'tbhContent' => null,
+                            'buttons' => [
+                                ButtonOptions::Make()
+                                    ->name('editOrder@@uniqueId@@')
+                                    ->style(BootstrapStylesEnum::Info)
+                                    ->type(ButtonTypeEnum::Icon)
+                                    ->size(ButtonSizeEnum::Small)
+                                    ->appendAttributes([
+                                        'data-workshop-order-edit' => true
+                                    ])
+                                    ->remixIcon('edit-2-line'),
+                                ButtonOptions::Make()
+                                    ->name('changeStatusOrder@@uniqueId@@')
+                                    ->style(BootstrapStylesEnum::Secondary)
+                                    ->type(ButtonTypeEnum::Icon)
+                                    ->size(ButtonSizeEnum::Small)
+                                    ->appendAttributes([
+                                        'data-workshop-order-change' => true
+                                    ])
+                                    ->remixIcon('article-line')
+                            ]
                         ]
-                    ]
-
-                ])
-                ->dataModel(\App\Models\Order::class));
+                    ])
+                ->dataModel(Order::class));
 
 
         $ordersCard->Body()->addElement(element: $tableOrders);

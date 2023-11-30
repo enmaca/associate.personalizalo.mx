@@ -1,6 +1,6 @@
 import {UxmalCSRF, UxmalSwiper} from "laravel-uxmal-npm";
 import {apiPutOrder, apiPutOrderProductDynamic} from "../workshop.js";
-import {createFunctions} from "./create/functions.js";
+import {createFunctions} from "./get_orders/functions.js";
 import {uxmal} from "../workshop.js";
 
 const uxmalSwiper = new UxmalSwiper();

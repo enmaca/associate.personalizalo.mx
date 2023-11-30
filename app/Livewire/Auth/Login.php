@@ -41,6 +41,7 @@ class Login extends Component
     }
     public function render()
     {
+
         return view('uxmal::pages.livewire.login')->extends('uxmal::layouts.master-without-nav');
     }
 }

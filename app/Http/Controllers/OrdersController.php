@@ -7,35 +7,34 @@ use App\Models\DigitalArt;
 use App\Models\DigitalArtCategory;
 use App\Models\MaterialVariationsGroup;
 use App\Models\Order;
-use App\Models\PaymentDetails;
-use App\Models\PaymentMethod;
 use App\Models\PrintVariationsGroup;
 use App\Models\PrintVariationsGroupDetails;
 use App\Models\Product;
 use App\Support\Services\OrderService;
+use App\Support\Workshop\Order\Dashboard;
 use App\Support\Workshop\Order\EditScreen;
 use Deligoez\LaravelModelHashId\Exceptions\UnknownHashIdConfigParameterException;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use \Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\Str;
 
 class OrdersController extends Controller
 {
-    public function get_orders_dashboard(Request $request): \Illuminate\Contracts\Foundation\Application|Factory|\Illuminate\Contracts\View\View|Application
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|Factory|View|Application
+     */
+    public function get_orders_dashboard(Request $request): \Illuminate\Contracts\Foundation\Application|Factory|View|Application
     {
 
-        $uxmal = \App\Support\Workshop\Order\Dashboard::Object();
+        $uxmal = Dashboard::Object();
 
 
-        $uxmal->addScript(Vite::asset('resources/js/orders/dashboard.js', 'workshop'));
-        $uxmal->addStyle(asset('workshop/css/uxmal.css'));
-        $uxmal->addStyle(asset('workshop/css/icons/remixicon.css'));
-
+        $uxmal->addScript(Vite::asset('resources/js/orders/get_orders_dashboard.js', 'workshop'));
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()
         ])->extends('uxmal::layout.master');
@@ -44,10 +43,10 @@ class OrdersController extends Controller
     /**
      * @param Request $request
      * @param $order_hashid
-     * @return \Illuminate\Contracts\Foundation\Application|Factory|\Illuminate\Contracts\View\View|Application
+     * @return \Illuminate\Contracts\Foundation\Application|Factory|View|Application
      * @throws UnknownHashIdConfigParameterException
      */
-    public function get_orders(Request $request, $order_hashid)
+    public function get_orders(Request $request, $order_hashid): \Illuminate\Contracts\Foundation\Application|Factory|View|Application
     {
         $order_id = Order::keyFromHashId($order_hashid);
         $order_data = Order::with(['customer', 'address'])->findOrFail($order_id);
@@ -64,13 +63,9 @@ class OrdersController extends Controller
             'order_address_book_id' => $order_data->address_book_id
         ]);
 
-        $uxmal->addStyle(asset('workshop/css/uxmal.css'));
-        $uxmal->addStyle(asset('workshop/css/icons/remixicon.css'));
-        $uxmal->addStyle(asset('workshop/css/icons/bootstrap-icons.css'));
-        $uxmal->addScript(Vite::asset('resources/scss/orders/create.scss', 'workshop'));
-
+        $uxmal->addStyle(Vite::asset('resources/scss/orders/get_orders.scss', 'workshop'));
         $uxmal->addScript(Vite::asset('resources/js/workshop.js', 'workshop'));
-        $uxmal->addScript(Vite::asset('resources/js/orders/create.js', 'workshop'));
+        $uxmal->addScript(Vite::asset('resources/js/orders/get_orders.js', 'workshop'));
 
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()

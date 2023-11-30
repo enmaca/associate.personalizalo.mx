@@ -27,3 +27,4 @@ Homestead.json
 /public/workshop/
 composer.lock
 package-lock.json
+/public/uxmal/
