@@ -89,12 +89,12 @@ document.addEventListener('livewire:initialized', () => {
                 uxmal.Cards.setLoading('clientCard', false);
             });
         } else {
-            console.log('=========> ',uxmal.Inputs.get('recipientDataSameAsCustomerId').element.value);
+            console.log('=========> ', uxmal.Inputs.get('recipientDataSameAsCustomerId').element.value);
             /// SubmitDeliveryData::Form => Livewire::Update::AddressBookForm::DefaultForm
             uxmal.Forms.submit('deliveryData', {
                 order_id: window.order_id,
                 customer_id: window.customer_id,
-                recipientDataSameAsCustomer : uxmal.Inputs.get('recipientDataSameAsCustomerId').element.checked ? 1 : 0
+                recipientDataSameAsCustomer: uxmal.Inputs.get('recipientDataSameAsCustomerId').element.checked ? 1 : 0
             }, (elementName, data) => {
                 Livewire.dispatch('addressbook.form.default-form::reload');
                 uxmal.alert(data.ok, 'success');
@@ -488,7 +488,7 @@ document.addEventListener('livewire:initialized', () => {
             targetElement = targetElement.parentNode;
         }
         const opdd_id = targetElement.getAttribute('data-row-id');
-        if( opdd_id ){
+        if (opdd_id) {
             uxmal.Cards.setLoading('dynamicCard', true);
             const apiDeleteOrderProductDynamicDetailUrl = uxmal.buildRoute('api_delete_order_opdd', window.order_id, window.opd_id, opdd_id);
             fetch(apiDeleteOrderProductDynamicDetailUrl, {
@@ -535,7 +535,7 @@ document.addEventListener('livewire:initialized', () => {
         }
         uxmal.Cards.setLoading('productCard', true);
         const oprd_hashedId = targetElement.getAttribute('data-row-id');
-        if( oprd_hashedId ){
+        if (oprd_hashedId) {
             const apiDeleteOrderProductDetail = uxmal.buildRoute('api_delete_order_product_detail', window.order_id, oprd_hashedId);
             fetch(apiDeleteOrderProductDetail, {
                 method: 'DELETE',
@@ -567,7 +567,14 @@ document.addEventListener('livewire:initialized', () => {
     /**
      * Enable Buton to select DeliveryDate to open FlatPickr
      */
-    document.querySelector('#orderDeliveryDateButtonId').onclick = () => {
+    uxmal.Buttons.get('orderDeliveryDateButtonId').element.onclick = () => {
         uxmal.Inputs.get('deliveryDateId').flatpickrEl.open();
     };
+
+    /**
+     * Validate Order Button
+     */
+    uxmal.Buttons.get('validateOrderButtonId').element.onclick = () => {
+        console.log('validateOrderButtonId clicked!');
+    }
 });

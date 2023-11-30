@@ -29,13 +29,15 @@ class OrdersController extends Controller
     public function get_orders_dashboard(Request $request): \Illuminate\Contracts\Foundation\Application|Factory|\Illuminate\Contracts\View\View|Application
     {
 
-        $dashboard = \App\Support\Workshop\Order\Dashboard::Object();
+        $uxmal = \App\Support\Workshop\Order\Dashboard::Object();
 
 
-        View::startPush('scripts', '<script src="' . Vite::asset('resources/js/orders/dashboard.js', 'workshop') . '" type="module"></script>');
+        $uxmal->addScript(Vite::asset('resources/js/orders/dashboard.js', 'workshop'));
+        $uxmal->addStyle(asset('workshop/css/uxmal.css'));
+        $uxmal->addStyle(asset('workshop/css/icons/remixicon.css'));
 
         return view('uxmal::master-default', [
-            'uxmal_data' => $dashboard->toArray()
+            'uxmal_data' => $uxmal->toArray()
         ])->extends('uxmal::layout.master');
     }
 
@@ -51,7 +53,7 @@ class OrdersController extends Controller
         $order_data = Order::with(['customer', 'address'])->findOrFail($order_id);
         $customer_data = Customer::findOrFail( $order_data->customer_id);
 
-        $edit_screen = EditScreen::Object(  values: [
+        $uxmal = EditScreen::Object(  values: [
             'customer_id' => $customer_data->hashId,
             'customer_name' => $customer_data->name,
             'customer_last_name' => $customer_data->last_name,
@@ -62,14 +64,15 @@ class OrdersController extends Controller
             'order_address_book_id' => $order_data->address_book_id
         ]);
 
-        View::startPush('scss', '<link rel="stylesheet" href="' . asset('enmaca/laravel-uxmal/assets/swiper.css') . '" type="text/css"/>'); //TODO: REVISAR COMO se va a manejar esto, si lo tiene que manejar laravel-uxmal. al renderizar un swiper o como en este caso es manual[livewire]
-        View::startPush('scss', '<link rel="stylesheet" href="' . Vite::asset('resources/scss/orders/create.scss', 'workshop') . '" type="text/css"/>');
+        $uxmal->addStyle(asset('workshop/css/uxmal.css'));
+        $uxmal->addStyle(asset('workshop/css/icons/remixicon.css'));
+        $uxmal->addScript(Vite::asset('resources/scss/orders/create.scss', 'workshop'));
 
-        View::startPush('scripts', '<script src="' . Vite::asset('resources/js/workshop.js', 'workshop') . '" type="module"></script>');
-        View::startPush('scripts', '<script src="' . Vite::asset('resources/js/orders/create.js', 'workshop') . '" type="module"></script>');
+        $uxmal->addScript(Vite::asset('resources/js/workshop.js', 'workshop'));
+        $uxmal->addScript(Vite::asset('resources/js/orders/create.js', 'workshop'));
 
         return view('uxmal::master-default', [
-            'uxmal_data' => $edit_screen->toArray()
+            'uxmal_data' => $uxmal->toArray()
         ])->extends('uxmal::layout.master');
     }
 
@@ -152,8 +155,9 @@ class OrdersController extends Controller
     }
 
 
-
-
+    /**
+     * @throws UnknownHashIdConfigParameterException
+     */
     public
     function put_payment(Request $request)
     {
@@ -176,22 +180,6 @@ class OrdersController extends Controller
             return response()->json(['ok' => 'Se ingreso el pago correctamente.']);
         } else
             return response()->json(['fail' => 'Error al ingresar el pago.']);
-    }
-
-
-
-    /**
-     * @param Request $request
-     * @return mixed
-     */
-    public
-    function test(Request $request)
-    {
-        $allInput = $request->all();
-        if (!empty($allInput['customerId'])) {
-            $customer_data = Customer::findByHashId($allInput['customerId']);
-
-        }
     }
 
 }

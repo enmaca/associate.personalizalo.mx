@@ -103,8 +103,8 @@ class Test extends Controller
             )->dataModel(\App\Models\Order::class)));
 
         $uxmal->addScript(Vite::asset('resources/js/test/test.js', 'workshop'));
-        $uxmal->addStyle(Vite::asset('resources/scss/workshop.scss', 'workshop'));
-        $uxmal->addStyle(asset('css/icons/remixicon.css'));
+        $uxmal->addStyle(asset('workshop/css/uxmal.css'));
+        $uxmal->addStyle(asset('workshop/css/icons/remixicon.css'));
 
 
         return view('uxmal::simple-default', [
