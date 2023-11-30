@@ -32,8 +32,6 @@ class OrdersController extends Controller
     {
 
         $uxmal = Dashboard::Object();
-
-
         $uxmal->addScript(Vite::asset('resources/js/orders/get_orders_dashboard.js', 'workshop'));
         return view('uxmal::master-default', [
             'uxmal_data' => $uxmal->toArray()

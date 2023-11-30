@@ -16,6 +16,7 @@ use Enmaca\LaravelUxmal\Components\Ui\Table;
 use Enmaca\LaravelUxmal\Support\Enums\BootstrapStylesEnum;
 use Enmaca\LaravelUxmal\Support\Enums\Form\Button\ButtonSizeEnum;
 use Enmaca\LaravelUxmal\Support\Enums\Form\Button\ButtonTypeEnum;
+use Enmaca\LaravelUxmal\Support\Enums\Ui\Table\TableTypesEnum;
 use Enmaca\LaravelUxmal\Support\Options\Form\ButtonOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\CardOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\TableOptions;
@@ -57,6 +58,9 @@ class MainContent extends ContentBlock
         $tableOrders = Table::Options(
             TableOptions::Make()
                 ->name('ordersTable')
+                ->type(TableTypesEnum::Listjs)
+                ->listJsPagination(10)
+                ->listJsEnableSearch(true)
                 ->columns(
                     [
                         'hashId' => [
