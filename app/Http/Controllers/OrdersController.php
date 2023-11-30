@@ -66,6 +66,7 @@ class OrdersController extends Controller
 
         $uxmal->addStyle(asset('workshop/css/uxmal.css'));
         $uxmal->addStyle(asset('workshop/css/icons/remixicon.css'));
+        $uxmal->addStyle(asset('workshop/css/icons/bootstrap-icons.css'));
         $uxmal->addScript(Vite::asset('resources/scss/orders/create.scss', 'workshop'));
 
         $uxmal->addScript(Vite::asset('resources/js/workshop.js', 'workshop'));
