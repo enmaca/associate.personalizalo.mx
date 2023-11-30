@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Enmaca\LaravelUxmal\Components\Ui\Row;
 use Enmaca\LaravelUxmal\Support\Helpers\BuildRoutesHelper;
 use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
+use Enmaca\LaravelUxmal\UxmalComponent;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
@@ -124,12 +125,24 @@ class Controller extends BaseController
             ],
         ];
         View::share('menu', $menu);
+        Session::put('user_token', base64_encode(encrypt(Auth::id())));
 
-        View::share('uxmalBody', Row::Options(new RowOptions(
-            replaceAttributes: [
-                'data-uxmal-routes' => json_encode(BuildRoutesHelper::build()),
-                'class' => ['d-none']
-            ]))->toHtml());
+        $uxmal = new UxmalComponent();
+        $uxmal->addElement(
+            element: Row::Options(new RowOptions(
+                replaceAttributes: [
+                    'data-uxmal-routes' => json_encode(BuildRoutesHelper::build()),
+                    'class' => ['d-none']
+                ]))
+        );
+        $uxmal->addElement(
+            element: Row::Options(new RowOptions(
+                replaceAttributes: [
+                    'data-uxmal-user-token' => Session::get('user_token'),
+                    'class' => ['d-none']
+                ]))
+        );
+        View::share('uxmalBody', $uxmal->toHtml());
     }
 
     public function lang($locale)

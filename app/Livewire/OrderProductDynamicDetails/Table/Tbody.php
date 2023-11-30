@@ -68,11 +68,10 @@ class Tbody extends Component
                 'price',
                 'created_by'])->get();
 
-        $price = Order::select('price')->findOrFail($order_id)->price;
         $opp_description = '';
         if (isset($opd_id))
             $opp_description = OrderProductDynamic::select('description')->findOrFail($opd_id)->description;
-        $this->dispatch('order-product-dynamic-details.table.tbody::updated', tfoot: $table->toHtml('tfoot'), price: $price, opp_description: $opp_description);
+        $this->dispatch('order-product-dynamic-details.table.tbody::updated', tfoot: $table->toHtml('tfoot'), opp_description: $opp_description);
         $this->dispatch('order-payment-data.form::reload');
         //dd($table->toHtml('tbody'));
         return $table->toHtml('tbody');

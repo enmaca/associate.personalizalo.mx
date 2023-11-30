@@ -44,7 +44,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/orders', 'get_orders_dashboard')->name('web_get_orders_dashboard');
 
         Route::post('/orders/product', 'post_product')->name('orders_post_product');
-        Route::post('/orders/put_payment', 'put_payment')->name('orders_put_payment');
 
     });
 

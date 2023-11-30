@@ -156,31 +156,6 @@ class OrdersController extends Controller
     }
 
 
-    /**
-     * @throws UnknownHashIdConfigParameterException
-     */
-    public
-    function put_payment(Request $request)
-    {
-        $allInput = $request->all();
 
-        if (empty($allInput['paymentMethod']))
-            return response()->json(['fail' => 'Se necesita seleccionar el methodo de pago.']);
-
-        $payment_method_id = PaymentMethod::keyFromHashId($allInput['paymentMethod']);
-
-        $PaymentDetails = new PaymentDetails();
-        $PaymentDetails->payment_method_id = $payment_method_id;
-        $PaymentDetails->customer_id = Customer::keyFromHashId($allInput['customer_id']);
-        $PaymentDetails->order_id = Order::keyFromHashId($allInput['order_id']);
-        $PaymentDetails->amount = $allInput['amount'];
-        $PaymentDetails->created_by = Auth::id();
-        $PaymentDetails->save();
-
-        if (OrderService::updateCostPrices($PaymentDetails->order_id)) {
-            return response()->json(['ok' => 'Se ingreso el pago correctamente.']);
-        } else
-            return response()->json(['fail' => 'Error al ingresar el pago.']);
-    }
 
 }

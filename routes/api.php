@@ -26,6 +26,7 @@ Route::controller(OrdersApiController::class)->group(function () {
     Route::put('/orders/{order_hashid}', 'put_order_hashid')->name('api_put_order');
     Route::put('/orders/{order_hashid}/delivery_data', 'put_order_delivery_data')->name('api_put_order_delivery_data');
     Route::get('/orders/{order_hashid}/event/{event_name}', 'get_order_event')->name('api_get_order_event');
+    Route::post('/orders/{order_hashid}/put_payment', 'put_order_payment')->name('api_put_order_payment');
 
     /** OrderProduct */
     // Route::delete('/orders/product_detail/{opdd_hashed_id}', 'delete_product_detail_row')->name('order_delete_product_detail_detail');

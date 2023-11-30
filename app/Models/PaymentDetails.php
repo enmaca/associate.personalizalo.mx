@@ -14,11 +14,6 @@ class PaymentDetails extends BaseModel
         return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
     }
 
-    public function customer(): BelongsTo
-    {
-        return $this->belongsTo(Customer::class, 'customer_id');
-    }
-
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class, 'order_id');

@@ -16,6 +16,8 @@ use App\Models\Order;
 use App\Models\OrderProductDetail;
 use App\Models\OrderProductDynamic;
 use App\Models\OrderProductDynamicDetails;
+use App\Models\PaymentDetails;
+use App\Models\PaymentMethod;
 use App\Support\Enums\ShipmentStatusEnum;
 use App\Support\Services\OrderService;
 use App\Support\Workshop\OrderProductDynamicDetails\SelectDynamicProducts;
@@ -173,7 +175,7 @@ class OrdersApiController extends Controller
      * @throws UnknownHashIdConfigParameterException
      */
     public
-    function put_order_opd(Request $request, $opd_hashid): JsonResponse
+    function put_order_opd(Request $request, $order_hashid, $opd_hashid): JsonResponse
     {
         $allInput = $request->all();
         $opd_id = OrderProductDynamic::keyFromHashId($opd_hashid);
@@ -250,6 +252,44 @@ class OrdersApiController extends Controller
             return response()->json(['ok' => 'La direccion de entrega se actualizo correctamente']);
         } else
             return response()->json(['fail' => 'Error al Actualizar la direccion de entrega']);
+    }
+
+    /**
+     * @throws UnknownHashIdConfigParameterException
+     */
+    public
+    function put_order_payment(Request $request, string $order_hashid)
+    {
+        $order_id = Order::keyFromHashId($order_hashid);
+
+
+        $allInput = $request->all();
+
+        if( empty($allInput['user_token']) )
+            return response()->json(['fail' => 'Error de autenticación (BadRequest)']);
+
+
+        if (empty($allInput['paymentMethod']))
+            return response()->json(['fail' => 'Se necesita seleccionar el methodo de pago.']);
+
+        $payment_method_id = PaymentMethod::keyFromHashId($allInput['paymentMethod']);
+
+        $authId = decrypt(base64_decode($allInput['user_token']));
+
+        if( empty($authId) )
+            return response()->json(['fail' => 'Error de autenticación (notFound)']);
+
+        $PaymentDetails = new PaymentDetails();
+        $PaymentDetails->payment_method_id = $payment_method_id;
+        $PaymentDetails->order_id = $order_id;
+        $PaymentDetails->amount = $allInput['amount'];
+        $PaymentDetails->created_by = $authId;
+        $PaymentDetails->save();
+
+        if (OrderService::updateCostPrices($PaymentDetails->order_id)) {
+            return response()->json(['ok' => 'Se ingreso el pago correctamente.']);
+        } else
+            return response()->json(['fail' => 'Error al ingresar el pago.']);
     }
 
     /**

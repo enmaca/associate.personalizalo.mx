@@ -12,6 +12,7 @@ use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputTextOptions;
 use Enmaca\LaravelUxmal\Support\Options\FormOptions;
 use Enmaca\LaravelUxmal\Support\Options\Ui\RowOptions;
 use Exception;
+use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -47,8 +48,9 @@ class Form extends Component
 
         $uxmal = FormComponent::Options(new FormOptions(
             id: 'addPaymentForm',
-            action: '/orders/put_payment',
-            method: 'POST'
+            action: route('api_put_order_payment', ['order_hashid' => $this->values['order_id']]).'?user_token='.Session::get('user_token'),
+            method: 'POST',
+            autocomplete: null
         ));
 
         $form_row = $uxmal->addRow(row_options: new RowOptions());
@@ -72,7 +74,6 @@ class Form extends Component
             checked: false,
             disabled: !($order_data['payment_status'] == 'pending'),
         ))->toHtml();
-
 
 
         $form_row->addElement(

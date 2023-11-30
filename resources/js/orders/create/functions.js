@@ -128,27 +128,30 @@ export const createFunctions = function () {
         dynamicCardPriceButtonIdEl.textContent = data.dynamic_products.count + " Productos Dinámicos $" + parseFloat(data.dynamic_products.payment_data.price).toFixed(2);
         dynamicCardPriceButtonIdEl.classList.remove('d-none');
 
-        const order_payment_amount = parseFloat(uxmal.Inputs.get('orderPaymentAmountId').element.value).toFixed(2);
-        const order_payment_price  = parseFloat(uxmal.Inputs.get('orderPriceId').element.value).toFixed(2);
+        uxmal.Inputs.get('orderPaymentAmountId').element.value = parseFloat(data.order.payment_amount).toFixed(2);
+        console.log('set orderPaymentAmountId', parseFloat(data.order.payment_amount).toFixed(2));
+        console.log('get orderPaymentAmountId', uxmal.Inputs.get('orderPaymentAmountId').element.value);
+        uxmal.Inputs.get('orderPriceId').element.value = parseFloat(data.order.price).toFixed(2);
+        console.log('set orderPriceId', parseFloat(data.order.price).toFixed(2));
+        console.log('get orderPriceId', uxmal.Inputs.get('orderPriceId').element.value);
     }
 
     // checkPaymentData
-    const paymentCheckNewPaymentData = (price) => {
+    const paymentCheckNewPaymentData = () => {
         const order_payment_status = uxmal.Inputs.get('orderPaymentStatusId').element;
         const advance_payment_50 = uxmal.Inputs.get('advance_payment_50Id').element;
+        const price = uxmal.Inputs.get('orderPriceId').element.value;
         if (order_payment_status.value === 'completed') {
-            paymentUpdateRemainingAmountToPay(0);
+            console.log('paymentUpdateRemainingAmountToPay 0');
+            uxmal.Inputs.setValue('amountId', 0);
         } else if (advance_payment_50.checked) {
-            paymentUpdateRemainingAmountToPay((price / 2).toFixed(2));
+            console.log('paymentUpdateRemainingAmountToPay', price / 2);
+            uxmal.Inputs.setValue('amountId', (price / 2).toFixed(2));
         } else {
-            paymentUpdateRemainingAmountToPay(price);
+            console.log('paymentUpdateRemainingAmountToPay', price);
+            uxmal.Inputs.setValue('amountId', parseFloat(price).toFixed(2));
         }
     }
-
-    // paymentUpdateRemainingAmountToPay, function to set the remaining amount to pay
-    const paymentUpdateRemainingAmountToPay = (price) => {
-        uxmal.Inputs.setValue('amountId', parseFloat(price).toFixed(2));
-    };
 
     const oPDUpdateForm = (opd_id) => {
         // Dropzone Mfg Devices.
@@ -159,9 +162,10 @@ export const createFunctions = function () {
         const mfgAreaSelectedIdEl = uxmal.Selects.get('mfgAreaSelectedId').tomselect2;
         mfgAreaSelectedIdEl.clear(true);
         mfgAreaSelectedIdEl.setValue('', true);
+        console.log('called buildRoute ', 'api_get_order_opd', window.order_id, window.opd_id);
         const api_get_order_opd_url = uxmal.buildRoute('api_get_order_opd', window.order_id, window.opd_id);
         fetch(api_get_order_opd_url, {
-            method: 'GET',
+            method: 'get',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': UxmalCSRF()
@@ -218,7 +222,7 @@ export const createFunctions = function () {
                 updateMfgMediaInstructionsButtonIdEl.classList.add('d-none');
 
             } else if (data.fail) {
-                uxmal.alert(data.fail, 'danger');
+                uxmal.alert(data.fail, 'error');
             } else if (data.warning) {
                 uxmal.alert(data.warning, 'warning');
             }
@@ -409,7 +413,6 @@ export const createFunctions = function () {
         updatePaymentData,
         paymentCheckNewPaymentData,
         paymentUpdatePaymentData,
-        paymentUpdateRemainingAmountToPay,
 
         oPDCreateNew,
         oPDUpdateForm,

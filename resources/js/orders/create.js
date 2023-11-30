@@ -1,5 +1,5 @@
 import {UxmalCSRF, UxmalSwiper} from "laravel-uxmal-npm";
-import {apiPutOrder, generateRandomString, apiPutOrderProductDynamic} from "../workshop.js";
+import {apiPutOrder, apiPutOrderProductDynamic} from "../workshop.js";
 import {createFunctions} from "./create/functions.js";
 import {uxmal} from "../workshop.js";
 
@@ -167,7 +167,7 @@ document.addEventListener('livewire:initialized', () => {
     Livewire.on('order-product-details.table.tbody::updated', (data) => {
         console.log('Catched Livewire::order-product-details.table.tbody::updated Event!!!!');
         productDetailsTableFooterData = data.tfoot;
-        currentPrice = functions.paymentUpdatePaymentData(data.price);
+        functions.paymentCheckNewPaymentData();
     });
 
     //// Update::OrderProductDetailsTable => RoundTrip::Succeded => Update::OrderProductDetailsTable
@@ -438,15 +438,11 @@ document.addEventListener('livewire:initialized', () => {
         uxmal.Modals.show('modalOrderProductDynamicDetailsCreateNewId');
     }
 
-    window.removeOPDD = (row) => {
-
-    }
-
-
 // On check Checkbox (Anticipo 50%)
     uxmal.Inputs.on('advance_payment_50Id', 'change', () => {
         functions.paymentCheckNewPaymentData(currentPrice);
     });
+
 
 //// Variables to work with the payment card
 // currentPrice 100% price, currentPriceDiv2 50% price
@@ -506,7 +502,7 @@ document.addEventListener('livewire:initialized', () => {
                         uxmal.alert(data.ok, 'success');
                     } else if (data.fail) {
                         uxmal.Cards.setLoading('dynamicCard', false);
-                        uxmal.alert(data.fail, 'danger');
+                        uxmal.alert(data.fail, 'error');
                     } else if (data.warning) {
                         uxmal.Cards.setLoading('dynamicCard', false);
                         uxmal.alert(data.warning, 'warning');
@@ -550,7 +546,7 @@ document.addEventListener('livewire:initialized', () => {
                         Livewire.dispatch('order-product-details.table.tbody::reload');
                         uxmal.alert(data.ok, 'success');
                     } else if (data.fail) {
-                        uxmal.alert(data.fail, 'danger');
+                        uxmal.alert(data.fail, 'error');
                         uxmal.Cards.setLoading('productCard', false);
                     } else if (data.warning) {
                         uxmal.alert(data.warning, 'warning');
