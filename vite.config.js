@@ -11,10 +11,10 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/js/workshop.js',
-                'resources/js/orders/dashboard.js',
-                'resources/js/orders/create.js',
+                'resources/js/orders/get_orders_dashboard.js',
+                'resources/js/orders/get_orders.js',
                 'resources/js/test/test.js',
-                'resources/scss/orders/create.scss',
+                'resources/scss/orders/get_orders.scss',
                 'resources/scss/workshop.scss'
             ],
             refresh: true,
