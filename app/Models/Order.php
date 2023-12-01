@@ -21,6 +21,10 @@ class Order extends BaseModel
         'shipment_status'
     ];
 
+    protected $appends = [
+        'hashId'
+    ];
+
     public static function CreateToCustomer($customer_id): Order
     {
         $newOrder = new self();

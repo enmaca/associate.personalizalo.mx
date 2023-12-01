@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Deligoez\LaravelModelHashId\Traits\SavesHashId;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,6 +12,7 @@ use Illuminate\Validation\Rule;
 class OrderProductDynamic extends BaseModel
 {
     use HasFactory;
+    use SavesHashId;
 
     protected $table = 'order_product_dynamic';
     protected $primaryKey = 'id';

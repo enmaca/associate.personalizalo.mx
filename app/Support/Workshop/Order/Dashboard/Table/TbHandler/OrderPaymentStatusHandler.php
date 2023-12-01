@@ -5,7 +5,7 @@ namespace App\Support\Workshop\Order\Dashboard\Table\TbHandler;
 use App\Support\Enums\OrderPaymentStatusEnum;
 use Enmaca\LaravelUxmal\Support\Builders\Ui\Table\ColumnParseValue;
 
-class OrderPaymentStatus extends ColumnParseValue
+class OrderPaymentStatusHandler extends ColumnParseValue
 {
     /**
      * @param array $attributes

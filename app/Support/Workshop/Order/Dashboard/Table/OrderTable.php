@@ -14,7 +14,7 @@ class OrderTable extends TableBlock
                 'id' => [
                     'tbhContent' => 'checkbox-all',
                     'type' => 'primaryKey',
-                    'handler' => \App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderIdCheckbox::class
+                    'handler' => \App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderProducts::class
                 ],
                 'code' => [
                     'tbhContent' => 'Código de pedido'
@@ -24,23 +24,23 @@ class OrderTable extends TableBlock
                 ],
                 'status' => [
                     'tbhContent' => 'Estatus',
-                    'handler' => \App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderStatus::class
+                    'handler' => \App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderStatusHandler::class
                 ],
                 'delivery_date' => [
                     'tbhContent' => 'Fecha de entrega',
-                    'handler' => \App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderDeliverDate::class
+                    'handler' => \App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderDeliverDateHandler::class
                 ],
                 'shipment_status' => [
                     'tbhContent' => 'Estatus de envio',
-                    'handler' => \App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderShipmentStatus::class
+                    'handler' => \App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderShipmentStatusHandler::class
                 ],
                 'payment_status' => [
                     'tbhContent' => 'Estatus de pago',
-                    'handler' => \App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderPaymentStatus::class
+                    'handler' => \App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderPaymentStatusHandler::class
                 ],
                 'payment_ammount' => [
                     'tbhContent' => 'Pago',
-                    'handler' => \App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderPaymentAmmount::class
+                    'handler' => \App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderPriceHandler::class
                 ]
             ],
             'table.data.model' => \App\Models\Order::class

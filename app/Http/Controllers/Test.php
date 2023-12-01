@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderDeliverDate;
-use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderIdCheckbox;
-use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderPaymentAmmount;
-use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderPaymentStatus;
-use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderShipmentStatus;
-use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderStatus;
+use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderDeliverDateHandler;
+use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderProducts;
+use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderPriceHandler;
+use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderPaymentStatusHandler;
+use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderShipmentStatusHandler;
+use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderStatusHandler;
 use App\Support\Workshop\Order\EditScreen\MainContent\ClientCard;
 use Enmaca\LaravelUxmal\Components\Ui\Row;
 use Enmaca\LaravelUxmal\Components\Ui\Table;
@@ -48,7 +48,7 @@ class Test extends Controller
                     'hashId' => [
                         'tbhContent' => 'checkbox-all',
                         'type' => 'primaryKey',
-                        'handler' => OrderIdCheckbox::class
+                        'handler' => OrderProducts::class
                     ],
                     'code' => [
                         'tbhContent' => 'Código de pedido'
@@ -58,23 +58,23 @@ class Test extends Controller
                     ],
                     'status' => [
                         'tbhContent' => 'Estatus',
-                        'handler' => OrderStatus::class
+                        'handler' => OrderStatusHandler::class
                     ],
                     'delivery_date' => [
                         'tbhContent' => 'Fecha de entrega',
-                        'handler' => OrderDeliverDate::class
+                        'handler' => OrderDeliverDateHandler::class
                     ],
                     'shipment_status' => [
                         'tbhContent' => 'Estatus de envio',
-                        'handler' => OrderShipmentStatus::class
+                        'handler' => OrderShipmentStatusHandler::class
                     ],
                     'payment_status' => [
                         'tbhContent' => 'Estatus de pago',
-                        'handler' => OrderPaymentStatus::class
+                        'handler' => OrderPaymentStatusHandler::class
                     ],
                     'payment_ammount' => [
                         'tbhContent' => 'Pago',
-                        'handler' => OrderPaymentAmmount::class
+                        'handler' => OrderPriceHandler::class
                     ],
                     'actions' => [
                         'tbhContent' => null,

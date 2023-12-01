@@ -4,7 +4,7 @@ namespace App\Support\Workshop\Order\Dashboard\Table\TbHandler;
 use App\Support\Enums\OrderStatusEnum;
 use Enmaca\LaravelUxmal\Support\Builders\Ui\Table\ColumnParseValue;
 
-class OrderStatus extends ColumnParseValue {
+class OrderStatusHandler extends ColumnParseValue {
     /**
      * @param array $attributes
      */
@@ -20,6 +20,6 @@ class OrderStatus extends ColumnParseValue {
     public function parseValue($value): string
     {
         $value = parent::parseValue($value);
-        return "<div>".$value ."</div>";
+        return "<div class='text-center'>".$value ."</div>";
     }
 }

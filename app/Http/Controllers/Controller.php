@@ -142,7 +142,7 @@ class Controller extends BaseController
                     'class' => ['d-none']
                 ]))
         );
-        View::share('uxmalBody', $uxmal->toHtml());
+        View::share('uxmal_global_body_init', $uxmal->toHtml());
     }
 
     public function lang($locale)

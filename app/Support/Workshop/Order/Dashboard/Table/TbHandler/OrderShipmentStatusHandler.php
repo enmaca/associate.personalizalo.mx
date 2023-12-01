@@ -5,7 +5,7 @@ namespace App\Support\Workshop\Order\Dashboard\Table\TbHandler;
 use App\Support\Enums\ShipmentStatusEnum;
 use Enmaca\LaravelUxmal\Support\Builders\Ui\Table\ColumnParseValue;
 
-class OrderShipmentStatus extends ColumnParseValue {
+class OrderShipmentStatusHandler extends ColumnParseValue {
 
     public function __construct($attributes = [])
     {

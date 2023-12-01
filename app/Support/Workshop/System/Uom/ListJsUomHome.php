@@ -3,7 +3,7 @@
 namespace App\Support\Workshop\System\Uom;
 
 use App\Models\UnitOfMeasure;
-use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderIdCheckbox;
+use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderProducts;
 use Enmaca\LaravelUxmal\Block\ListJs;
 
 class ListJsUomHome extends ListJs
@@ -14,7 +14,7 @@ class ListJsUomHome extends ListJs
             'id' => [
                 'tbhContent' => 'checkbox-all',
                 'type' => 'primaryKey',
-                'handler' => OrderIdCheckbox::class,
+                'handler' => OrderProducts::class,
             ],
             'name' => [
                 'tbhContent' => 'Nombre',

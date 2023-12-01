@@ -4,7 +4,7 @@ namespace App\Support\Workshop\Order\Dashboard\Table\TbHandler;
 
 use Enmaca\LaravelUxmal\Support\Builders\Ui\Table\ColumnParseValue;
 
-class OrderDeliverDate extends ColumnParseValue {
+class OrderPaymentAmountHandler extends ColumnParseValue {
 
     /**
      * @param $value
@@ -13,8 +13,8 @@ class OrderDeliverDate extends ColumnParseValue {
     public function parseValue($value): string
     {
         if(empty($value))
-            $value = 'OrderDeliverDate::empty';
+            $value = '$0.00';
 
-        return "<div>" .$value ."</div>";
+        return "<div class='text-end me-1'>\$" .round($value, 2) ."</div>";
     }
 }

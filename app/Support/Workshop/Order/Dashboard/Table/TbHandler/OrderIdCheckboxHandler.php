@@ -7,7 +7,7 @@ use Enmaca\LaravelUxmal\Support\Builders\Ui\Table\ColumnParseValue;
 use Enmaca\LaravelUxmal\Support\Options\Form\Input\InputCheckboxOptions;
 use Illuminate\Support\Facades\View;
 
-class OrderIdCheckbox extends ColumnParseValue
+class OrderIdCheckboxHandler extends ColumnParseValue
 {
 
     /**

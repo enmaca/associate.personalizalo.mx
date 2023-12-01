@@ -14,10 +14,10 @@ enum ShipmentStatusEnum: string
     public function label(): string
     {
         return match ($this) {
-            self::NotNeeded => 'No Necesario',
-            self::Pendind => 'Pendiente',
-            self::Shipped => 'Enviado',
-            self::Delivered => 'Entregado'
+            self::NotNeeded => '<span class="badge text-dark bg-dark-subtle">No Necesario</span>',
+            self::Pendind => '<span class="badge text-warning bg-warning-subtle">Pendiente</span>',
+            self::Shipped => '<span class="badge text-secondary bg-secondary-subtle">Enviado</span>',
+            self::Delivered => '<span class="badge text-success bg-success-subtle">Entregado<span>'
         };
     }
 }

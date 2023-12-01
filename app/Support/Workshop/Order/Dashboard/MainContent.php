@@ -3,12 +3,16 @@
 namespace App\Support\Workshop\Order\Dashboard;
 
 use App\Models\Order;
-use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderDeliverDate;
-use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderIdCheckbox;
-use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderPaymentAmmount;
-use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderPaymentStatus;
-use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderShipmentStatus;
-use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderStatus;
+use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderDeliverDateHandler;
+use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderIdCheckboxHandler;
+use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderPaymentAmountHandler;
+use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderPriceHandler;
+use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderPaymentStatusHandler;
+use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderProductsDynamicHandler;
+use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderCustomerHandler;
+use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderProductsHandler;
+use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderShipmentStatusHandler;
+use App\Support\Workshop\Order\Dashboard\Table\TbHandler\OrderStatusHandler;
 use Enmaca\LaravelUxmal\Block\ContentBlock;
 use \Enmaca\LaravelUxmal\Components\Form\Button;
 use Enmaca\LaravelUxmal\Components\Ui\Card;
@@ -64,35 +68,48 @@ class MainContent extends ContentBlock
                 ->columns(
                     [
                         'hashId' => [
-                            'tbhContent' => 'checkbox-all',
+                            'tbhContent' => null,
                             'type' => 'primaryKey',
-                            'handler' => OrderIdCheckbox::class
+                            'handler' => OrderIdCheckboxHandler::class
                         ],
                         'code' => [
-                            'tbhContent' => 'Código de pedido'
+                            'tbhContent' => 'Código'
                         ],
-                        'customer.name' => [
+                        'customer' => [
                             'tbhContent' => 'Cliente',
+                            'handler' => OrderCustomerHandler::class
+                        ],
+                        'products' => [
+                            'tbhContent' => 'Productos',
+                            'handler' => OrderProductsHandler::class
+                        ],
+                        'dynamic_products' => [
+                            'tbhContent' => 'Prod. Dinámicos',
+                            'handler' => OrderProductsDynamicHandler::class
                         ],
                         'status' => [
                             'tbhContent' => 'Estatus',
-                            'handler' => OrderStatus::class
+                            'handler' => OrderStatusHandler::class
                         ],
                         'delivery_date' => [
                             'tbhContent' => 'Fecha de entrega',
-                            'handler' => OrderDeliverDate::class
+                            'handler' => OrderDeliverDateHandler::class
                         ],
                         'shipment_status' => [
                             'tbhContent' => 'Estatus de envio',
-                            'handler' => OrderShipmentStatus::class
+                            'handler' => OrderShipmentStatusHandler::class
+                        ],
+                        'price' => [
+                            'tbhContent' => 'Precio',
+                            'handler' => OrderPriceHandler::class
                         ],
                         'payment_status' => [
                             'tbhContent' => 'Estatus de pago',
-                            'handler' => OrderPaymentStatus::class
+                            'handler' => OrderPaymentStatusHandler::class
                         ],
-                        'payment_ammount' => [
+                        'payment_amount' => [
                             'tbhContent' => 'Pago',
-                            'handler' => OrderPaymentAmmount::class
+                            'handler' => OrderPaymentAmountHandler::class
                         ],
                         'actions' => [
                             'tbhContent' => null,
@@ -128,7 +145,24 @@ class MainContent extends ContentBlock
                 'customer' => function ($query) {
                     $query->select([
                         'id',
-                        'name'
+                        'name',
+                        'last_name',
+                        'email',
+                        'mobile',
+                    ]);
+                },
+                'products' => function ($query) {
+                    $query->select([
+                        'id',
+                        'order_id'
+                    ]);
+                },
+                'dynamic_products' => function ($query) {
+                    $query->select([
+                        'id',
+                        'order_id',
+                        'description',
+                        'mfg_status'
                     ]);
                 }])
             ->select([
@@ -139,10 +173,9 @@ class MainContent extends ContentBlock
                 'delivery_date',
                 'shipment_status',
                 'payment_status',
-                'payment_amount']);
-
-
-
+                'payment_amount',
+                'price'
+            ]);
 
 
         $this->ContentRow()->addElement(element: $ordersCard);
