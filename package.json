@@ -2,7 +2,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "copy": "mkdirp public/uxmal/css/icons && cp -r node_modules/laravel-uxmal-npm/dist/css/* public/uxmal/css",
+        "copy": "mkdirp public/uxmal && cp -r node_modules/laravel-uxmal-npm/dist/* public/uxmal",
         "dev": "vite",
         "build": "vite build && npm run copy"
     },

@@ -14,6 +14,7 @@ use App\Models\OrderProductDynamicDetails;
 use App\Models\PaymentDetails;
 use App\Models\PrintVariationsGroupDetails;
 use App\Models\Product;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -322,6 +323,10 @@ class OrderService
             ]
         ]);
         return $order->toArray();
+    }
+
+    public static function getDeliveryDateLabel(Carbon $date): string {
+
     }
 
 }

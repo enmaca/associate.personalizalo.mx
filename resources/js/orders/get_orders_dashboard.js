@@ -64,28 +64,26 @@ document.addEventListener("livewire:initialized", function () {
         }
     });
 
-    const orderEditButtonsEl = uxmal.Tables.get('ordersTableId').element.querySelectorAll("[data-workshop-order-edit]");
-
-    orderEditButtonsEl.forEach(function (element) {
-        element.onclick = function (event) {
-            if (event.currentTarget) {
-                const order_id = event.currentTarget.attributes['data-row-id'].value;
-                const edit_order_url = uxmal.buildRoute('web_get_orders', order_id);
-                window.location.assign(edit_order_url);
-            }
-        };
+    const orderTableEl = uxmal.Tables.get('ordersTableIdDiv').listJS;
+    orderTableEl.items.forEach(function(item) {
+        item.elm.querySelectorAll("[data-workshop-order-edit]").forEach(function (element) {
+            element.onclick = function (event) {
+                if (event.currentTarget) {
+                    const order_id = event.currentTarget.attributes['data-row-id'].value;
+                    const edit_order_url = uxmal.buildRoute('web_get_orders', order_id);
+                    window.location.assign(edit_order_url);
+                }
+            };
+        });
+        item.elm.querySelectorAll("[data-workshop-order-change]").forEach(function (element) {
+            element.onclick = function (event) {
+                if (event.currentTarget) {
+                    const order_id = event.currentTarget.attributes['data-row-id'].value;
+                    console.log('orderChangeButtonsEl', order_id);
+                }
+            };
+        });
     });
-
-    const orderChangeButtonsEl = uxmal.Tables.get('ordersTableId').element.querySelectorAll("[data-workshop-order-change]");
-    orderChangeButtonsEl.forEach(function (element) {
-        element.onclick = function (event) {
-            if (event.currentTarget) {
-                const order_id = event.currentTarget.attributes['data-row-id'].value;
-                console.log('orderChangeButtonsEl', order_id);
-            }
-        };
-    });
-
 });
 
 

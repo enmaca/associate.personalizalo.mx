@@ -53,7 +53,9 @@ class Form extends Component
             autocomplete: null
         ));
 
-        $form_row = $uxmal->addRow(row_options: new RowOptions());
+        $form_row = $uxmal->addRow(RowOptions::Make()->replaceAttributes([
+            'class' => 'row'
+        ]));
 
         $form_row->addElementInRow(
             element: SelectPaymentMethods::Object([
