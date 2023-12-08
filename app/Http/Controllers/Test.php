@@ -21,6 +21,91 @@ class Test extends Controller
 {
     //
 
+    public function prueba()
+    {
+        $form_element = Form::create('test')
+            ->action('/pedidos')
+            ->method('POST')
+            ->content([
+                UI::Card('testCard')
+                    ->header(
+                        UI::Row([
+                            UI::Column()
+                                ->content('<h1>Crear pedido</h1>')
+                                ->align('left'),
+                            UI::Column()
+                                ->content(
+                                    UI::Button('createOrder')
+                                        ->label('Crear Pedido')
+                                        ->color(ButtonColor::Primary)
+                                        ->type(ButtonType::Submit)
+                                )
+                                ->align('left'),
+                        ])
+                    )
+                    ->body(
+                        UI::Table('order')
+                            ->data($orders) // Array o Collection
+                            ->columns([
+                                UI::TableColumn('status')
+                                    ->headerLabel('Estatus')
+                                    ->render(OrderStatusHandler::class),
+                                UI::TableColumn('code')
+                                    ->render(OrderStatusHandler::class),
+                                UI::TableColumn('customer.name')
+                                    ->render(OrderStatusHandler::class),
+                                UI::TableColumn('total')
+                                    ->render(OrderStatusHandler::class),
+                                UI::TableColumn('actions')
+                                    ->render(function ($row) {
+                                        return UI::Div()
+                                            ->hiddenOnAll()
+                                            ->hiddenOnXs()
+                                            ->hiddenOnSm()
+                                            ->hiddenOnMd()
+                                            ->hiddenOnLg()
+                                            ->hiddenOnXl()
+                                            ->hiddenOnxl()
+                                            ->hiddenOn2xl()
+                                            ->visibleOnAll()
+                                            ->visibleOnXs()
+                                            ->visibleOnSm()
+                                            ->visibleOnMd()
+                                            ->visibleOnLg()
+                                            ->visibleOnXl()
+                                            ->visibleOn2xl()
+                                            ->style([
+                                                'width' => '100px',
+                                                'border' => '1px solid red',
+                                            ])
+                                            ->display('flex')
+                                            ->justify('between')
+                                            ->class([
+                                                'border-2',
+                                                'border-red-500',
+                                            ])
+                                            ->content([
+                                                UI::Button('editOrder')
+                                                    ->icon('edit-2-line')
+                                                    ->label('Editar')
+                                                    ->color(ButtonColor::Info)
+                                                    ->type(ButtonType::Submit),
+                                                UI::Button('editOrder')
+                                                    ->icon('edit-2-line')
+                                                    ->label('Editar')
+                                                    ->color(ButtonColor::Info)
+                                                    ->type(ButtonType::Submit),
+                                                UI::Button('changeStatusOrder')
+                                                    ->label('Cambiar estatus')
+                                                    ->color(ButtonColor::Secondary)
+                                                    ->type(ButtonType::Submit)
+                                            ]);
+                                    }),
+                            ])
+                    )
+            ]);
+    }
+
     /**
      * @throws Exception
      */
@@ -96,7 +181,8 @@ class Test extends Controller
     }
 
 
-    public function _test(){
+    public function _test()
+    {
         $uxmal = new UxmalComponent();
 
         $uxmal->addElement(element: Table::Options(TableOptions::Make()
